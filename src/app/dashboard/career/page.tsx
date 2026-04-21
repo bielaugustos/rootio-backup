@@ -1,6 +1,7 @@
 'use client'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
+import dynamic from 'next/dynamic'
 import { storage, saveStorage, todayISO } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
@@ -98,7 +99,7 @@ function gerarObjetivo(momento: string, cargo: string, area: string): string {
   return t[momento] || t['nao-sei']
 }
 
-export default function CareerPage() {
+function CareerPageContent() {
   const [onboarding, setOnboarding] = useState<CareerOnboarding>(ONBOARDING_VAZIO)
   const [etapa, setEtapa] = useState(0)
   const [learns, setLearns] = useState<CareerLearn[]>([])
@@ -126,7 +127,7 @@ export default function CareerPage() {
     if (tabParam === 'aprendizado') {
       setShowAddLearn(true)
     }
-  }, [])
+  }, [tabParam])
 
   useEffect(() => {
     if (onboarding.momento && onboarding.area && onboarding.cargo) {
@@ -617,5 +618,13 @@ export default function CareerPage() {
         </TabsContent>
       </Tabs>
     </div>
+  )
+}
+
+export default function CareerPage() {
+  return (
+    <Suspense fallback={null}>
+      <CareerPageContent />
+    </Suspense>
   )
 }

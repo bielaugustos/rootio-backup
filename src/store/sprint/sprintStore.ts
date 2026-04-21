@@ -75,6 +75,20 @@ interface SprintStore {
     getBurndownData: (sprint: Sprint) => { day: number; remaining: number }[]
     updateSprintName: (sprintId: number, name: string) => void
     deleteSprint: (sprintId: number) => void
+
+    // Aliases for compatibility
+    setSprints: (sprints: Sprint[]) => void
+    loadSprints: () => void
+    deleteTask: (sprintId: number, taskId: number) => void
+    setTaskStatus: (sprintId: number, taskId: number, completed: boolean) => void
+    moveTask: (sprintId: number, taskId: number, newStatus: string) => void
+    clearTaskBlock: (sprintId: number, taskId: number) => void
+    clearNotes: (sprintId: number) => void
+    clearSprints: () => void
+    setSprintStatus: (sprintId: number, status: SprintStatus) => void
+    addSprint: (name: string, projectId?: number) => void
+    updateSprint: (sprintId: number, updates: Partial<Sprint>) => void
+    setTaskBlock: (sprintId: number, taskId: number, reason: string) => void
   }
 
   const KEY_SPRINTS = 'io_sprints'
@@ -358,5 +372,55 @@ export const useSprintStore = create<SprintStore>()(
         return { sprints, currentSprint }
       })
     },
+
+    // Aliases
+    setSprints: (sprints) => set({ sprints }),
+    loadSprints: () => {
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem(KEY_SPRINTS)
+        if (stored) {
+          try {
+            const sprints = JSON.parse(stored)
+            set({ sprints })
+          } catch {}
+        }
+      }
+    },
+    deleteTask: (sprintId, taskId) => get().removeTask(sprintId, taskId),
+    setTaskStatus: (sprintId, taskId, completed) => get().updateTask(sprintId, taskId, { completed }),
+    moveTask: (sprintId, taskId, newStatus) => get().transitionStatus(sprintId, newStatus as SprintStatus),
+    clearTaskBlock: (sprintId, taskId) => get().unblockTask(sprintId, taskId),
+    clearNotes: (sprintId) => {
+      set((state) => {
+        const sprints = state.sprints.map((s) => {
+          if (s.id !== sprintId) return s
+          return { ...s, notes: [] }
+        })
+        const currentSprint = sprints.find((s) => s.id === sprintId) || null
+        return { sprints, currentSprint }
+      })
+    },
+    clearSprints: () => {
+      set({ sprints: [], currentSprint: null })
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem(KEY_SPRINTS)
+      }
+    },
+    setSprintStatus: (sprintId, status) => get().transitionStatus(sprintId, status),
+    addSprint: (name, projectId) => get().createSprint(name, projectId),
+    updateSprint: (sprintId, updates) => {
+      set((state) => {
+        const sprints = state.sprints.map((s) => {
+          if (s.id !== sprintId) return s
+          return { ...s, ...updates }
+        })
+        const currentSprint = state.currentSprint?.id === sprintId ? { ...state.currentSprint, ...updates } : state.currentSprint
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(KEY_SPRINTS, JSON.stringify(sprints))
+        }
+        return { sprints, currentSprint }
+      })
+    },
+    setTaskBlock: (sprintId, taskId, reason) => get().blockTask(sprintId, taskId, reason),
   }))
 )

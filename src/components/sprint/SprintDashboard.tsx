@@ -1,5 +1,6 @@
 'use client'
-import { useState, useEffect, useRef, use } from 'react'
+import { useState, useEffect, useRef, use, Suspense } from 'react'
+import { useAppStore } from '@/store/useAppStore'
 import { useSprintStore, Sprint, SprintTask, SprintStatus } from '@/store/sprint/sprintStore'
 import { storage } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -221,24 +222,9 @@ function BurndownChart({ progress, totalTasks, completedTasks }: BurndownChartPr
   )
 }
 
-export default function SprintDashboard() {
-  const {
-    sprints,
-    currentSprint,
-    activeImpediments,
-    createSprint,
-    setCurrentSprint,
-    addTask,
-    updateTask,
-    removeTask,
-    transitionStatus,
-    blockTask,
-    unblockTask,
-    addNote,
-    getSprintProgress,
-    updateSprintName,
-    deleteSprint,
-  } = useSprintStore()
+function SprintDashboardContent() {
+  const { isLoggedIn, userId } = useAppStore()
+  const { sprints, currentSprint, activeImpediments, setSprints, loadSprints, addSprint, updateSprint, deleteSprint, addTask, updateTask, deleteTask, setTaskStatus, moveTask, setTaskBlock, clearTaskBlock, addNote, clearNotes, clearSprints, setSprintStatus, setCurrentSprint, createSprint, getSprintProgress, blockTask, updateSprintName, transitionStatus, removeTask, unblockTask } = useSprintStore()
   
   const [showSprintForm, setShowSprintForm] = useState(false)
   const [showTaskForm, setShowTaskForm] = useState(false)
@@ -261,6 +247,8 @@ export default function SprintDashboard() {
   const projectCategory = projectId 
     ? projects.find(p => p.id === projectId)?.category 
     : null
+
+  const sprintInitialized = useRef(false)
 
   useEffect(() => {
     if (!projectId || sprintInitialized.current) return
@@ -322,7 +310,6 @@ export default function SprintDashboard() {
   const [sprintToDelete, setSprintToDelete] = useState<Sprint | null>(null)
   const [sprintToEdit, setSprintToEdit] = useState<number | null>(null)
   const [editingSprintName, setEditingSprintName] = useState('')
-  const sprintInitialized = useRef(false)
 
   const currentStatusIndex = currentSprint ? STATUS_ORDER.indexOf(currentSprint.status) : 0
   const nextStatus = currentSprint && currentStatusIndex < STATUS_ORDER.length - 1 
@@ -744,5 +731,13 @@ export default function SprintDashboard() {
         />
       )}
     </div>
+  )
+}
+
+export default function SprintDashboard() {
+  return (
+    <Suspense fallback={null}>
+      <SprintDashboardContent />
+    </Suspense>
   )
 }

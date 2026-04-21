@@ -28,9 +28,17 @@ export default function FinancePage() {
   const { isLoggedIn, userId } = useAppStore()
   
   const [currentDate, setCurrentDate] = useState(() => new Date())
-  const [transactions, setTransactions] = useState<Transaction[]>(() => storage(KEY.transactions, []))
-  const [goals, setGoals] = useState<FinancialGoal[]>(() => storage(KEY.goals, []))
-  const [emergency, setEmergency] = useState(() => storage(KEY.emergency, { current: 0, target: 5000 }))
+  const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [goals, setGoals] = useState<FinancialGoal[]>([])
+  const [emergency, setEmergency] = useState({ current: 0, target: 5000 })
+  const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => {
+    setTransactions(storage<Transaction[]>(KEY.transactions, []))
+    setGoals(storage<FinancialGoal[]>(KEY.goals, []))
+    setEmergency(storage(KEY.emergency, { current: 0, target: 5000 }))
+    setLoaded(true)
+  }, [])
   
   const [showForm, setShowForm] = useState(false)
   const [txType, setTxType] = useState<'income' | 'expense'>('expense')
@@ -49,6 +57,7 @@ export default function FinancePage() {
   const [editingGoal, setEditingGoal] = useState<FinancialGoal | null>(null)
   const [lastAport, setLastAport] = useState<number | null>(null)
   const [emergencySet, setEmergencySet] = useState(() => {
+    if (typeof window === 'undefined') return false
     const stored = localStorage.getItem(KEY.emergency)
     return stored ? true : false
   })

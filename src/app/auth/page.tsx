@@ -206,7 +206,7 @@ export default function AuthPage() {
             </div>
 
             <Button variant="outline" className="w-full"
-              onClick={() => { localStorage.setItem('io_auth_skipped','true'); router.replace('/dashboard') }}>
+              onClick={() => { if (typeof window !== 'undefined') { localStorage.setItem('io_auth_skipped','true'); } router.replace('/dashboard') }}>
               Continuar sem conta
             </Button>
           </>
