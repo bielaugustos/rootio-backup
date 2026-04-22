@@ -318,23 +318,26 @@ export default function AjustesPage() {
         <Card>
           <CardContent className="p-0 divide-y">
 
-            {/* Tema */}
-            <div className="flex items-center gap-3 px-4 py-3.5">
-              <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center flex-shrink-0">
-                {theme === 'dark'
-                  ? <MoonStars size={15} className="text-zinc-600" />
-                  : <Sun size={15} className="text-amber-600" />}
-              </div>
-              <div className="flex-1">
-                <Label className="text-sm font-medium cursor-pointer">Tema</Label>
-                <p className="text-[11px] text-muted-foreground">
-                  {theme === 'dark' ? 'Escuro' : 'Claro'}
-                </p>
-              </div>
-              <Switch
-                checked={theme === 'dark'}
-                onCheckedChange={v => setTheme(v ? 'dark' : 'light')} />
-            </div>
+             {/* Tema */}
+             <div className="flex items-center gap-3 px-4 py-3.5">
+               <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center flex-shrink-0">
+                 {themeMode === 'dark'
+                   ? <MoonStars size={15} className="text-zinc-600" />
+                   : <Sun size={15} className="text-amber-600" />}
+               </div>
+               <div className="flex-1">
+                 <Label className="text-sm font-medium cursor-pointer">Tema</Label>
+                 <p className="text-[11px] text-muted-foreground">
+                   {themeMode === 'dark' ? 'Escuro' : 'Claro'}
+                 </p>
+               </div>
+               <Switch
+                 checked={themeMode === 'dark'}
+                 onCheckedChange={v => {
+                   setThemeMode(v ? 'dark' : 'light')
+                   setTheme(v ? 'dark' : 'light')
+                 }} />
+             </div>
 
             {/* Sons */}
             <div className="flex items-center gap-3 px-4 py-3.5">

@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef, use } from 'react'
+import { useState, useEffect, useRef, use, Suspense } from 'react'
 import { useSprintStore, Sprint, SprintTask, SprintStatus, ImpedimentLog } from '@/store/sprint/sprintStore'
 import { storage } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -264,23 +264,20 @@ function BurndownChart({ progress, totalTasks, completedTasks }: BurndownChartPr
 }
 
 export default function SprintDashboard() {
+  return (
+    <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <SprintDashboardContent />
+    </Suspense>
+  )
+}
+
+function SprintDashboardContent() {
   const {
-    sprints,
-    currentSprint,
-    activeImpediments,
-    createSprint,
-    setCurrentSprint,
-    addTask,
-    updateTask,
-    removeTask,
-    transitionStatus,
-    blockTask,
-    unblockTask,
-    addNote,
-    getSprintProgress,
-    updateSprintName,
-    deleteSprint,
-    impedimentLogs,
+    sprints, currentSprint, setCurrentSprint,
+    addTask, updateTask, removeTask, addNote,
+    blockTask, unblockTask,
+    createSprint, transitionStatus, updateSprintName, deleteSprint,
+    activeImpediments, impedimentLogs, getSprintProgress,
   } = useSprintStore()
   
   const [showSprintForm, setShowSprintForm] = useState(false)

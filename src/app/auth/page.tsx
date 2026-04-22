@@ -71,7 +71,7 @@ export default function AuthPage() {
     <div className="min-h-screen flex items-center justify-center p-6 bg-background">
       <div className="w-full max-w-sm space-y-6">
         <div className="flex items-center gap-3">
-          <img src="/logodark.svg" alt="Rootio" className="w-10 h-10" />
+          <img src="/logo.svg" alt="Rootio" className="w-10 h-10" />
           <div>
             <h1 className="font-bold text-xl">Rootio</h1>
             <p className="text-xs text-muted-foreground">Sua Evolução Pessoal</p>

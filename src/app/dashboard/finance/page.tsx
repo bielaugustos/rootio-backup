@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useMemo, useRef } from 'react'
+import { useState, useEffect, useMemo, useRef, Suspense } from 'react'
 import { useAppStore } from '@/store/useAppStore'
 import { saveStorage, storage, formatBRL, todayISO } from '@/lib/utils'
 import { Transaction, FinancialGoal } from '@/types'
@@ -26,6 +26,14 @@ const CATS_IN = ['Salário', 'Freelance', 'Investimento', 'Outros']
 const CATS_OUT = ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Educação', 'Outros']
 
 export default function FinancePage() {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <FinancePageContent />
+    </Suspense>
+  )
+}
+
+function FinancePageContent() {
   const { isLoggedIn, userId } = useAppStore()
   
   const [currentDate, setCurrentDate] = useState(() => new Date())
@@ -50,10 +58,12 @@ export default function FinancePage() {
   const [emergencyAport, setEmergencyAport] = useState('')
   const [editingGoal, setEditingGoal] = useState<FinancialGoal | null>(null)
   const [lastAport, setLastAport] = useState<number | null>(null)
-  const [emergencySet, setEmergencySet] = useState(() => {
+  const [emergencySet, setEmergencySet] = useState(false)
+
+  useEffect(() => {
     const stored = localStorage.getItem(KEY.emergency)
-    return stored ? true : false
-  })
+    if (stored) setEmergencySet(true)
+  }, [])
 
   // AI Chat state
   const [chatInput, setChatInput] = useState('')

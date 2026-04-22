@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { storage, saveStorage, todayISO } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -100,6 +100,14 @@ function gerarObjetivo(momento: string, cargo: string, area: string): string {
 }
 
 export default function CareerPage() {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <CareerPageContent />
+    </Suspense>
+  )
+}
+
+function CareerPageContent() {
   const [onboarding, setOnboarding] = useState<CareerOnboarding>(ONBOARDING_VAZIO)
   const [etapa, setEtapa] = useState(0)
   const [learns, setLearns] = useState<CareerLearn[]>([])

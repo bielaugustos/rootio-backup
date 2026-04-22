@@ -104,10 +104,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <div className="min-h-screen flex flex-col bg-background">
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b" ref={navRef}>
         <nav className="flex items-center h-14 px-4 gap-1 max-w-screen-xl mx-auto text-foreground">
-<Link href="/dashboard" className="flex items-center gap-2 mr-4 font-semibold hover:opacity-80 transition-opacity">
-            <img src="/logo.svg" alt="IO" className={`w-7 h-7 ${themeMode === 'dark' ? '' : 'hidden'}`} />
-            <img src="/logodark.svg" alt="IO" className={`w-7 h-7 ${themeMode === 'dark' ? 'hidden' : ''}`} />
-          </Link>
+           <Link href="/dashboard" className="flex items-center gap-2 mr-4 font-semibold transition-opacity">
+             <img src="/logo.svg" alt="IO" className="w-7 h-7" style={{ filter: themeMode === 'dark' ? 'invert(1) brightness(2)' : 'none' }} />
+           </Link>
 
           <div className="hidden md:flex items-center gap-0.5 flex-1">
             {MENUS.map(m => (
