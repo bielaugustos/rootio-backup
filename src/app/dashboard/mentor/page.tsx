@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
+import Link from 'next/link'
+import { PageSkeleton } from '@/components/PageSkeleton'
 import {
   Plus, Trash, Lock, BookOpen, Sparkle, PaperPlaneRight,
   Smiley, SmileyMeh, SmileySad, Star,
@@ -64,6 +66,7 @@ export default function MentorPage() {
   const { plan } = useAppStore()
   const [entries, setEntries] = useState<JournalEntry[]>(() => storage(KEY.entries, []))
   const [activeTab, setActiveTab] = useState<'diario' | 'mentor'>('diario')
+  const [loading, setLoading] = useState(true)
   
   const [isLocked, setIsLocked] = useState(false)
   const [pinInput, setPinInput] = useState('')
@@ -90,6 +93,7 @@ export default function MentorPage() {
   useEffect(() => {
     const today = new Date().getDate()
     setCurrentPrompt(PROMPTS[today % PROMPTS.length])
+    setLoading(false)
   }, [])
 
   useEffect(() => {
@@ -193,7 +197,7 @@ export default function MentorPage() {
     return [...entries].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
   }, [entries])
 
-  return (
+  return loading ? <PageSkeleton /> : (
     <div className="p-4 md:p-6 space-y-4 max-w-2xl">
       {/* Abas */}
       <div className="flex rounded-lg bg-muted p-1 mx-3">
@@ -224,10 +228,10 @@ export default function MentorPage() {
         <>
           {/* Header */}
           <div className="flex items-center justify-between mx-3">
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl font-bold">Diário de Reflexão</h1>
+            <div className="flex items-center mr-6">
+              <h1 className="text-xl font-bold text-foreground">Diário de Reflexão</h1>
               <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setPinMode(hasPin ? 'verify' : 'setup')}>
-                <Lock className="h-4 w-4" />
+                <Lock className="h-4 w-4 text-foreground" />
               </Button>
             </div>
             <Button onClick={() => setShowEntryForm(true)} className="gap-2 bg-amber-600 hover:bg-amber-700">
@@ -296,7 +300,7 @@ export default function MentorPage() {
           {isLocked && pinMode === 'none' && (
             <Card className="mx-3 mt-3">
               <CardContent className="p-8 text-center">
-                <Lock className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <Lock className="h-12 w-12 mx-auto text-foreground mb-4" />
                 <p className="text-muted-foreground mb-4">Diário protegido</p>
                 <Button onClick={() => setPinMode('verify')}>Desbloquear</Button>
               </CardContent>
@@ -393,7 +397,7 @@ export default function MentorPage() {
                     <Card key={entry.id}>
                       <CardContent className="p-3">
                         <div className="flex items-start justify-between">
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-4">
                             <mood.icon className={cn('h-5 w-5', mood.color)} />
                             <span className="text-xs text-muted-foreground">
                               {new Date(entry.createdAt).toLocaleDateString('pt-BR', { 
@@ -454,8 +458,10 @@ export default function MentorPage() {
                 <p className="text-xs text-muted-foreground mb-4">
                   Benefícios Pro: Mentor IA ilimitado, insights personalizados, sync entre dispositivos.
                 </p>
-                <Button onClick={() => window.open('/dashboard/profile', '_self')} className="bg-amber-500 hover:bg-amber-600">
-                  Ver Planos Pro
+                <Button asChild className="bg-amber-500 hover:bg-amber-600">
+                  <Link href="/dashboard/profile">
+                    Ver Planos Pro
+                  </Link>
                 </Button>
               </CardContent>
             </Card>
@@ -493,7 +499,7 @@ export default function MentorPage() {
               <Card className="mx-3 mt-3 nb-card-dark">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between mb-4">
-                    <p className="font-bold text-white">Mentor IA</p>
+                    <p className="font-bold text-white dark:text-white">Mentor IA</p>
                     <Button variant="ghost" size="sm" onClick={() => setShowApiForm(true)}>
                       Alterar API
                     </Button>

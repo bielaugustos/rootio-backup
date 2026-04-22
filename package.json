@@ -1,6 +1,7 @@
 {
   "name": "rootio",
-  "version": "0.3.0",
+  "description": "An personal ai",
+  "version": "0.4.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -32,7 +33,7 @@
     "@radix-ui/react-tooltip": "^1.1.0",
     "@supabase/ssr": "^0.3.0",
     "@supabase/supabase-js": "^2.43.0",
-    "class-variance-authority": "^0.7.0",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",

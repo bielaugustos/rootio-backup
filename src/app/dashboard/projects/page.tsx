@@ -1,5 +1,5 @@
 'use client'
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useAppStore } from '@/store/useAppStore'
 import { useSprintStore } from '@/store/sprint/sprintStore'
@@ -14,8 +14,10 @@ import { Progress } from '@/components/ui/progress'
 import {
   Plus, Trash, PencilSimple, CaretDown, CaretUp,
   Flag, Rocket, Heart, Chat, Palette, Coins, CheckCircle,
+  CalendarBlank, CaretDown as CaretDownIcon,
 } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
+import { PageSkeleton } from '@/components/PageSkeleton'
 
 const KEY_PROJECTS = 'io_projects'
 const KEY_BANNER = 'io_proj_banner'
@@ -46,6 +48,7 @@ interface ProjectFormData {
   title: string
   description: string
   category: string
+  status: 'em andamento' | 'planejando' | 'concluido'
   priority: 'alta' | 'media' | 'baixa'
   deadline: string
 }
@@ -58,10 +61,14 @@ export default function ProjectsPage() {
   const [bannerOpen, setBannerOpen] = useState(() => storage(KEY_BANNER, true))
   const [showForm, setShowForm] = useState(false)
   const [editingProject, setEditingProject] = useState<Project | null>(null)
+  const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'em andamento' | 'planejando' | 'concluido'>('em andamento')
   const [showCategoryManager, setShowCategoryManager] = useState(false)
   const [customCategories, setCustomCategories] = useState<string[]>(() => storage(KEY_CATEGORIES, []))
   const [newCategoryName, setNewCategoryName] = useState('')
+  const categoryManagerRef = useRef<HTMLDivElement>(null)
+  const projectFormRef = useRef<HTMLDivElement>(null)
+  const projectsListRef = useRef<HTMLDivElement>(null)
   
   const allCategories = [...DEFAULT_CATEGORIES, ...customCategories]
   const customColors = useMemo(() => {
@@ -77,6 +84,7 @@ export default function ProjectsPage() {
     title: '',
     description: '',
     category: 'Geral',
+    status: 'planejando',
     priority: 'media',
     deadline: '',
   })
@@ -87,7 +95,38 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     saveStorage(KEY_BANNER, bannerOpen)
+    setLoading(false)
   }, [bannerOpen])
+
+  useEffect(() => {
+    if (showCategoryManager && categoryManagerRef.current) {
+      categoryManagerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [showCategoryManager])
+
+  useEffect(() => {
+    if (showCategoryManager && categoryManagerRef.current) {
+      categoryManagerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [showCategoryManager])
+
+  useEffect(() => {
+    if (showForm && projectFormRef.current) {
+      projectFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [showForm])
+
+  useEffect(() => {
+    if (showCategoryManager) {
+      setFormData(prev => ({ ...prev, category: 'Geral' }))
+    } else if (!showCategoryManager && showForm) {
+      setTimeout(() => {
+        if (projectFormRef.current) {
+          projectFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+      }, 100)
+    }
+  }, [showCategoryManager, showForm])
 
   function openNewForm() {
     setEditingProject(null)
@@ -95,6 +134,7 @@ export default function ProjectsPage() {
       title: '',
       description: '',
       category: 'Geral',
+      status: 'planejando',
       priority: 'media',
       deadline: '',
     })
@@ -107,6 +147,7 @@ export default function ProjectsPage() {
       title: p.title,
       description: p.description || '',
       category: p.category,
+      status: p.status,
       priority: p.priority,
       deadline: p.deadline || '',
     })
@@ -153,6 +194,7 @@ export default function ProjectsPage() {
       title: '',
       description: '',
       category,
+      status: 'planejando',
       priority: 'media',
       deadline: '',
     })
@@ -162,10 +204,13 @@ export default function ProjectsPage() {
   function addCategory() {
     if (!newCategoryName.trim()) return
     if (allCategories.includes(newCategoryName.trim())) return
-    const updated = [...customCategories, newCategoryName.trim()]
+    const newCategory = newCategoryName.trim()
+    const updated = [...customCategories, newCategory]
     setCustomCategories(updated)
     saveStorage(KEY_CATEGORIES, updated)
+    setFormData({ ...formData, category: newCategory })
     setNewCategoryName('')
+    setShowCategoryManager(false)
   }
 
   function removeCategory(cat: string) {
@@ -185,6 +230,15 @@ export default function ProjectsPage() {
     return CAT_COLORS[cat] || customColors[cat] || CAT_COLORS['Geral']
   }
 
+  function getPriorityColor(priority: 'alta' | 'media' | 'baixa'): string {
+    const colors: Record<string, string> = {
+      'alta': '#dc2626',
+      'media': '#d97706',
+      'baixa': '#16a34a',
+    }
+    return colors[priority] || colors['media']
+  }
+
   function ColoredIcon({ category }: { category: string }) {
     const color = getCategoryColor(category)
     const iconMap: Record<string, React.ComponentType<{ className?: string; color?: string }>> = {
@@ -198,14 +252,13 @@ export default function ProjectsPage() {
     return <Icon className="h-4 w-4 flex-shrink-0" color={color} />
   }
 
-  return (
+  return loading ? <PageSkeleton /> : (
     <div className="p-4 md:p-6 space-y-4 max-w-2xl">
       {/* Banner colapsável - sempre visível */}
       <Card className="mx-3 mt-3 overflow-hidden border-l-4 border-l-amber-500">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Flag className="h-5 w-5 text-amber-600" />
+            <div>
               <h2 className="font-bold text-foreground">
                 Projetos & metas de vida
               </h2>
@@ -300,7 +353,7 @@ export default function ProjectsPage() {
       {/* Header + Botão Novo */}
       <div className="flex items-center justify-between mx-3">
         <div>
-          <h1 className="text-xl font-bold">Meus projetos</h1>
+          <h1 className="text-xl font-bold text-foreground">Meus projetos</h1>
           <p className="text-sm text-muted-foreground">{projects.length} projeto(s)</p>
         </div>
         <Button onClick={openNewForm} className="gap-2 bg-amber-600 hover:bg-amber-700">
@@ -309,16 +362,19 @@ export default function ProjectsPage() {
       </div>
 
       {/* Filtros */}
-      <div className="flex gap-2 mx-3 overflow-x-auto pb-2">
-        {filters.map(f => (
+      <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-nowrap sm:gap-2 mx-3">
+        {filters.map((f, idx) => (
           <button
             key={f.id}
             onClick={() => setFilter(f.id)}
+            disabled={showForm}
             className={cn(
               'px-3 py-1.5 text-sm rounded-full whitespace-nowrap transition-all',
+              'opacity-50 cursor-not-allowed',
+              idx === 2 && 'col-span-2',
               filter === f.id
-                ? 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200'
-                : 'bg-muted text-muted-foreground hover:text-foreground'
+                ? 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 cursor-pointer'
+                : 'bg-muted text-muted-foreground hover:text-foreground hover:cursor-pointer'
             )}
           >
             {f.label}
@@ -328,7 +384,7 @@ export default function ProjectsPage() {
 
       {/* Formulário de projeto */}
       {showForm && (
-        <Card className="mx-3 mt-3">
+        <Card ref={projectFormRef} className="mx-3 mt-3">
           <CardContent className="p-4 space-y-3">
             <div className="flex items-center justify-between">
               <Label className="text-base font-semibold">
@@ -347,21 +403,49 @@ export default function ProjectsPage() {
               />
             </div>
             <div className="space-y-1">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mr-4">
                 <Label>Categoria</Label>
-                <Button variant="ghost" size="sm" onClick={() => setShowCategoryManager(true)} className="h-6 text-xs">
+                <Button variant="ghost" size="sm" onClick={() => setShowCategoryManager(true)} className="h-8 w-8 shrink-0 ml-2 pl-4 opacity-50 text-xs">
                   Gerenciar
                 </Button>
               </div>
-              <select
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                value={formData.category}
-                onChange={e => setFormData({ ...formData, category: e.target.value })}
-              >
-                {allCategories.map(c => (
-                  <option key={c} value={c}>{c}</option>
+            </div>
+            <div className="space-y-1">
+              <div className="relative">
+                <select
+                    className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm appearance-none pr-10"
+                    value={formData.category}
+                    onChange={e => setFormData({ ...formData, category: e.target.value })}
+                  >
+                  {allCategories.map(c => (
+                      <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+                <CaretDownIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+              </div>
+            </div>
+            <div className="space-y-1">
+              <Label>Status</Label>
+              <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-nowrap sm:gap-2">
+                {(['em andamento', 'planejando', 'concluido'] as const).map((s, idx) => (
+                  <Button
+                    key={s}
+                    variant={formData.status === s ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setFormData({ ...formData, status: s })}
+                    className={cn(
+                      'capitalize w-full text-xs sm:text-sm',
+                      idx === 2 && 'col-span-2',
+                      s === 'em andamento' && formData.status === s && 'bg-blue-600 hover:bg-blue-700',
+                      s === 'planejando' && formData.status === s && 'bg-amber-600 hover:bg-amber-700',
+                      s === 'concluido' && formData.status === s && 'bg-green-600 hover:bg-green-700',
+                    )}
+                  >
+                    <span className="hidden sm:inline">{s}</span>
+                    <span className="sm:hidden">{s === 'em andamento' ? 'Em andamento' : s === 'planejando' ? 'Planejando' : 'Concluído'}</span>
+                  </Button>
                 ))}
-              </select>
+              </div>
             </div>
             <div className="space-y-1">
               <Label>Prioridade</Label>
@@ -386,11 +470,15 @@ export default function ProjectsPage() {
             </div>
             <div className="space-y-1">
               <Label>Prazo (opcional)</Label>
-              <Input
-                type="date"
-                value={formData.deadline}
-                onChange={e => setFormData({ ...formData, deadline: e.target.value })}
-              />
+              <div className="relative">
+                <Input
+                  type="date"
+                  value={formData.deadline}
+                  onChange={e => setFormData({ ...formData, deadline: e.target.value })}
+                  className="pr-10"
+                />
+                <CalendarBlank className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+              </div>
             </div>
             <div className="flex gap-2">
               <Button onClick={saveProject} className="flex-1 bg-amber-600 hover:bg-amber-700">Salvar</Button>
@@ -402,9 +490,9 @@ export default function ProjectsPage() {
 
       {/* Category Manager Modal */}
       {showCategoryManager && (
-        <Card className="mx-3 mt-3">
+        <Card ref={categoryManagerRef} className="mx-3 mt-3 animate-in fade-in slide-in-from-top-4 duration-300">
           <CardContent className="p-4 space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center">
               <Label className="text-base font-semibold">Gerenciar Categorias</Label>
               <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setShowCategoryManager(false)}>
                 <Trash size={14} />
@@ -420,7 +508,7 @@ export default function ProjectsPage() {
                   onChange={e => setNewCategoryName(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && addCategory()}
                 />
-                <Button onClick={addCategory} size="sm">Add</Button>
+                <Button onClick={addCategory} size="sm">Adicionar</Button>
               </div>
             </div>
 
@@ -462,7 +550,7 @@ export default function ProjectsPage() {
 
       {/* Cards de projeto */}
       {filteredProjects.length > 0 && (
-        <div className="space-y-3 mx-3">
+        <div ref={projectsListRef} className="space-y-3 mx-3">
           {filteredProjects.map(p => {
             const color = getCategoryColor(p.category)
             const projectSprints = sprints.filter(s => s.projectId === p.id || s.name === `Projeto #${p.id}`)
@@ -470,13 +558,14 @@ export default function ProjectsPage() {
             const completedSprints = projectSprints.filter(s => s.status === 'DONE').length
             const sprintProgress = totalSprints > 0 ? Math.round((completedSprints / totalSprints) * 100) : 0
             
+            const priorityColor = getPriorityColor(p.priority)
+            
             return (
-              <Card key={p.id} className="overflow-hidden border-l-4" style={{ borderLeftColor: color }}>
+              <Card key={p.id} className="overflow-hidden border-l-4" style={{ borderLeftColor: priorityColor }}>
                 <div style={{ height: 3, background: color, width: `${sprintProgress}%` }} />
                 <CardContent className="p-3">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2 flex-1">
-                      <ColoredIcon category={p.category} />
                       <p className="font-semibold text-sm truncate">{p.title}</p>
                     </div>
                     <div className="flex gap-1">
@@ -498,6 +587,9 @@ export default function ProjectsPage() {
                     <Badge variant="secondary" className="text-[10px]">
                       {p.status}
                     </Badge>
+                    <Badge variant="outline" className="text-[10px]" style={{ borderColor: color, color }}>
+                      {p.category}
+                    </Badge>
                     <Badge variant="outline" className="text-[10px] capitalize">
                       {p.priority}
                     </Badge>
@@ -508,12 +600,14 @@ export default function ProjectsPage() {
                     )}
                   </div>
 
-                  <div className="flex items-center gap-2 mb-2">
-                    <Progress value={sprintProgress} className="h-1.5 flex-1" />
-                    <span className="text-xs font-mono text-muted-foreground">
-                      {totalSprints > 0 ? `${completedSprints}/${totalSprints}` : '0/0'} ({sprintProgress}%)
-                    </span>
-                  </div>
+                  {totalSprints > 0 && (
+                    <div className="flex items-center gap-2 mb-2">
+                      <Progress value={sprintProgress} className="h-1.5 flex-1" />
+                      <span className="text-xs font-mono text-muted-foreground">
+                        {completedSprints}/{totalSprints} ({sprintProgress}%)
+                      </span>
+                    </div>
+                  )}
 
                   {p.milestones && p.milestones.length > 0 && (
                     <div className="flex items-center gap-1 mb-2">

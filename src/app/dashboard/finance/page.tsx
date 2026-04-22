@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
+import { PageSkeleton } from '@/components/PageSkeleton'
 import {
   ArrowUp, ArrowDown, Trash, Plus, CaretLeft, CaretRight, PiggyBank, Target, PencilSimple, ArrowCounterClockwise, TrashSimple,
 } from '@phosphor-icons/react'
@@ -28,17 +29,10 @@ export default function FinancePage() {
   const { isLoggedIn, userId } = useAppStore()
   
   const [currentDate, setCurrentDate] = useState(() => new Date())
-  const [transactions, setTransactions] = useState<Transaction[]>([])
-  const [goals, setGoals] = useState<FinancialGoal[]>([])
-  const [emergency, setEmergency] = useState({ current: 0, target: 5000 })
-  const [loaded, setLoaded] = useState(false)
-
-  useEffect(() => {
-    setTransactions(storage<Transaction[]>(KEY.transactions, []))
-    setGoals(storage<FinancialGoal[]>(KEY.goals, []))
-    setEmergency(storage(KEY.emergency, { current: 0, target: 5000 }))
-    setLoaded(true)
-  }, [])
+  const [transactions, setTransactions] = useState<Transaction[]>(() => storage(KEY.transactions, []))
+  const [goals, setGoals] = useState<FinancialGoal[]>(() => storage(KEY.goals, []))
+  const [emergency, setEmergency] = useState(() => storage(KEY.emergency, { current: 0, target: 5000 }))
+  const [loading, setLoading] = useState(true)
   
   const [showForm, setShowForm] = useState(false)
   const [txType, setTxType] = useState<'income' | 'expense'>('expense')
@@ -57,7 +51,6 @@ export default function FinancePage() {
   const [editingGoal, setEditingGoal] = useState<FinancialGoal | null>(null)
   const [lastAport, setLastAport] = useState<number | null>(null)
   const [emergencySet, setEmergencySet] = useState(() => {
-    if (typeof window === 'undefined') return false
     const stored = localStorage.getItem(KEY.emergency)
     return stored ? true : false
   })
@@ -278,6 +271,7 @@ export default function FinancePage() {
   ]
 
   const currentMonth = useMemo(() => {
+    setLoading(false)
     return currentDate.toISOString().slice(0, 7)
   }, [currentDate])
 
@@ -424,18 +418,18 @@ export default function FinancePage() {
 
   const suggestedTargets = [3000, 5000, 10000, 15000, 20000]
 
-  return (
+  return loading ? <PageSkeleton /> : (
     <div className="p-4 md:p-6 space-y-4 max-w-2xl">
       {/* Header com mês */}
-      <div className="flex items-center justify-between mx-3">
-        <Button variant="ghost" size="icon" onClick={prevMonth}>
-          <CaretLeft className="h-4 w-4" />
-        </Button>
-        <h2 className="text-lg font-bold capitalize">{monthLabel}</h2>
-        <Button variant="ghost" size="icon" onClick={nextMonth}>
-          <CaretRight className="h-4 w-4" />
-        </Button>
-      </div>
+        <div className="flex items-center justify-between mx-3">
+          <Button variant="ghost" size="icon" onClick={prevMonth}>
+            <CaretLeft className="h-4 w-4 text-foreground" />
+          </Button>
+          <h2 className="text-lg font-bold capitalize text-foreground">{monthLabel}</h2>
+          <Button variant="ghost" size="icon" onClick={nextMonth}>
+            <CaretRight className="h-4 w-4 text-foreground" />
+          </Button>
+        </div>
 
       {/* Abas */}
       <div className="flex rounded-lg bg-muted p-1 mx-3">

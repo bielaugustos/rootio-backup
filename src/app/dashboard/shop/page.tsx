@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { ShopItem } from '@/types'
 import { getNivel } from '@/lib/io-system'
+import { PageSkeleton } from '@/components/PageSkeleton'
 import {
   ShoppingBag, Lightning, Star, Fire, Shield, Crown,
   Plus, Trash, Eye, Check, User, Palette, Coins, Gift,
@@ -77,11 +78,13 @@ export default function ShopPage() {
   const [inventory, setInventory] = useState<string[]>([])
   const [filter, setFilter] = useState('todos')
   const [search, setSearch] = useState('')
+  const [loading, setLoading] = useState(true)
 
   const nivel = useMemo(() => getNivel(economy.xp_total), [economy.xp_total])
 
   useEffect(() => {
     setInventory(storage<string[]>(KEY_INVENTORY, []))
+    setLoading(false)
   }, [])
 
   const filteredItems = useMemo(() => {
@@ -144,7 +147,7 @@ export default function ShopPage() {
     }
   }
 
-  return (
+  return loading ? <PageSkeleton /> : (
     <div className="p-4 md:p-6 space-y-4 max-w-2xl">
       <Card className="bg-zinc-950 text-white border-zinc-800">
         <CardHeader className="pb-3">

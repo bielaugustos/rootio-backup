@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAppStore, Habit } from '@/store/useAppStore'
 import { toast } from 'sonner'
@@ -15,6 +15,7 @@ import { Separator } from '@/components/ui/separator'
 import { Stepper } from '@/components/ui/stepper'
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { cn } from '@/lib/utils'
+import { PageSkeleton } from '@/components/PageSkeleton'
 
 const PRIORITY_COLORS = {
   alta: {
@@ -57,12 +58,17 @@ export default function HabitsPage() {
   const [pts, setPts] = useState(0)
   const [ptsPage, setPtsPage] = useState(1)
   const [quickAdd, setQuickAdd] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const IO_VALUES = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
   const IO_PER_PAGE = 5
   const totalPtsPages = Math.ceil(IO_VALUES.length / IO_PER_PAGE)
   const quickInputRef = useRef<HTMLInputElement>(null)
   const formInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    setLoading(false)
+  }, [])
 
   const canAdd = plan === 'pro' || habits.length < FREE_LIMIT
   const today = new Date().getDay()
@@ -167,14 +173,14 @@ export default function HabitsPage() {
     setShowForm(false)
   }
 
-  return (
+  return loading ? <PageSkeleton /> : (
     <div className="p-4 md:p-6 space-y-4 max-w-2xl">
       {/* Header */}
       <div className="p-3 pb-0">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-base font-bold tracking-tight">Hábitos</h1>
-            <p className="text-[10px] text-muted-foreground">
+          <h1 className="text-base font-bold tracking-tight text-foreground">Hábitos</h1>
+          <p className="text-[10px] text-muted-foreground">
               {done} de {total} neste momento
             </p>
           </div>
@@ -182,10 +188,10 @@ export default function HabitsPage() {
             <Button
               variant="outline"
               size="sm"
-              className="w-9"
+              className="w-9 text-foreground"
               onClick={() => setShowSearch(!showSearch)}
             >
-              <MagnifyingGlass className="h-4 w-4" />
+              <MagnifyingGlass className="h-4 w-4 text-foreground" />
             </Button>
             <Button
               onClick={openNew}

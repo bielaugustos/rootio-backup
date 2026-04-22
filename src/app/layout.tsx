@@ -4,13 +4,14 @@ import './globals.css'
 import { geist } from './fonts'
 import { ThemeInitializer } from '@/components/ThemeInitializer'
 
+
 export const metadata: Metadata = {
-  title:       'Rootio — Evolução Pessoal com IO',
+  title:       'Rootio • Evolução Pessoal com IO',
   description: 'Sistema de produtividade gamificado. Hábitos, finanças, carreira e bem-estar em um só lugar.',
   manifest:    '/manifest.json',
   icons: {
-    icon: '/logotipoio.png',
-    apple: '/logotipoio.png',
+    icon: '/logoio.png',
+    apple: '/logoio.png',
   },
   openGraph: {
     title:       'Rootio',
@@ -34,20 +35,22 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${geist.variable} min-h-screen bg-nb-bg antialiased font-sans`}>
+
         <ThemeInitializer />
         {children}
         <Toaster
-          position="top-center"
+          position="bottom-center"
           toastOptions={{
             style: {
               background:   '#1c1917',
-              color:        '#f59e0b',
-              border:       '2px solid #1c1917',
-              borderRadius: '6px',
-              fontFamily:   'monospace',
-              fontWeight:   '700',
-              fontSize:     '12px',
-              boxShadow:    '3px 3px 0 #b45309',
+              color:        '#d97706',
+              border:       '1px solid #292524',
+              borderRadius: '4px',
+              fontFamily:   'var(--font-geist), sans-serif',
+              fontWeight:   '500',
+              fontSize:     '13px',
+              padding:    '8px 12px',
+              minWidth:  '200px',
             },
           }}
         />

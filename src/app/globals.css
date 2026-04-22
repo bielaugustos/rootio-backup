@@ -104,11 +104,25 @@
   border-color: #fff;
 }
 
-.dark .nb-header nav a.active {
-  border-color: #fff;
-}
+  .dark .nb-header nav a.active {
+    border-color: #fff;
+  }
 
-/* ─── Base ───────────────────────────────────────────────── */
+  .dark .io-nav-icon {
+    background: hsl(var(--background));
+  }
+  .dark .io-nav-icon.active {
+    background: var(--amber);
+  }
+
+    /* ── Spinner circular ── */
+  .spinner-circle {
+    border-radius: 9999px !important;
+    width: 12px;
+    height: 12px;
+  }
+
+  /* ─── Base ───────────────────────────────────────────────── */
 @layer base {
   * {
     @apply border-border;
@@ -154,6 +168,18 @@
     text-transform: uppercase;
     letter-spacing: .14em;
     color: var(--ink);
+  }
+  .dark .nb-label {
+    color: #fff;
+  }
+  
+  .bg-nb-ink {
+    background: #fef3c7;
+    border: 2px solid var(--amber);
+  }
+  .dark .bg-nb-ink {
+    background: #1f2937;
+    border: 2px solid var(--amber);
   }
   .nb-label-mute { @apply nb-label; color: var(--mute); }
 
@@ -217,17 +243,26 @@
   .nb-ticker {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 3px;
     background: var(--ink);
     color: var(--sun);
-    padding: 6px 12px;
+    padding: 3px 6px;
     font-family: 'Geist Mono', monospace;
     font-weight: 700;
-    font-size: 13px;
+    font-size: 10px;
     border: var(--bw) solid var(--ink);
     box-shadow: var(--sh);
     text-transform: uppercase;
     border-radius: 0;
+    cursor: pointer;
+  }
+  .nb-ticker:hover {
+    transform: translate(-1px,-1px);
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .nb-ticker:active {
+    transform: translate(1px,1px);
+    box-shadow: 1px 1px 0 var(--ink);
   }
   .nb-ticker-amber { @apply nb-ticker; background: var(--amber); color: #fff; }
 
@@ -663,8 +698,7 @@
   .io-dot-red     { @apply nb-dot-coral; }
   .io-nav-item    { @apply flex flex-col items-center gap-0.5 cursor-pointer; }
   .io-nav-icon    {
-    width: 36px; height: 36px;
-    border: var(--bw) solid var(--ink);
+    width: 40px; height: 40px;
     display: flex; align-items: center; justify-content: center;
     background: #fff;
     transition: background .1s;

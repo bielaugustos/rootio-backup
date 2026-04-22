@@ -1,11 +1,12 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAppStore } from '@/store/useAppStore'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Heart, ChatCircle, ShareNetwork, Plus, X } from '@phosphor-icons/react'
 import { FeedPost } from '@/types'
+import { PageSkeleton } from '@/components/PageSkeleton'
 
 const MOCK: FeedPost[] = [
   { id:'1',user_id:'u1',username:'ana.conectora',avatar:'🦅',
@@ -35,7 +36,12 @@ export default function FeedPage() {
   const [compose, setCompose] = useState(false)
   const [draft, setDraft]   = useState('')
   const [filter, setFilter] = useState('Tudo')
+  const [loading, setLoading] = useState(true)
   const FILTERS = ['Tudo','Hábitos','Finanças','Carreira']
+
+  useEffect(() => {
+    setLoading(false)
+  }, [])
 
   function toggleLike(id: string) {
     setPosts(ps => ps.map(p => p.id===id ? {...p,liked:!p.liked,likes:p.liked?p.likes-1:p.likes+1} : p))
@@ -48,13 +54,13 @@ export default function FeedPage() {
 
   const filtered = filter==='Tudo' ? posts : posts.filter(p => p.tags.some(t => t.includes(filter)))
 
-  return (
+  return loading ? <PageSkeleton /> : (
     <div className="max-w-2xl mx-auto p-4 md:p-6">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h2 className="text-2xl font-bold">Feed</h2>
-          <p className="text-sm text-muted-foreground">Comunidade Rootio</p>
-        </div>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-2xl font-bold text-foreground">Feed</h2>
+            <p className="text-sm text-muted-foreground dark:text-white/50">Comunidade Rootio</p>
+          </div>
         <Button onClick={() => setCompose(true)} className="gap-1.5">
           <Plus size={14}/> Publicar
         </Button>
@@ -64,7 +70,7 @@ export default function FeedPage() {
       <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
         {FILTERS.map(f => (
           <Button key={f} variant={filter===f?'default':'outline'} size="sm"
-            onClick={() => setFilter(f)} className="rounded-full whitespace-nowrap">
+            onClick={() => setFilter(f)} className="rounded-full whitespace-nowrap text-foreground">
             {f}
           </Button>
         ))}
@@ -76,7 +82,7 @@ export default function FeedPage() {
           <Card className="w-full max-w-lg animate-slide-in-up">
             <CardContent className="p-5 space-y-4">
               <div className="flex items-center justify-between">
-                <p className="font-semibold">Nova publicação</p>
+                <p className="font-semibold text-foreground">Nova publicação</p>
                 <Button variant="ghost" size="icon" onClick={() => setCompose(false)}><X size={16}/></Button>
               </div>
               <div className="flex gap-3">
@@ -103,10 +109,10 @@ export default function FeedPage() {
               <div className="w-10 h-10 rounded-full bg-amber-100 border-2 border-amber-200 flex items-center justify-center text-base flex-shrink-0">{post.avatar}</div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-sm font-semibold">{post.username}</span>
+                  <span className="text-sm font-semibold text-foreground">{post.username}</span>
                   <span className="text-xs text-muted-foreground">{timeAgo(post.created_at)}</span>
                 </div>
-                <p className="text-sm leading-relaxed mb-2">{post.content}</p>
+                <p className="text-sm leading-relaxed mb-2 text-foreground">{post.content}</p>
                 {post.tags.length>0 && (
                   <div className="flex flex-wrap gap-1.5 mb-3">
                     {post.tags.map(tag => (

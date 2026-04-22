@@ -13,6 +13,7 @@ import { Progress } from '@/components/ui/progress'
 import { Switch } from '@/components/ui/switch'
 import { Separator } from '@/components/ui/separator'
 import { Label } from '@/components/ui/label'
+import { PageSkeleton } from '@/components/PageSkeleton'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -59,6 +60,7 @@ export default function AjustesPage() {
   const [selectedBgColor, setSelectedBgColor] = useState(bgColor || '#fef3c7')
   const [inventory, setInventory] = useState<string[]>([])
   const [themePage, setThemePage] = useState(1)
+  const [loading, setLoading] = useState(true)
 
   const THEMES_PER_PAGE = 5
   const THEME_LIST = [
@@ -73,6 +75,7 @@ export default function AjustesPage() {
   useEffect(() => {
     const inv = storage<string[]>(KEY_INVENTORY, [])
     setInventory(inv)
+    setLoading(false)
   }, [])
 
   useEffect(() => {
@@ -94,10 +97,10 @@ export default function AjustesPage() {
     router.push('/auth')
   }
 
-  return (
+  return loading ? <PageSkeleton /> : (
     <div className="p-4 md:p-6 max-w-xl space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">Ajustes</h2>
+        <h2 className="text-2xl font-bold text-foreground">Ajustes</h2>
         <p className="text-sm text-muted-foreground">Conta, aparência e preferências</p>
       </div>
 
@@ -245,6 +248,11 @@ export default function AjustesPage() {
               onClick={() => window.open(WA_URL, '_blank')}>
               <Crown size={14} weight="fill" />
               Ativar Pro via WhatsApp
+            </Button>
+            <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white gap-2 mt-2"
+              onClick={() => window.open('https://buy.stripe.com/cNi3cufptc2t8AhgWf6g802', '_blank')}>
+              <Crown size={14} weight="fill" />
+              Ativar Pro via Stripe
             </Button>
           </CardContent>
         </Card>
@@ -475,58 +483,6 @@ export default function AjustesPage() {
         </AlertDialog>
       </div>
 
-      {/* Espaço extra no final */}
-      <div className="h-4" />
-
-      {/* ─── Plano ───────────────────────────────────────────── */}
-      <div id="plano">
-        {plan !== 'pro' ? (
-          <Card className="bg-zinc-950 border-zinc-800 text-white overflow-hidden">
-            <CardContent className="p-5">
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <Crown size={16} className="text-amber-400" />
-                    <p className="font-bold text-amber-400">Pro vitalício</p>
-                  </div>
-                  <p className="text-2xl font-bold text-white">R$ 12,90</p>
-                  <p className="text-xs text-zinc-400">pagamento único · sem mensalidade</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 mb-4">
-                {[
-                  'Hábitos ilimitados',
-                  'Sync entre dispositivos',
-                  'Todos os temas',
-                  'Acesso vitalício',
-                  'IA em breve',
-                  'Suporte prioritário',
-                ].map(f => (
-                  <div key={f} className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0">
-                      <span className="text-[7px] font-bold text-white">✓</span>
-                    </div>
-                    <span className="text-xs text-zinc-300">{f}</span>
-                  </div>
-                ))}
-              </div>
-              <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white gap-2"
-                onClick={() => window.open(WA_URL, '_blank')}>
-                <Crown size={14} weight="fill" />
-                Ativar Pro via WhatsApp
-              </Button>
-            </CardContent>
-          </Card>
-        ) : (
-          <Card className="border-amber-200 bg-amber-50">
-            <CardContent className="p-5 text-center">
-              <Crown size={32} className="text-amber-500 mx-auto mb-2" />
-              <p className="font-bold text-amber-700">Pro Ativo</p>
-              <p className="text-xs text-amber-600">Obrigado pelo suporte!</p>
-            </CardContent>
-          </Card>
-        )}
-      </div>
     </div>
   )
 }

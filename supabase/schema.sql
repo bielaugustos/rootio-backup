@@ -179,12 +179,13 @@ alter table public.life_projects   enable row level security;
 alter table public.journal         enable row level security;
 alter table public.finance_config  enable row level security;
 
--- Políticas: usuário só acessa/modifica os próprios registros
+  -- Políticas: usuário só acessa/modifica os próprios registros
+  -- Nota: profiles é tratado separadamente pois usa 'id' em vez de 'user_id'
 do $$
 declare
   tbl text;
   tables text[] := array[
-    'profiles','habits','habit_history','transactions',
+    'habits','habit_history','transactions',
     'financial_goals','emergency_fund','career_readings',
     'career_goals','career_projects','life_projects',
     'journal','finance_config'

@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { storage } from '@/lib/utils'
+import { LoadingScreen } from '@/components/LoadingScreen'
 
 export default function RootPage() {
   const router = useRouter()
@@ -20,7 +21,7 @@ export default function RootPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-nb-bg">
-      <div className="nb-ticker text-sm animate-pulse">/root</div>
+      <LoadingScreen />
     </div>
   )
 }

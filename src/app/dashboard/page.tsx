@@ -10,17 +10,19 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
+import { PageSkeleton } from '@/components/PageSkeleton'
 import {
   Lightning, ArrowRight, CheckSquare, Trophy,
   Coins, TrendUp, CaretRight, Lock, Star,
   Play, Plus, ChartLineUp, Check, CalendarBlank, Lightbulb, BookOpen, Globe,
-} from '@phosphor-icons/react'
+  } from '@phosphor-icons/react'
 
 const PRI_COLORS: Record<string, string> = { alta:'bg-red-500', media:'bg-amber-500', baixa:'bg-green-500' }
 
 export default function HojePage() {
   const { habits, economy, toggleHabit, plan } = useAppStore()
   const [expandExtra, setExpandExtra] = useState(true)
+  const [loading, setLoading] = useState(true)
   const nivel    = getNivel(economy.xp_total)
   const pctNivel = getProgresso(economy.xp_total)
   const today    = new Date().getDay()
@@ -37,6 +39,7 @@ export default function HojePage() {
   
   useEffect(() => {
     setLearns(storage<any[]>('io_career_learns', []))
+    setLoading(false)
   }, [])
   
   function advanceLearnStatus(id: number) {
@@ -51,14 +54,14 @@ export default function HojePage() {
     saveStorage('io_career_learns', lista)
   }
 
-  return (
+  return loading ? <PageSkeleton /> : (
     <div className="p-4 md:p-6 space-y-4 max-w-2xl">
       {/* Header com saudação */}
       <div className="p-3 pb-0">
-        <div className="font-bold text-base">
+        <div className="font-bold text-base text-foreground">
           O que fazer agora?
         </div>
-        <div className="text-[10px] text-nb-gray">
+        <div className="text-[10px] text-muted-foreground">
           {new Date().toLocaleDateString('pt-BR', {
             weekday: 'long', day: 'numeric', month: 'long'
           })}
@@ -174,7 +177,7 @@ export default function HojePage() {
       <div className="mx-3 mt-3">
         <button
           onClick={() => setExpandExtra(!expandExtra)}
-          className="flex items-center gap-2 text-xs text-nb-gray hover:text-nb-ink transition-colors"
+          className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
           <CaretRight size={12} className={`transition-transform ${expandExtra ? 'rotate-90' : ''}`} />
           {expandExtra ? 'Ocultar extras' : 'Mostrar extras'}
@@ -303,14 +306,14 @@ export default function HojePage() {
                   const hasActivity = false
                   return (
                     <div key={day} className="flex flex-col items-center gap-1.5">
-                      <div className={`w-8 h-8 border-2 border-nb-ink rounded-nb-sm flex items-center justify-center
+<div className={`w-8 h-8 border-2 border-nb-ink rounded-nb-sm flex items-center justify-center
                             font-mono text-[10px] font-bold transition-colors
                             ${isToday    ? 'bg-nb-ink text-nb-amber'
                             : hasActivity ? 'bg-nb-amberl text-nb-amberd'
-                            : 'bg-white text-nb-gray'}`}>
-                        {isToday ? <Lightning size={12} weight="fill" className="text-nb-amber" /> : day[0]}
-                      </div>
-                      <span className={`text-[8px] font-mono ${isToday ? 'font-bold text-nb-ink' : 'text-nb-gray'}`}>
+                            : 'bg-background text-muted-foreground dark:bg-stone-800'}`}>
+                          {isToday ? <Lightning size={12} weight="fill" className="text-nb-amber" /> : day[0]}
+                        </div>
+                        <span className={`text-[8px] font-mono ${isToday ? 'font-bold text-foreground' : 'text-muted-foreground'}`}>
                         {day}
                       </span>
                     </div>
@@ -354,7 +357,6 @@ export default function HojePage() {
           )}
         </CardContent>
       </Card>
-
     </div>
   )
 }

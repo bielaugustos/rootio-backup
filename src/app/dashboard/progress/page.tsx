@@ -8,6 +8,7 @@ import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { PageSkeleton } from '@/components/PageSkeleton'
 import {
   Trophy, Lightning, Fire, Star, Lock,
   CheckCircle, Target, Calendar, ChartLineUp,
@@ -140,6 +141,7 @@ export default function ProgressPage() {
 
   const [challenges, setChallenges] = useState<Challenge[]>([])
   const [ioHistory, setIoHistory] = useState<IOEvent[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const stored = storage<Challenge[]>(KEY_CHALLENGES, [])
@@ -161,6 +163,7 @@ export default function ProgressPage() {
   useEffect(() => {
     const stored = storage<IOEvent[]>(KEY_HISTORY, [])
     setIoHistory(stored)
+    setLoading(false)
   }, [])
 
   const STATS = [
@@ -180,13 +183,13 @@ export default function ProgressPage() {
 
   const sortedDates = Object.keys(grouped).sort((a, b) => b.localeCompare(a))
 
-  return (
+  return loading ? <PageSkeleton /> : (
     <div className="p-4 md:p-6 space-y-4 max-w-2xl">
       <Tabs defaultValue="nivel" className="w-full">
         <TabsList className="w-full grid grid-cols-3">
-          <TabsTrigger value="nivel">Nível</TabsTrigger>
-          <TabsTrigger value="desafios">Desafios</TabsTrigger>
-          <TabsTrigger value="historico">Histórico</TabsTrigger>
+          <TabsTrigger value="nivel" className="text-foreground">Nível</TabsTrigger>
+          <TabsTrigger value="desafios" className="text-foreground">Desafios</TabsTrigger>
+          <TabsTrigger value="historico" className="text-foreground">Histórico</TabsTrigger>
         </TabsList>
 
         <TabsContent value="nivel" className="space-y-4 mt-4">
@@ -202,7 +205,7 @@ export default function ProgressPage() {
                 </div>
                 <div className="flex-1">
                   <p className="text-[10px] text-zinc-400 uppercase tracking-widest mb-1">Título atual</p>
-                  <h2 className="text-lg font-bold text-white mb-2">{nivel.titulo}</h2>
+                  <h2 className="text-lg font-bold text-foreground mb-2">{nivel.titulo}</h2>
                   <Progress value={pct} className="h-1.5 bg-zinc-800 mb-1" />
                   <div className="flex justify-between text-[10px] text-zinc-400 font-mono">
                     <span>{economy.xp_total} XP</span>
@@ -263,7 +266,7 @@ export default function ProgressPage() {
           {/* Unlocks */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm">Desbloqueios</CardTitle>
+              <CardTitle className="text-sm text-foreground">Desbloqueios</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               {DESBLOQUEIOS.map(({ nivel: n, items }) => {
@@ -298,7 +301,7 @@ export default function ProgressPage() {
           {/* Achievements */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm flex items-center gap-2">
+              <CardTitle className="text-sm flex items-center gap-2 text-foreground">
                 <Medal size={15} className="text-amber-500" />
                 Conquistas
               </CardTitle>
@@ -347,7 +350,7 @@ export default function ProgressPage() {
         <TabsContent value="desafios" className="space-y-6 mt-4">
           {['semanal', 'mensal'].map(type => (
             <div key={type}>
-              <p className="text-sm font-semibold mb-3">
+              <p className="text-sm font-semibold mb-3 text-foreground">
                 Desafios {type === 'semanal' ? 'da semana' : 'do mês'}
               </p>
               <div className="space-y-3">

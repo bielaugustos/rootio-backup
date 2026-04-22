@@ -1,7 +1,6 @@
 'use client'
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
-import dynamic from 'next/dynamic'
 import { storage, saveStorage, todayISO } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
@@ -11,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { PageSkeleton } from '@/components/PageSkeleton'
 import {
   Briefcase, GraduationCap, Star, Shield,
   Plus, Trash, PencilSimple, FileText,
@@ -99,13 +99,14 @@ function gerarObjetivo(momento: string, cargo: string, area: string): string {
   return t[momento] || t['nao-sei']
 }
 
-function CareerPageContent() {
+export default function CareerPage() {
   const [onboarding, setOnboarding] = useState<CareerOnboarding>(ONBOARDING_VAZIO)
   const [etapa, setEtapa] = useState(0)
   const [learns, setLearns] = useState<CareerLearn[]>([])
   const [skills, setSkills] = useState<CareerSkill[]>([])
   const [showAddLearn, setShowAddLearn] = useState(false)
   const [showAddSkill, setShowAddSkill] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [novaLearn, setNovaLearn] = useState({
     title: '',
     type: 'Curso' as const,
@@ -123,11 +124,12 @@ function CareerPageContent() {
     setOnboarding(storage<CareerOnboarding>(KEY_ONBOARDING, ONBOARDING_VAZIO))
     setLearns(storage<CareerLearn[]>(KEY_LEARNS, []))
     setSkills(storage<CareerSkill[]>(KEY_SKILLS, []))
+    setLoading(false)
     
     if (tabParam === 'aprendizado') {
       setShowAddLearn(true)
     }
-  }, [tabParam])
+  }, [])
 
   useEffect(() => {
     if (onboarding.momento && onboarding.area && onboarding.cargo) {
@@ -244,7 +246,7 @@ function CareerPageContent() {
 
   const sugestoesFiltradas = SUGESTOES.filter(s => !skills.find(skill => skill.name === s))
 
-  return (
+  return loading ? <PageSkeleton /> : (
     <div className="p-4 md:p-6 space-y-4 max-w-2xl">
       <Tabs defaultValue={tabParam || 'agente'} className="w-full">
         <TabsList className="w-full grid grid-cols-3">
@@ -416,7 +418,7 @@ function CareerPageContent() {
 
         <TabsContent value="aprendizado" className="space-y-4 mt-4">
           <div className="flex justify-between items-center">
-            <h3 className="font-semibold">Conteúdos ({learns.length})</h3>
+              <h3 className="font-semibold text-foreground">Conteúdos ({learns.length})</h3>
             <Button size="sm" onClick={() => setShowAddLearn(true)}>
               <Plus className="h-4 w-4 mr-1" /> Adicionar
             </Button>
@@ -542,9 +544,9 @@ function CareerPageContent() {
           )}
         </TabsContent>
 
-        <TabsContent value="habilidades" className="space-y-4 mt-4">
-          <div className="flex justify-between items-center">
-            <h3 className="font-semibold">Habilidades ({skills.length})</h3>
+          <TabsContent value="habilidades" className="space-y-4 mt-4">
+            <div className="flex justify-between items-center">
+              <h3 className="font-semibold text-foreground">Habilidades ({skills.length})</h3>
             <Button size="sm" onClick={() => setShowAddSkill(true)}>
               <Plus className="h-4 w-4 mr-1" /> Adicionar
             </Button>
@@ -618,13 +620,5 @@ function CareerPageContent() {
         </TabsContent>
       </Tabs>
     </div>
-  )
-}
-
-export default function CareerPage() {
-  return (
-    <Suspense fallback={null}>
-      <CareerPageContent />
-    </Suspense>
   )
 }
