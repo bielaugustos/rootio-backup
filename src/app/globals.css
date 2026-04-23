@@ -104,25 +104,29 @@
   border-color: #fff;
 }
 
-  .dark .nb-header nav a.active {
+.dark .nb-header nav a.active {
     border-color: #fff;
   }
 
-  .dark .io-nav-icon {
+  .dark button[data-sidebar="trigger"] {
+    color: #fff;
+  }
+
+    .dark .io-nav-icon {
     background: hsl(var(--background));
   }
   .dark .io-nav-icon.active {
     background: var(--amber);
   }
 
-    /* ── Spinner circular ── */
+  /* ── Spinner circular ── */
   .spinner-circle {
     border-radius: 9999px !important;
     width: 12px;
     height: 12px;
   }
 
-  /* ─── Base ───────────────────────────────────────────────── */
+  /* ─── Base ───────────────────────────────────────── */
 @layer base {
   * {
     @apply border-border;
@@ -166,7 +170,7 @@
   }
 }
 
-/* ─── Neobrutalism components ─────────────────────────────── */
+/* ─── Neobrutalism components ─────────────────────── */
 @layer components {
 
   /* ── Typography ── */
@@ -230,8 +234,9 @@
   .nb-btn-primary { @apply nb-btn; background: var(--amber); color: #fff; }
   .nb-btn-ink     { @apply nb-btn; background: var(--ink);   color: #fff; }
   .nb-btn-ghost   { @apply nb-btn; background: #fff; }
-  .nb-btn-danger  { @apply nb-btn; background: var(--coral);  color: #fff; }
-  .nb-btn-violet  { @apply nb-btn; background: var(--violet); color: #fff; }
+  .nb-btn-amber   { @apply nb-btn; background: var(--amber); color: #fff; }
+  .nb-btn-danger  { @apply nb-btn; background: var(--coral); color: #fff; }
+  .nb-btn-violet { @apply nb-btn; background: var(--violet); color: #fff; }
   .nb-btn-grass   { @apply nb-btn; background: var(--grass); }
   .nb-btn-sm      { padding: 6px 10px; font-size: 12px; }
   .nb-btn-lg      { padding: 14px 22px; font-size: 16px; }
@@ -278,11 +283,11 @@
   }
   .nb-ticker:hover {
     transform: translate(-1px,-1px);
-    box-shadow: 3px 3px 0 var(--ink);
+    box-shadow: 3px 3px 0 0 var(--ink);
   }
   .nb-ticker:active {
     transform: translate(1px,1px);
-    box-shadow: 1px 1px 0 var(--ink);
+    box-shadow: 1px 1px 0 0 var(--ink);
   }
   .nb-ticker-amber { @apply nb-ticker; background: var(--amber); color: #fff; }
 
@@ -303,7 +308,7 @@
   }
   .nb-tag-amber  { @apply nb-tag; background: var(--amber-soft); }
   .nb-tag-grass  { @apply nb-tag; background: var(--grass); }
-  .nb-tag-coral  { @apply nb-tag; background: var(--coral);  color: #fff; }
+  .nb-tag-coral  { @apply nb-tag; background: var(--coral); color: #fff; }
   .nb-tag-violet { @apply nb-tag; background: var(--violet); color: #fff; }
   .nb-tag-sky    { @apply nb-tag; background: var(--sky); }
   .nb-tag-sun    { @apply nb-tag; background: var(--sun); }
@@ -318,9 +323,9 @@
     border-radius: 0;
     flex-shrink: 0;
   }
-  .nb-dot-amber  { @apply nb-dot; background: var(--amber);  border-color: var(--amber-deep); }
-  .nb-dot-grass  { @apply nb-dot; background: var(--grass);  border-color: #3a9e37; }
-  .nb-dot-coral  { @apply nb-dot; background: var(--coral);  border-color: #c94040; }
+  .nb-dot-amber  { @apply nb-dot; background: var(--amber); border-color: var(--amber-deep); }
+  .nb-dot-grass { @apply nb-dot; background: var(--grass); border-color: #3a9e37; }
+  .nb-dot-coral  { @apply nb-dot; background: var(--coral); border-color: #c94040; }
   .nb-dot-sky    { @apply nb-dot; background: var(--sky);    border-color: #3a82c9; }
   .nb-dot-violet { @apply nb-dot; background: var(--violet); border-color: #6a4dbf; }
   .nb-dot-sun    { @apply nb-dot; background: var(--sun);    border-color: #c9930b; }
@@ -376,7 +381,7 @@
     display: inline-flex; align-items: center; justify-content: center;
     background: #fff;
     border: var(--bw) solid var(--ink);
-    box-shadow: 2px 2px 0 0 var(--ink);
+    box-shadow: var(--sh);
     cursor: pointer;
     flex-shrink: 0;
     border-radius: 0;
@@ -401,7 +406,7 @@
     background: var(--amber);
     background-image: repeating-linear-gradient(
       -45deg,
-      rgba(0,0,0,.18) 0 5px,
+      --var(--sun) 0 5px,
       transparent 5px 10px
     );
     border-right: var(--bw) solid var(--ink);
@@ -409,7 +414,7 @@
   .nb-prog-grass  { @apply nb-prog; }
   .nb-prog-grass i  { background: var(--grass); background-image: repeating-linear-gradient(-45deg, rgba(0,0,0,.15) 0 5px, transparent 5px 10px); }
   .nb-prog-violet { @apply nb-prog; }
-  .nb-prog-violet i { background: var(--violet); background-image: repeating-linear-gradient(-45deg, rgba(0,0,0,.18) 0 5px, transparent 5px 10px); }
+  .nb-prog-violet i  { background: var(--violet); background-image: repeating-linear-gradient(-45deg, rgba(0,0,0,.18) 0 5px, transparent 5px 10px); }
 
   /* ── Stamp (decorativo — conquistas, recompensas) ── */
   .nb-stamp {
@@ -427,7 +432,7 @@
     border-radius: 0;
   }
   .nb-stamp-amber  { @apply nb-stamp; background: var(--amber); color: #fff; }
-  .nb-stamp-grass  { @apply nb-stamp; background: var(--grass); color: var(--ink); }
+  .nb-stamp-grass { @apply nb-stamp; background: var(--grass); color: var(--ink); }
   .nb-stamp-violet { @apply nb-stamp; background: var(--violet); color: #fff; }
   .nb-stamp-ink    { @apply nb-stamp; background: var(--ink); color: var(--sun); }
 
@@ -552,7 +557,9 @@
   .nb-lvl-badge .b2 { font-size: 42px; line-height: .9; }
 
   /* ── Week strip ── */
-  .nb-week { display: flex; justify-content: space-between; gap: 6px; width: 100%; }
+  .nb-week {
+    display: flex; justify-content: space-between; gap: 20px; width: 100%;
+  }
   .nb-week-day {
     flex: 1 1 0; min-width: 0;
     aspect-ratio: 1 / 1.1;
@@ -568,6 +575,85 @@
   .nb-week-day .n { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; margin-top: 2px; }
   .nb-week-day.done  { background: var(--grass); }
   .nb-week-day.today { background: var(--amber); color: #fff; box-shadow: 3px 3px 0 0 var(--ink); }
+
+  /* ── Week calendar (spec-body, week, day) ── */
+  .spec-body {
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    min-height: 80px;
+    position: relative;
+    background: #fff;
+    margin-left: -12px;
+  }
+  .spec-body.stretch {
+    align-items: stretch;
+
+  }
+  .week {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+  }
+  .day {
+    flex: 1 1 0;
+    min-width: 0;
+    aspect-ratio: 1 / 1.1;
+    background: #fff;
+    border: var(--bw) solid var(--ink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 0;
+  }
+  .day .d {
+    font-size: 14px;
+    font-family: 'Geist', sans-serif;
+    font-weight: 900;
+  }
+  .day .n {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    margin-top: 2px;
+  }
+  .day.done {
+    background: var(--grass);
+  }
+  .day.today {
+    background: var(--amber);
+    color: #fff;
+    box-shadow: 3px 3px 0 0 var(--ink);
+  }
+
+  /* ── Dark mode styles for week calendar ── */
+  .dark .spec-body {
+    background: transparent;
+  }
+  .dark .day {
+    background: hsl(var(--card));
+    border-color: #fff;
+    color: #fff;
+  }
+  .dark .day.done {
+    background: #22c55e;
+    border-color: #16a34a;
+  }
+  .dark .day.today {
+    background: #f59e0b;
+    border-color: #d97706;
+    color: #fff;
+    box-shadow: 3px 3px 0 0 #fff;
+  }
+  .dark .day .d,
+  .dark .day .n {
+    color: #fff;
+  }
 
   /* ── Header / Nav ── */
   .nb-header {
@@ -591,7 +677,8 @@
   .nb-header nav { display: flex; gap: 2px; margin-left: 6px; }
   .nb-header nav a {
     padding: 6px 10px;
-    font-weight: 700; font-size: 13px;
+    font-weight: 700;
+    font-size: 13px;
     border: 2px solid transparent;
     cursor: pointer;
     font-family: 'Geist Mono', monospace;
@@ -601,7 +688,7 @@
     transition: background .1s, border-color .1s;
   }
   .nb-header nav a.active { border-color: var(--ink); background: var(--amber); color: #fff; }
-  .nb-header nav a:hover  { border-color: var(--ink); background: var(--sun); }
+  .nb-header nav a:hover { border-color: var(--ink); background: var(--sun); }
 
   /* ── Bottom tabs (mobile) ── */
   .nb-tabs {
@@ -615,7 +702,8 @@
   .nb-tabs a {
     flex: 1;
     display: flex; flex-direction: column;
-    align-items: center; gap: 2px;
+    align-items: center;
+    gap: 2px;
     padding: 8px 4px;
     font-family: 'Geist Mono', monospace;
     font-size: 10px;
@@ -738,10 +826,10 @@
     border-radius: 0;
   }
   .io-chest-btn:hover  { background: var(--sun); }
-  .io-chest-btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--ink); }
+  .io-chest-btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 0 var(--ink); }
 }
 
-/* ─── Utilitários Tailwind extras ─────────────────────────── */
+/* ─── Utilitários Tailwind extras ─────────────────── */
 @layer utilities {
   .font-display { font-family: 'Geist', sans-serif; font-weight: 900; }
   .font-mono    { font-family: 'Geist Mono', monospace; }

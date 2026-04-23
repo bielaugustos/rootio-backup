@@ -17,11 +17,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <SidebarProvider defaultOpen={false}>
       <DashboardSidebar />
       <SidebarInset>
-        <header className="flex h-14 shrink-0 items-center gap-2 border-b">
+        <header className="flex h-14 shrink-0 items-center gap-2 border-b text-foreground">
           <div className="flex items-center gap-2 px-4 flex-1">
-            <SidebarTrigger className="-ml-1" />
+            <SidebarTrigger className="-ml-1 text-foreground" />
             <div className="flex items-center gap-2">
-              <div className="hidden sm:block text-sm font-semibold">
+              <div className="hidden sm:block text-sm font-semibold text-foreground">
                 IO Dashboard
               </div>
             </div>
@@ -30,7 +30,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <Link href="/dashboard/progress">
               <div className="io-ticker"><Lightning size={8} weight="fill" />{economy.saldo_io} IO</div>
             </Link>
-            <Button variant="ghost" size="icon" className="relative">
+            <Button variant="ghost" size="icon" className="relative text-foreground">
               <Bell size={16} />
             </Button>
             <Link href="/dashboard/profile">

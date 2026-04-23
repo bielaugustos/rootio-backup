@@ -10,8 +10,8 @@ export const metadata: Metadata = {
   description: 'Sistema de produtividade gamificado. Hábitos, finanças, carreira e bem-estar em um só lugar.',
   manifest:    '/manifest.json',
   icons: {
-    icon: '/logoio.png',
-    apple: '/logoio.png',
+    icon: '/logo.svg',
+    apple: '/logo.svg',
   },
   openGraph: {
     title:       'Rootio',

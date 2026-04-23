@@ -15,13 +15,13 @@ import {
   Lightning, ArrowRight, CheckSquare, Trophy,
   Coins, TrendUp, CaretRight, Lock, Star,
   Play, Plus, ChartLineUp, Check, CalendarBlank, Lightbulb, BookOpen, Globe,
-  } from '@phosphor-icons/react'
+} from '@phosphor-icons/react'
 
 const PRI_COLORS: Record<string, string> = { alta:'bg-red-500', media:'bg-amber-500', baixa:'bg-green-500' }
 
 export default function HojePage() {
-  const { habits, economy, toggleHabit, plan } = useAppStore()
-  const [expandExtra, setExpandExtra] = useState(true)
+  const { habits, economy, toggleHabit, plan, history } = useAppStore()
+  const [expandExtra, setExpandExtra] = useState(false)
   const [loading, setLoading] = useState(true)
   const nivel    = getNivel(economy.xp_total)
   const pctNivel = getProgresso(economy.xp_total)
@@ -55,7 +55,7 @@ export default function HojePage() {
   }
 
   return loading ? <PageSkeleton /> : (
-    <div className="p-4 md:p-6 space-y-4 max-w-2xl">
+    <div className="p-4 md:p-6 space-y-8 max-w-2xl">
       {/* Header com saudação */}
       <div className="p-3 pb-0">
         <div className="font-bold text-base text-foreground">
@@ -81,59 +81,59 @@ export default function HojePage() {
 
         if (!next) {
           return (
-            <div className="nb-card-dark mx-3 mt-3 p-4">
-              <div className="text-[9px] text-white/40 uppercase tracking-widest mb-2">
+            <div className="nb-card mx-3 mt-3 p-4">
+              <div className="text-[9px] text-black/40 uppercase tracking-widest mb-2">
                 ✓ tudo concluído
               </div>
-              <div className="text-lg font-bold text-white mb-1">
+              <div className="text-lg font-bold text-black mb-1">
                 Dia Produtivo!
               </div>
-              <div className="text-sm text-white/45 mb-4">
+              <div className="text-sm text-black/45 mb-4">
                 100% dos hábitos realizados hoje
               </div>
-              <a href="/dashboard/progress"
+              <Link href="/dashboard/habits"
                 className="nb-btn nb-btn-amber py-2.5 w-full flex items-center justify-between px-4 no-underline">
-                <span>Ver detalhes</span>
+                <span>Ver hábitos</span>
                 <ArrowRight size={14} />
-              </a>
+              </Link>
             </div>
           )
         }
 
         if (habits.length === 0) {
           return (
-            <div className="nb-card-dark mx-3 mt-3 p-4 text-center">
+            <div className="nb-card mx-3 mt-3 p-4 text-center">
               <div className="text-nb-amber font-bold mb-2">
                 Sem hábitos ainda
               </div>
-              <div className="text-white/45 text-xs mb-4">
+              <div className="text-black/45 text-xs mb-4">
                 Crie seu primeiro hábito para começar
               </div>
-              <a href="/dashboard/habits"
+              <Link href="/dashboard/habits"
                 className="nb-btn nb-btn-amber py-2.5 px-6 inline-flex items-center gap-2 no-underline">
                 <Plus size={12} weight="bold" /> Criar hábito
-              </a>
+              </Link>
             </div>
           )
         }
 
         return (
-          <div className="nb-card-dark mx-3 mt-3 p-4">
-            <div className="text-[9px] text-white/40 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+          <div className="nb-card mx-3 mt-3 p-4">
+            <div className="text-[9px] text-black/40 uppercase tracking-widest mb-2 flex items-center gap-1.5">
               <Play size={9} weight="fill" className="text-nb-amber" />
               próxima ação
             </div>
-            <div className="text-lg font-bold text-white mb-1 leading-tight">
+            <div className="text-lg font-bold text-black mb-1 leading-tight">
               {next.name}
             </div>
-            <div className="text-xs text-white/45 mb-4">
+            <div className="text-xs text-black/45 mb-4">
               {next.priority === 'alta' ? 'Alta' : next.priority === 'media' ? 'Média' : 'Baixa'} prioridade
               {next.freq && ` · ${next.freq === 'diario' ? 'Hábito diário' : next.freq}`}
             </div>
             <button
               onClick={() => toggleHabit(next.id)}
               className="nb-btn nb-btn-amber py-2.5 w-full flex items-center justify-between px-4">
-              <span>Concluir agora</span>
+              <span>Concluir o hábito</span>
               <ArrowRight size={14} />
             </button>
           </div>
@@ -141,7 +141,7 @@ export default function HojePage() {
       })()}
 
       {/* Card de progresso do dia — Hoje */}
-      <Card className="mx-3 mt-3">
+      <Card className="mx-3 mt-3 border-black shadow-[4px_4px_0_0_#000]">
         <CardContent className="p-3">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-1.5">
@@ -152,26 +152,39 @@ export default function HojePage() {
         </div>
 
         <div className="flex items-center gap-1.5 mb-3">
-          {habits.slice(0,5).map((h, i) => (
-            <div key={h.id}
-              className={`w-5 h-5 border-2 border-nb-ink rounded-[3px] flex items-center justify-center
-                ${h.done ? 'bg-nb-amber' : 'bg-white'}`}>
-              {h.done && <Check size={10} weight="bold" />}
-            </div>
-          ))}
-          {habits.length > 5 && (
-            <span className="text-[10px] font-base text-nb-gray">+{habits.length - 5}</span>
-          )}
-          <span className="text-xs font-bold font-base ml-1">
-            {done.length} / {habits.length} hábitos
-          </span>
-        </div>
+           {habits.slice(0,5).map((h, i) => (
+             <div
+               key={h.id}
+               className={cn(
+                 'w-[22px] h-[22px] inline-flex items-center justify-center',
+                 'bg-white border-2 border-black shadow-[2px_2px_0_0_#000]',
+                 'rounded-none flex-shrink-0',
+                 h.done && 'bg-amber-500'
+               )}
+             >
+               {h.done && <Check className="h-4 w-4 text-black" />}
+             </div>
+           ))}
+           {habits.length > 5 && (
+             <span className="text-[10px] font-base text-nb-gray">+{habits.length - 5}</span>
+           )}
+           <span className="text-xs font-bold font-base ml-1">
+             {done.length} / {habits.length} hábitos
+           </span>
+         </div>
 
-        <div className="nb-progress-bar">
-          <div className="nb-progress-fill" style={{ width: `${pct}%` }} />
-        </div>
-      </CardContent>
-      </Card>
+         <div className="h-[18px] bg-white border-4 border-[#111111] relative overflow-hidden shadow-[2px 2px 0 0 #000] rounded-none">
+           <div
+             className="h-full bg-amber-500"
+             style={{
+               width: `${pct}%`,
+               backgroundImage: 'repeating-linear-gradient(-45deg, rgba(0,0,0,0.18) 0 5px, transparent 5px 10px)',
+               borderRight: '2px solid #000'
+             }}
+           />
+         </div>
+              </CardContent>
+            </Card>
 
       {/* Botão para expandir/ocultar cards extras */}
       <div className="mx-3 mt-3">
@@ -187,111 +200,67 @@ export default function HojePage() {
       {expandExtra && (
         <>
 
-      {/* Card de Aprendizados — Carreira */}
-          {(() => {
-            const homeReady = learns.filter(l => l.showOnHome === true).slice(0, 1)
-            if (!homeReady.length) {
-              return (
-                <div className="nb-card-dark mx-3 mt-3 p-4">
-                  <div className="text-[9px] text-white/40 uppercase tracking-widest mb-2 font-base flex items-center gap-1.5">
-                    <Globe size={9} className="text-nb-amber" />
-                    CARREIRA
+           {/* Card de Aprendizados — Carreira */}
+           {(() => {
+             const homeReady = learns.filter(l => l.showOnHome === true).slice(0, 1)
+             if (homeReady.length === 0) {
+               return (
+                 <div className="nb-card-dark mx-3 mt-3 p-4">
+                      <div className="text-[9px] text-white/40 uppercase tracking-widest mb-2 font-base flex items-center gap-1.5">
+                        <Globe size={9} className="text-nb-amber" />
+                        CARREIRA
+                      </div>
+                      <p className="text-sm text-white/45 font-base mb-3">Nenhum aprendizado para mostrar</p>
+                      <Link href="/dashboard/career?tab=aprendizado"
+                        className="nb-btn nb-btn-amber py-2.5 w-full flex items-center justify-between px-4 no-underline">
+                        Criar aprendizado
+                        <ArrowRight size={14} />
+                      </Link>
+                    </div>
+                  )
+                }
+                const l = homeReady[0]
+                const statusLabel = l.status === 'em andamento' ? 'Em andamento' : l.status === 'quero' ? 'Quero' : 'Concluído'
+                const statusColors: Record<string, string> = {
+                  'em andamento': 'bg-blue-500/20 text-blue-400',
+                  'quero': 'bg-amber-500/20 text-amber-400',
+                  'concluído': 'bg-green-500/20 text-green-400',
+                }
+                const canAdvance = l.status !== 'concluído'
+                return (
+                  <div className="nb-card-dark mx-3 mt-3 p-4">
+                      <div className="text-[9px] text-white/40 uppercase tracking-widest mb-2 font-base flex items-center gap-1.5">
+                        <Globe size={9} className="text-nb-amber" />
+                        CARREIRA
+                      </div>
+                      <div className="text-base font-bold text-white font-base">{l.title}</div>
+                      <div className="flex gap-1.5">
+                        {l.area && <Badge variant="secondary" className="text-xs bg-stone-700 text-stone-300">{l.area}</Badge>}
+                        <Badge className={cn('text-xs', statusColors[l.status])}>{statusLabel}</Badge>
+                        <Badge variant="outline" className="text-xs border-stone-600 text-stone-300">{l.type}</Badge>
+                      </div>
+                      {canAdvance ? (
+                        <button 
+                          onClick={() => advanceLearnStatus(l.id)}
+                          className="nb-btn nb-btn-amber py-2.5 w-full flex items-center justify-between px-4"
+                        >
+                          <span>Avançar status</span>
+                          <ArrowRight size={14} />
+                        </button>
+                      ) : (
+                        <Link href="/dashboard/career?tab=aprendizado"
+                          className="nb-btn nb-btn-amber py-2.5 w-full flex items-center justify-between px-4 no-underline">
+                          <span>Crie um novo aprendizado</span>
+                          <ArrowRight size={14} />
+                        </Link>
+                      )}
                   </div>
-                  <p className="text-sm text-white/45 font-base mb-3">Nenhum aprendizado para mostrar</p>
-                  <a href="/dashboard/career?tab=aprendizado"
-                    className="nb-btn nb-btn-amber py-2.5 w-full flex items-center justify-between px-4 no-underline">
-                    Criar aprendizado
-                    <ArrowRight size={14} />
-                  </a>
-                </div>
-              )
-            }
-            const l = homeReady[0]
-            const statusLabel = l.status === 'em andamento' ? 'Em andamento' : l.status === 'quero' ? 'Quero' : 'Concluído'
-            const statusColors: Record<string, string> = {
-              'em andamento': 'bg-blue-500/20 text-blue-400',
-              'quero': 'bg-amber-500/20 text-amber-400',
-              'concluído': 'bg-green-500/20 text-green-400',
-            }
-            const canAdvance = l.status !== 'concluído'
-            return (
-              <div className="nb-card-dark mx-3 mt-3 p-4">
-                <CardContent className="p-0 space-y-3">
-                  <div className="text-[9px] text-white/40 uppercase tracking-widest mb-2 font-base flex items-center gap-1.5">
-                    <Globe size={9} className="text-nb-amber" />
-                    CARREIRA
-                  </div>
-                  <div className="text-base font-bold text-white font-base">{l.title}</div>
-                  <div className="flex gap-1.5">
-                    {l.area && <Badge variant="secondary" className="text-xs bg-stone-700 text-stone-300">{l.area}</Badge>}
-                    <Badge className={cn('text-xs', statusColors[l.status])}>{statusLabel}</Badge>
-                    <Badge variant="outline" className="text-xs border-stone-600 text-stone-300">{l.type}</Badge>
-                  </div>
-                  {canAdvance ? (
-                    <button 
-                      onClick={() => advanceLearnStatus(l.id)}
-                      className="nb-btn nb-btn-amber py-2.5 w-full flex items-center justify-between px-4"
-                    >
-                      <span>Avançar status</span>
-                      <ArrowRight size={14} />
-                    </button>
-                  ) : (
-                    <a href="/dashboard/career?tab=aprendizado"
-                      className="nb-btn nb-btn-amber py-2.5 w-full flex items-center justify-between px-4 no-underline">
-                      <span>Crie um novo aprendizado</span>
-                      <ArrowRight size={14} />
-                    </a>
-                  )}
-                </CardContent>
-              </div>
-            )
-          })()}
+                 )
+               })()}
 
-          {/* Card de Impulso — Streak + IO */}
-          <Card className="mx-3 mt-3">
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-1.5">
-                  <Lightning size={14} weight="fill" className="text-nb-amberd" />
-                  <span className="nb-label">Impulso</span>
-                </div>
-                <span className="font-base text-xs text-nb-amberd">{economy.io_hoje} IO hoje</span>
-              </div>
-
-              <div className="flex items-baseline gap-2 mb-2">
-                <span className="font-base font-bold text-2xl text-nb-amberd">{economy.streak}</span>
-                <span className="text-xs text-nb-amberd/70 font-base">dias seguidos</span>
-                <span className="ml-auto font-base text-xs text-nb-amberd/60">{economy.saldo_io} IO</span>
-              </div>
-
-              <div className="text-[10px] font-base text-nb-amberd/60 italic mb-2">
-                {economy.streak === 0
-                  ? 'Algo começou.'
-                  : economy.streak < 7
-                    ? 'Mantendo o ritmo!'
-                    : economy.streak < 30
-                      ? `${economy.streak} dias - você está em chamas!`
-                      : `${economy.streak} dias - consistência lendária!`}
-              </div>
-
-              <div className="nb-progress-bar" style={{ background: 'bg-stone-700' }}>
-                <div style={{
-                  height: '100%',
-                  background: '#F59E0B',
-                  width: `${Math.min((economy.io_hoje / 200) * 100, 100)}%`,
-                  transition: 'width .5s ease'
-                }} />
-              </div>
-
-              <div className="text-[9px] text-nb-amberd/50 font-base mt-1">
-                {200 - economy.io_hoje} IO restantes hoje
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Card de semana — dias ativos */}
-          <Card className="mx-3 mt-3">
-            <CardContent className="p-3">
+           {/* Card de semana — dias ativos */}
+           <Card className="nb-card-dark mx-3 shadow-[4px_4px_0_0_#000]">
+             <CardContent className="p-3">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-1.5">
                   <CalendarBlank size={14} />
@@ -299,26 +268,52 @@ export default function HojePage() {
                 </div>
               </div>
 
-              <div className="flex justify-between">
-                {['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'].map((day, i) => {
-                  const dayIndex = i === 6 ? 0 : i + 1
-                  const isToday  = new Date().getDay() === dayIndex
-                  const hasActivity = false
-                  return (
-                    <div key={day} className="flex flex-col items-center gap-1.5">
-<div className={`w-8 h-8 border-2 border-nb-ink rounded-nb-sm flex items-center justify-center
-                            font-mono text-[10px] font-bold transition-colors
-                            ${isToday    ? 'bg-nb-ink text-nb-amber'
-                            : hasActivity ? 'bg-nb-amberl text-nb-amberd'
-                            : 'bg-background text-muted-foreground dark:bg-stone-800'}`}>
-                          {isToday ? <Lightning size={12} weight="fill" className="text-nb-amber" /> : day[0]}
+              <div className="spec-body stretch">
+                <div className="week" style={{width:'100%', maxHeight:'80px'}}>
+                  {(() => {
+                    // Get current week's days (Sunday = 0, Saturday = 6)
+                    const now = new Date()
+                    const currentDay = now.getDay()
+                    const startOfWeek = new Date(now)
+                    startOfWeek.setDate(now.getDate() - currentDay) // Start from Sunday
+                    
+                    const dayLabels = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
+                    
+                    return Array.from({ length: 7 }, (_, i) => {
+                      const date = new Date(startOfWeek)
+                      date.setDate(startOfWeek.getDate() + i)
+                      const dayOfWeek = date.getDay()
+                      const dayNum = date.getDate()
+                      const isToday = dayOfWeek === currentDay
+                      const isPastDay = date < now && !isToday
+                      
+                      // Format date as YYYY-MM-DD for comparison
+                      const dateKey = date.toISOString().split('T')[0]
+                      
+                      // Check if this specific date has completed habits from history
+                      const dayHistory = history[dateKey]
+                      const hasCompletedHabits = dayHistory && dayHistory.done > 0
+                      
+                      // Logic:
+                      // - Today: amber
+                      // - Past day with completed habits: green
+                      // - Past day without completed habits: white
+                      // - Future day: white
+                      const dayClass = isToday 
+                        ? 'today' 
+                        : (isPastDay && hasCompletedHabits) 
+                        ? 'done' 
+                        : ''
+                      
+                      return (
+                        <div key={i} className={`day ${dayClass}`}>
+                          <span className="d">{dayLabels[dayOfWeek]}</span>
+                          <span className="n">{dayNum}</span>
                         </div>
-                        <span className={`text-[8px] font-mono ${isToday ? 'font-bold text-foreground' : 'text-muted-foreground'}`}>
-                        {day}
-                      </span>
-                    </div>
-                  )
-                })}
+                      )
+                    })
+                  })()}
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -349,10 +344,10 @@ export default function HojePage() {
               <div className="text-xs text-nb-gray font-base">
                 Análises personalizadas e recomendações inteligentes para acelerar sua evolução.
               </div>
-              <a href="/dashboard/profile#plano"
+              <Link href="/dashboard/profile#plano"
                 className="nb-btn nb-btn-amber px-2.5 py-1.5 text-[9px] ml-3 no-underline whitespace-nowrap">
                 Ver Pro
-              </a>
+              </Link>
             </div>
           )}
         </CardContent>

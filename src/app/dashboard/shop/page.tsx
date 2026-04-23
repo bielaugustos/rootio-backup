@@ -15,7 +15,7 @@ import { PageSkeleton } from '@/components/PageSkeleton'
 import {
   ShoppingBag, Lightning, Star, Fire, Shield, Crown,
   Plus, Trash, Eye, Check, User, Palette, Coins, Gift,
-  Lock, ShoppingCart, Trophy, Diamond,
+  Lock, ShoppingCart, Diamond,
 } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 

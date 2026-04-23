@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useAppStore } from '@/store/useAppStore'
 import {
   Briefcase,
-  Rocket, Robot, ShoppingBag, ChatCircle,
+  Rocket, Robot, ShoppingBag, ChatCircle, DotsNine,
 } from '@phosphor-icons/react'
 import {
   Sidebar,
@@ -23,8 +23,8 @@ import {
 
 // Custom Icons
 const ProgressIcon = ({ size = 18, weight = 'regular', className = '' }: { size?: number; weight?: string; className?: string }) => (
-  <svg width={size} height={size} viewBox="0 0 18 18" fill="none" className={className}>
-    <path d="M5 2h8l-1 8H6L5 2zM4 14h10M9 10v4" stroke="currentColor" strokeWidth="2" strokeLinecap="square" fill="none" />
+  <svg width={size} height={size} viewBox="0 0 256 256" fill="currentColor" className={className}>
+    <path d="M230.9,73.6A15.85,15.85,0,0,0,212,77.39l-33.67,36.29-35.8-80.29a1,1,0,0,1,0-.1,16,16,0,0,0-29.06,0,1,1,0,0,1,0,.1l-35.8,80.29L44,77.39A16,16,0,0,0,16.25,90.81c0,.11,0,.21.07.32L39,195a16,16,0,0,0,15.72,13H201.29A16,16,0,0,0,217,195L239.68,91.13c0-.11,0-.21.07-.32A15.85,15.85,0,0,0,230.9,73.6ZM201.35,191.68l-.06.32H54.71l-.06-.32L32,88l.14.16,42,45.24a8,8,0,0,0,13.18-2.18L128,40l40.69,91.25a8,8,0,0,0,13.18,2.18l42-45.24L224,88Z"></path>
   </svg>
 )
 
@@ -54,6 +54,20 @@ const ProfileIcon = ({ size = 18, weight = 'regular', className = '' }: { size?:
   </svg>
 )
 
+const DotsNineIcon = ({ size = 18, strokeWidth = 2, className = '' }: { size?: number; strokeWidth?: number; className?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+    <circle cx="4" cy="4" r="2" stroke="currentColor" strokeWidth={strokeWidth} />
+    <circle cx="12" cy="4" r="2" stroke="currentColor" strokeWidth={strokeWidth} />
+    <circle cx="20" cy="4" r="2" stroke="currentColor" strokeWidth={strokeWidth} />
+    <circle cx="4" cy="12" r="2" stroke="currentColor" strokeWidth={strokeWidth} />
+    <circle cx="12" cy="12" r="2" stroke="currentColor" strokeWidth={strokeWidth} />
+    <circle cx="20" cy="12" r="2" stroke="currentColor" strokeWidth={strokeWidth} />
+    <circle cx="4" cy="20" r="2" stroke="currentColor" strokeWidth={strokeWidth} />
+    <circle cx="12" cy="20" r="2" stroke="currentColor" strokeWidth={strokeWidth} />
+    <circle cx="20" cy="20" r="2" stroke="currentColor" strokeWidth={strokeWidth} />
+  </svg>
+)
+
 const data = {
   navMain: [
     {
@@ -62,12 +76,12 @@ const data = {
       icon: HomeIcon,
       items: [
         {
-          title: 'Tela principal',
+          title: 'Hoje',
           url: '/dashboard',
           icon: HomeIcon,
         },
         {
-          title: 'Progresso IO',
+          title: 'Experiência',
           url: '/dashboard/progress',
           icon: ProgressIcon,
         },
@@ -100,7 +114,7 @@ const data = {
     {
       title: 'Mais',
       url: '#',
-      icon: (props: any) => <div {...props}>📋</div>,
+      icon: (props: any) => <DotsNineIcon {...props} strokeWidth={2} />,
       items: [
         {
           title: 'Carreira',
@@ -135,7 +149,7 @@ const data = {
       icon: ProfileIcon,
       items: [
         {
-          title: 'Meu perfil',
+          title: 'Ajustes',
           url: '/dashboard/profile',
           icon: ProfileIcon,
         },
@@ -155,16 +169,15 @@ export function DashboardSidebar({ ...props }: React.ComponentProps<typeof Sideb
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/dashboard" className="flex items-center gap-3">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg text-sidebar-primary-foreground">
                   <img 
-                    src="/logo.svg" 
+                    src={themeMode === 'dark' ? "/logod.svg" : "/logo.svg"} 
                     alt="IO" 
                     className="size-4" 
-                    style={{ filter: themeMode === 'dark' ? 'invert(1) brightness(2)' : 'none' }} 
                   />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold">IO Dashboard</span>
+                  <span className="font-semibold text-foreground">IO Dashboard</span>
                 </div>
               </Link>
             </SidebarMenuButton>

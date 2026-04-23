@@ -4,10 +4,17 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import {
-  House, CheckSquare, CurrencyDollar, Trophy,
+  House, CheckSquare, CurrencyDollar,
   User, MagnifyingGlass, ArrowLeft, List, X,
   Plus, Lightning,
 } from '@phosphor-icons/react'
+
+// Progress Icon SVG
+const ProgressIcon = ({ size = 15, className = '' }: { size?: number; className?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 256 256" fill="currentColor" className={className}>
+    <path d="M230.9,73.6A15.85,15.85,0,0,0,212,77.39l-33.67,36.29-35.8-80.29a1,1,0,0,1,0-.1,16,16,0,0,0-29.06,0,1,1,0,0,1,0,.1l-35.8,80.29L44,77.39A16,16,0,0,0,16.25,90.81c0,.11,0,.21.07.32L39,195a16,16,0,0,0,15.72,13H201.29A16,16,0,0,0,217,195L239.68,91.13c0-.11,0-.21.07-.32A15.85,15.85,0,0,0,230.9,73.6ZM201.35,191.68l-.06.32H54.71l-.06-.32L32,88l.14.16,42,45.24a8,8,0,0,0,13.18-2.18L128,40l40.69,91.25a8,8,0,0,0,13.18,2.18l42-45.24L224,88Z"></path>
+  </svg>
+)
 
 // ─── Tipos ────────────────────────────────────────────────
 interface FabItem {
@@ -28,7 +35,7 @@ const GLOBAL_ITEMS: FabItem[] = [
   { label: 'Hoje',      icon: <House size={15} weight="fill" />,          href: '/dashboard',          variant: 'primary'   },
   { label: 'Hábitos',   icon: <CheckSquare size={15} weight="fill" />,    href: '/dashboard/habits',   variant: 'primary'   },
   { label: 'Finanças',  icon: <CurrencyDollar size={15} weight="fill" />, href: '/dashboard/finance',  variant: 'primary'   },
-  { label: 'Progresso', icon: <Trophy size={15} weight="fill" />,         href: '/dashboard/progress', variant: 'primary'   },
+  { label: 'Progresso', icon: <ProgressIcon size={15} />,                href: '/dashboard/progress', variant: 'primary'   },
   { label: 'Perfil',    icon: <User size={15} weight="fill" />,           href: '/dashboard/profile',  variant: 'primary'   },
 ]
 

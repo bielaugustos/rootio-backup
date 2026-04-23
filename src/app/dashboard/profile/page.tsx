@@ -13,6 +13,7 @@ import { Progress } from '@/components/ui/progress'
 import { Switch } from '@/components/ui/switch'
 import { Separator } from '@/components/ui/separator'
 import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
 import { PageSkeleton } from '@/components/PageSkeleton'
 import {
   AlertDialog,
@@ -45,7 +46,7 @@ export default function AjustesPage() {
   const router = useRouter()
   const {
     economy, plan, username, avatar, theme, themeMode, soundOn, bgColor, bgImage,
-    setAvatar, setTheme, setThemeMode, setSoundOn, setBgColor, setBgImage, reset,
+    setAvatar, setTheme, setThemeMode, setSoundOn, setBgColor, setBgImage, reset, setUsername,
   } = useAppStore()
 
   const nivel  = getNivel(economy.xp_total)
@@ -61,6 +62,8 @@ export default function AjustesPage() {
   const [inventory, setInventory] = useState<string[]>([])
   const [themePage, setThemePage] = useState(1)
   const [loading, setLoading] = useState(true)
+  const [isEditingName, setIsEditingName] = useState(false)
+  const [newName, setNewName] = useState(username)
 
   const THEMES_PER_PAGE = 5
   const THEME_LIST = [
@@ -85,6 +88,18 @@ export default function AjustesPage() {
   function handleSaveAvatar() {
     setBgColor(selectedBgColor)
     setShowAvatars(false)
+  }
+
+  function handleSaveName() {
+    if (newName.trim()) {
+      setUsername(newName.trim())
+      setIsEditingName(false)
+    }
+  }
+
+  function handleCancelEditName() {
+    setNewName(username)
+    setIsEditingName(false)
   }
 
   async function handleSignOut() {
@@ -122,7 +137,18 @@ export default function AjustesPage() {
             </button>
 
             <div className="flex-1 min-w-0">
-              <p className="font-bold text-base truncate">{username}</p>
+              <div className="flex items-center gap-2">
+                <p className="font-bold text-base truncate">{username}</p>
+                <button
+                  onClick={() => {
+                    setNewName(username)
+                    setIsEditingName(true)
+                  }}
+                  className="flex-shrink-0 hover:text-foreground text-muted-foreground transition-colors"
+                >
+                  <PencilSimple size={14} />
+                </button>
+              </div>
               <p className="text-sm text-muted-foreground">{nivel.titulo}</p>
               <div className="flex items-center gap-2 mt-1.5">
                 <Progress value={pct} className="h-1.5 flex-1" />
@@ -420,7 +446,7 @@ export default function AjustesPage() {
               <div className="flex-1">
                 <p className="text-sm font-medium">Versão</p>
                 <p className="text-[11px] text-muted-foreground">
-                  Rootio {process.env.NEXT_PUBLIC_APP_VERSION ?? '0.3.0'} · Sistema IO
+                  Rootio {process.env.NEXT_PUBLIC_APP_VERSION ?? '0.4.0'} · Sistema IO
                 </p>
               </div>
             </div>
@@ -428,6 +454,35 @@ export default function AjustesPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* ─── Editar nome do usuário ──────────────────────────── */}
+      <AlertDialog open={isEditingName} onOpenChange={setIsEditingName}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Editar nome</AlertDialogTitle>
+            <AlertDialogDescription>
+              Digite o novo nome para o seu perfil.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="py-4">
+            <Input
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              placeholder="Seu nome"
+              className="w-full"
+              autoFocus
+            />
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleCancelEditName}>
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleSaveName}>
+              Salvar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* ─── Zona de perigo ──────────────────────────────────── */}
       <div className="space-y-3">

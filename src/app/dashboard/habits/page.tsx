@@ -561,14 +561,20 @@ function HabitCard({
     >
       <CardContent className="p-4">
         <div className="flex items-center gap-3">
-          <Button
-            variant={done ? 'default' : 'outline'}
-            size="icon"
-            className={cn('h-8 w-8 flex-shrink-0 rounded-md', done && 'bg-primary')}
+          <button
             onClick={() => onToggle(habit.id)}
+            className={cn(
+              'w-[22px] h-[22px] inline-flex items-center justify-center',
+              'bg-white border-2 border-black shadow-[2px_2px_0_0_#000]',
+              'cursor-pointer rounded-none flex-shrink-0',
+              'hover:shadow-[1px_1px_0_0_#000] hover:translate-x-[1px] hover:translate-y-[1px]',
+              'active:shadow-none active:translate-x-[2px] active:translate-y-[2px]',
+              'transition-all',
+              done && 'bg-amber-500'
+            )}
           >
-            {done && <Check className="h-4 w-4" />}
-          </Button>
+            {done && <Check className="h-4 w-4 text-black" />}
+          </button>
 
           <div className="flex-1 min-w-0 space-y-1">
             <div className="flex items-center gap-2">
