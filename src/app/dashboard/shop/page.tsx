@@ -137,7 +137,6 @@ export default function ShopPage() {
     }
     if (item.cat === 'bgcolor') {
       store.setBgColor(item.itemColor || item.barColor)
-      saveStorage('io_selected_bgColor', item.itemColor || item.barColor)
     }
     if (item.cat === 'tema') {
       const themeKey = item.id.replace('tm', '')

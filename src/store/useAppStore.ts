@@ -234,6 +234,8 @@ export const useAppStore = create<AppStore>()(
         plan:    s.plan,
         avatar:  s.avatar,
         username:s.username,
+        bgColor: s.bgColor,
+        bgImage: s.bgImage,
       }),
     }
   )

@@ -57,8 +57,12 @@ export default function HabitsPage() {
   const [notes, setNotes] = useState('')
   const [pts, setPts] = useState(0)
   const [ptsPage, setPtsPage] = useState(1)
+  const [editMode, setEditMode] = useState<'simples' | 'avancado'>('simples')
+  const [showAllPending, setShowAllPending] = useState(false)
+  const [showAllCompleted, setShowAllCompleted] = useState(false)
   const [quickAdd, setQuickAdd] = useState(false)
   const [loading, setLoading] = useState(true)
+  const HABIT_LIMIT = 5
 
   const IO_VALUES = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
   const IO_PER_PAGE = 5
@@ -77,6 +81,8 @@ export default function HabitsPage() {
   const amanha = filtered.filter(h => !(h.days?.includes(today) ?? true))
   const pendentes = paraHoje.filter(h => !h.done)
   const concluidos = paraHoje.filter(h => h.done)
+  const visiblePending = showAllPending ? pendentes : pendentes.slice(0, HABIT_LIMIT)
+  const visibleCompleted = showAllCompleted ? concluidos : concluidos.slice(0, HABIT_LIMIT)
   const done = paraHoje.filter(h => h.done).length
   const total = paraHoje.length
   const pct = total ? Math.round((done / total) * 100) : 0
@@ -262,15 +268,36 @@ export default function HabitsPage() {
       {/* Form */}
       {showForm && (
         <Card className="mx-3 mt-3 animate-in slide-in-from-top-2 duration-300">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">{editing ? 'Editar hábito' : 'Novo hábito'}</CardTitle>
-              <Button variant="ghost" size="icon" onClick={() => setShowForm(false)}>
-                <X className="h-4 w-4" />
-              </Button>
+          <div className="flex items-center justify-between px-6 pt-6">
+            <p className="text-sm font-semibold">
+              {editing ? 'Editar hábito' : 'Novo hábito'}
+            </p>
+            <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
+              <button
+                onClick={() => setEditMode('simples')}
+                className={cn(
+                  'px-3 py-1 text-xs font-medium rounded-md transition-all',
+                  editMode === 'simples'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                Simples
+              </button>
+              <button
+                onClick={() => setEditMode('avancado')}
+                className={cn(
+                  'px-3 py-1 text-xs font-medium rounded-md transition-all',
+                  editMode === 'avancado'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                Avançado
+              </button>
             </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
+          </div>
+          <CardContent className="space-y-4 px-6">
             <div className="space-y-2">
               <Label htmlFor="name">Nome</Label>
               <Input
@@ -304,111 +331,130 @@ export default function HabitsPage() {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label>Frequência</Label>
-              <div className="grid grid-cols-3 gap-2">
-                {[
-                  { id: 'diario' as const, label: 'Diário' },
-                  { id: 'semanal' as const, label: 'Semanal' },
-                  { id: 'personalizado' as const, label: 'Personalizado' },
-                ].map(f => (
-                  <Button
-                    key={f.id}
-                    variant={freq === f.id ? 'default' : 'outline'}
-                    onClick={() => setFreq(f.id)}
-                    className="text-sm"
-                  >
-                    {f.label}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            {freq === 'personalizado' && (
-              <div className="space-y-2">
-                <Label>Dias</Label>
-                <div className="grid grid-cols-7 gap-1">
-                  {['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map((d, i) => (
-                    <Button
-                      key={i}
-                      variant={days.includes(i) ? 'default' : 'outline'}
-                      onClick={() => setDays(prev => (prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i]))}
-                      className="h-8 p-0 text-xs"
-                    >
-                      {d}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className="space-y-2">
-              <Label htmlFor="notes">Nota (opcional)</Label>
-              <Input
-                id="notes"
-                placeholder="Por que esse hábito importa?"
-                value={notes}
-                onChange={e => setNotes(e.target.value)}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Label htmlFor="pts">IO por conclusão</Label>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-4 w-4 p-0">
-                        <Info className="h-4 w-4 text-muted-foreground" />
+            {editMode === 'avancado' && (
+              <>
+                <div className="space-y-2">
+                  <Label>Frequência</Label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { id: 'diario' as const, label: 'Diário' },
+                      { id: 'semanal' as const, label: 'Semanal' },
+                      { id: 'personalizado' as const, label: 'Personalizado' },
+                    ].map(f => (
+                      <Button
+                        key={f.id}
+                        variant={freq === f.id ? 'default' : 'outline'}
+                        onClick={() => setFreq(f.id)}
+                        className="text-sm"
+                      >
+                        {f.label}
                       </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Sobre pontos IO</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          <p className="text-sm">Cada vez que você conclude este hábito, ganha {pts} IO.</p>
-                          <p className="text-sm mt-2">Pontos IO podem ser usados no Shop e criar Dashboards de Estatisticas para acompanhamento - também são uma métrica para estimular na caminhada.</p>
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogAction>Entendi</AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                    ))}
+                  </div>
                 </div>
-                <Badge variant="secondary" className="font-mono">
-                  {pts} IO
-                </Badge>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setPtsPage(p => Math.max(1, p - 1))}
-                  disabled={ptsPage <= 1}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center border border-input bg-transparent transition-colors hover:bg-accent disabled:opacity-50 disabled:pointer-events-none"
-                >
-                  ‹
-                </button>
-                {IO_VALUES.slice((ptsPage - 1) * IO_PER_PAGE, ptsPage * IO_PER_PAGE).map(val => (
-                  <button
-                    key={val}
-                    onClick={() => setPts(val)}
-                    className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors flex-shrink-0
-                      ${pts === val
-                        ? 'bg-amber-500 text-white'
-                        : 'bg-muted hover:bg-amber-50'}`}
-                  >
-                    {val}
-                  </button>
-                ))}
-                <button
-                  onClick={() => setPtsPage(p => Math.min(totalPtsPages, p + 1))}
-                  disabled={ptsPage >= totalPtsPages}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center border border-input bg-transparent transition-colors hover:bg-accent disabled:opacity-50 disabled:pointer-events-none flex-shrink-0"
-                >
-                  ›
-                </button>
-              </div>
-            </div>
+
+                {freq === 'personalizado' && (
+                  <div className="space-y-2">
+                    <Label>Dias</Label>
+                    <div className="grid grid-cols-7 gap-1">
+                      {['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map((d, i) => (
+                        <Button
+                          key={i}
+                          variant={days.includes(i) ? 'default' : 'outline'}
+                          onClick={() => setDays(prev => (prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i]))}
+                          className="h-8 p-0 text-xs"
+                        >
+                          {d}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="space-y-2">
+                  <Label htmlFor="notes">Nota (opcional)</Label>
+                  <Input
+                    id="notes"
+                    placeholder="Por que esse hábito importa?"
+                    value={notes}
+                    onChange={e => setNotes(e.target.value)}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Label htmlFor="pts">IO por conclusão</Label>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-4 w-4 p-0">
+                            <Info className="h-4 w-4 text-muted-foreground" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Sobre pontos IO</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              <p className="text-sm">Cada vez que você conclude este hábito, ganha {pts} IO.</p>
+                              <p className="text-sm mt-2">Pontos IO podem ser usados no Shop e criar Dashboards de Estatisticas para acompanhamento - também são uma métrica para estimular na caminhada.</p>
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogAction>Entendi</AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                    <Badge variant="secondary" className="font-mono">
+                      {pts} IO
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <button
+                      onClick={() => setPtsPage(p => Math.max(1, p - 1))}
+                      disabled={ptsPage <= 1}
+                      className="w-9 h-9 rounded-lg flex items-center justify-center
+                                 border border-input bg-background flex-shrink-0
+                                 hover:bg-accent disabled:opacity-40 disabled:cursor-not-allowed
+                                 transition-colors text-base leading-none"
+                    >
+                      ‹
+                    </button>
+                    <div className="flex items-center justify-center gap-2 flex-1">
+                      {IO_VALUES.slice((ptsPage - 1) * IO_PER_PAGE, ptsPage * IO_PER_PAGE).map(val => (
+                        <button
+                          key={val}
+                          onClick={() => setPts(val)}
+                          className={cn(
+                            'w-9 h-9 rounded-lg text-sm font-semibold transition-all flex-shrink-0',
+                            pts === val
+                              ? 'bg-amber-500 text-white shadow-sm scale-105'
+                              : 'bg-muted hover:bg-amber-50 dark:hover:bg-amber-950 text-foreground'
+                          )}
+                        >
+                          {val}
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      onClick={() => setPtsPage(p => Math.min(totalPtsPages, p + 1))}
+                      disabled={ptsPage >= totalPtsPages}
+                      className="w-9 h-9 rounded-lg flex items-center justify-center
+                                 border border-input bg-background flex-shrink-0
+                                 hover:bg-accent disabled:opacity-40 disabled:cursor-not-allowed
+                                 transition-colors text-base leading-none"
+                    >
+                      ›
+                    </button>
+                  </div>
+                  {totalPtsPages > 1 && (
+                    <p className="text-center text-[10px] text-muted-foreground">
+                      página {ptsPage} de {totalPtsPages}
+                    </p>
+                  )}
+                </div>
+              </>
+            )}
           </CardContent>
           <CardFooter>
             <Button onClick={save} className="w-full">
@@ -420,27 +466,49 @@ export default function HabitsPage() {
 
       {/* Pending Habits */}
       {pendentes.length > 0 && (
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <Flag className="h-4 w-4 text-muted-foreground" />
-            <h2 className="text-sm font-semibold text-muted-foreground">Pendentes · {pendentes.length}</h2>
+        <div>
+          <div className="flex items-center justify-between px-1 mb-2">
+            <div className="flex items-center gap-2">
+              <Flag className="h-4 w-4 text-muted-foreground" />
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                Pendentes ({pendentes.length})
+              </p>
+            </div>
           </div>
-          {pendentes.map(h => (
+          {visiblePending.map(h => (
             <HabitCard key={h.id} habit={h} onToggle={toggleHabit} onDelete={deleteHabit} onEdit={openEdit} />
           ))}
+          {pendentes.length > HABIT_LIMIT && (
+            <button
+              onClick={() => setShowAllPending(v => !v)}
+              className="w-full py-2 text-xs text-muted-foreground hover:text-foreground
+                         flex items-center justify-center gap-1.5 transition-colors mt-1"
+            >
+              {showAllPending ? (
+                <><CaretUp size={12} /> Ocultar {pendentes.length - HABIT_LIMIT} hábitos</>
+              ) : (
+                <><CaretDown size={12} /> Ver mais {pendentes.length - HABIT_LIMIT} hábitos</>
+              )}
+            </button>
+          )}
         </div>
       )}
 
+      {/* Separator */}
+      {pendentes.length > 0 && concluidos.length > 0 && <Separator className="my-3" />}
+
       {/* Completed Habits */}
       {concluidos.length > 0 && (
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <Check className="h-4 w-4 text-green-500" />
-            <h2 className="text-sm font-semibold text-green-600 dark:text-green-400">
-              Concluídos · {concluidos.length}
-            </h2>
+        <div>
+          <div className="flex items-center justify-between px-1 mb-2">
+            <div className="flex items-center gap-2">
+              <Check className="h-4 w-4 text-green-500" />
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                Concluídos hoje ({concluidos.length})
+              </p>
+            </div>
           </div>
-          {concluidos.map(h => (
+          {visibleCompleted.map(h => (
             <HabitCard
               key={h.id}
               habit={h}
@@ -450,6 +518,19 @@ export default function HabitsPage() {
               onEdit={openEdit}
             />
           ))}
+          {concluidos.length > HABIT_LIMIT && (
+            <button
+              onClick={() => setShowAllCompleted(v => !v)}
+              className="w-full py-2 text-xs text-muted-foreground hover:text-foreground
+                         flex items-center justify-center gap-1.5 transition-colors mt-1"
+            >
+              {showAllCompleted ? (
+                <><CaretUp size={12} /> Ocultar {concluidos.length - HABIT_LIMIT} concluídos</>
+              ) : (
+                <><CaretDown size={12} /> Ver {concluidos.length - HABIT_LIMIT} concluídos</>
+              )}
+            </button>
+          )}
         </div>
       )}
 
