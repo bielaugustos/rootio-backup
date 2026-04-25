@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer'
 import { toast } from 'sonner'
-import { Lightning, Eye, EyeSlash, X, ArrowLeft, FingerprintSimple } from '@phosphor-icons/react'
+import { Lightning, Eye, EyeSlash, X, ArrowLeft, FingerprintSimple, CheckSquareIcon } from '@phosphor-icons/react'
 
 const ERR: Record<string, string> = {
   'Email not confirmed':      'Confirme seu e-mail antes de entrar.',
@@ -62,6 +62,7 @@ export default function AuthPage() {
     else {
       toast.success('Link de recuperação enviado!', {
         description: 'Verifique seu e-mail para redefinir sua senha.',
+        icon: <CheckSquareIcon size={16} />
       })
       setView('login')
     }
@@ -74,32 +75,32 @@ export default function AuthPage() {
           <img src="/logo.svg" alt="Rootio" className="w-10 h-10" />
           <div>
             <h1 className="font-bold text-xl">Rootio</h1>
-            <p className="text-xs text-muted-foreground">Sua Evolução Pessoal</p>
+            <p className="text-[10px] font-medium text-muted-foreground">Sua Evolução Pessoal</p>
           </div>
         </div>
 
         {view === 'reset' ? (
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <button onClick={() => setView('login')} className="text-muted-foreground hover:text-foreground">
-                  <ArrowLeft size={20} />
-                </button>
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Button size="icon" variant="io-neutral" onClick={() => setView('login')} className="mr-4 mb-2">
+                  <ArrowLeft size={16} />
+                </Button>
                 Recuperar senha
               </CardTitle>
-              <CardDescription>Digite seu e-mail para receber o link de recuperação</CardDescription>
+              <CardDescription className='text-xs'>Digite seu e-mail para receber o link de recuperação</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleResetPassword} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="reset-email">E-mail</Label>
                   <Input id="reset-email" type="email" placeholder="seu@email.com"
-                    value={email} onChange={e => setEmail(e.target.value)} />
+                    value={email} onChange={e => setEmail(e.target.value)} className="transition-shadow duration-200 focus:shadow-nb" />
                 </div>
                 {msg && (
                   <p className={`text-xs ${isErr ? 'text-destructive' : 'text-green-600'}`}>{msg}</p>
                 )}
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" className="w-full" variant="io" disabled={loading}>
                   {loading ? 'Enviando...' : 'Enviar link de recuperação'}
                 </Button>
               </form>
@@ -109,22 +110,22 @@ export default function AuthPage() {
           <>
             <Tabs defaultValue="login" onValueChange={(v) => { setView(v as AuthView); setMsg('') }}>
               <TabsList className="grid grid-cols-2 w-full">
-                <TabsTrigger value="login">Entrar</TabsTrigger>
+                <TabsTrigger value="login">Login</TabsTrigger>
                 <TabsTrigger value="signup">Criar conta</TabsTrigger>
               </TabsList>
 
               <TabsContent value="login">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-lg">Bem-vindo de volta</CardTitle>
-                    <CardDescription>Entre com seu e-mail e senha</CardDescription>
+                    <CardTitle className="text-sm">Bem-vindo de volta</CardTitle>
+                    <CardDescription className='text-xs'>Entre com seu e-mail e senha</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <form onSubmit={handleLogin} className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="email-login">E-mail</Label>
                         <Input id="email-login" type="email" placeholder="seu@email.com"
-                          value={email} onChange={e => setEmail(e.target.value)} />
+                          value={email} onChange={e => setEmail(e.target.value)} className="transition-shadow duration-200 focus:shadow-nb" />
                       </div>
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
@@ -135,7 +136,7 @@ export default function AuthPage() {
                         </div>
                         <div className="relative">
                           <Input id="pass-login" type={showPw ? 'text' : 'password'}
-                            placeholder="••••••••" className="pr-10"
+                            placeholder="••••••••" className="pr-10 transition-shadow duration-200 focus:shadow-nb"
                             value={pass} onChange={e => setPass(e.target.value)} />
                           <button type="button" onClick={() => setShowPw(v => !v)}
                             className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
@@ -146,7 +147,7 @@ export default function AuthPage() {
                       {msg && (
                         <p className={`text-xs ${isErr ? 'text-destructive' : 'text-green-600'}`}>{msg}</p>
                       )}
-                      <Button type="submit" className="w-full" disabled={loading}>
+                      <Button type="submit" className="w-full" variant="io" disabled={loading}>
                         {loading ? 'Entrando...' : 'Entrar'}
                       </Button>
                     </form>
@@ -157,26 +158,26 @@ export default function AuthPage() {
               <TabsContent value="signup">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-lg">Criar conta grátis</CardTitle>
-                    <CardDescription>Comece sua jornada com o Rootio</CardDescription>
+                    <CardTitle className="text-sm">Criar conta grátis</CardTitle>
+                    <CardDescription className='text-xs'>Comece sua jornada com o Rootio</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <form onSubmit={handleSignup} className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="name">Nome</Label>
                         <Input id="name" placeholder="Como quer ser chamado"
-                          value={name} onChange={e => setName(e.target.value)} />
+                          value={name} onChange={e => setName(e.target.value)} className="transition-shadow duration-200 focus:shadow-nb" />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="email-signup">E-mail</Label>
                         <Input id="email-signup" type="email" placeholder="seu@email.com"
-                          value={email} onChange={e => setEmail(e.target.value)} />
+                          value={email} onChange={e => setEmail(e.target.value)} className="transition-shadow duration-200 focus:shadow-nb" />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="pass-signup">Senha</Label>
                         <div className="relative">
                           <Input id="pass-signup" type={showPw ? 'text' : 'password'}
-                            placeholder="Mínimo 6 caracteres" className="pr-10"
+                            placeholder="Mínimo 6 caracteres" className="pr-10 transition-shadow duration-200 focus:shadow-nb"
                             value={pass} onChange={e => setPass(e.target.value)} />
                           <button type="button" onClick={() => setShowPw(v => !v)}
                             className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -187,7 +188,7 @@ export default function AuthPage() {
                       {msg && (
                         <p className={`text-xs ${isErr ? 'text-destructive' : 'text-green-600'}`}>{msg}</p>
                       )}
-                      <Button type="submit" className="w-full" disabled={loading}>
+                      <Button type="submit" className="w-full" variant="io" disabled={loading}>
                         {loading ? 'Criando...' : 'Criar conta'}
                       </Button>
                     </form>
@@ -205,7 +206,7 @@ export default function AuthPage() {
               </div>
             </div>
 
-            <Button variant="outline" className="w-full"
+            <Button variant="io-neutral" className="w-full"
               onClick={() => { localStorage.setItem('io_auth_skipped','true'); router.replace('/dashboard') }}>
               Continuar sem conta
             </Button>

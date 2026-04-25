@@ -56,12 +56,12 @@ const SHOP_ITEMS: ShopItem[] = [
 ]
 
 const TAG_STYLES: Record<string, string> = {
-  'grátis': 'bg-green-100 text-green-700 border-green-500',
-  'básico': 'bg-amber-100 text-amber-700 border-amber-500',
-  'médio': 'bg-yellow-100 text-yellow-700 border-yellow-500',
-  'avançado': 'bg-purple-100 text-purple-700 border-purple-500',
-  'elite': 'bg-red-100 text-red-700 border-red-500',
-  'lendário': 'bg-stone-900 text-amber-400 border-amber-400',
+  'grátis': 'bg-secondary text-secondary-foreground border',
+  'básico': 'bg-secondary text-secondary-foreground border',
+  'médio': 'bg-secondary text-secondary-foreground border',
+  'avançado': 'bg-secondary text-secondary-foreground border',
+  'elite': 'bg-secondary text-secondary-foreground border',
+  'lendário': 'bg-primary text-primary-foreground border',
 }
 
 const CATEGORIES = [
@@ -104,22 +104,22 @@ export default function ShopPage() {
       if (item.cat === 'avatar') {
         const isApplied = avatar === item.icon
         return isApplied 
-          ? { label: '✓ Ativo', className: 'bg-amber-500 text-white border-amber-500', disabled: true }
-          : { label: 'Aplicar', className: 'bg-green-500 text-white border-green-500 hover:bg-green-600', disabled: false, onApply: item.icon }
+          ? { label: '✓ Ativo', className: 'bg-primary text-primary-foreground border-primary', disabled: true }
+          : { label: 'Aplicar', className: 'bg-primary text-primary-foreground border-primary hover:opacity-90', disabled: false, onApply: item.icon }
       }
       if (item.cat === 'bgcolor') {
         const itemColor = item.itemColor || item.barColor
         const isApplied = bgColor === itemColor
         return isApplied
-          ? { label: '✓ Ativo', className: 'bg-amber-500 text-white border-amber-500', disabled: true }
-          : { label: 'Aplicar', className: 'bg-green-500 text-white border-green-500 hover:bg-green-600', disabled: false, onApplyColor: itemColor }
+          ? { label: '✓ Ativo', className: 'bg-primary text-primary-foreground border-primary', disabled: true }
+          : { label: 'Aplicar', className: 'bg-primary text-primary-foreground border-primary hover:opacity-90', disabled: false, onApplyColor: itemColor }
       }
-      return { label: '✓ Adquirido', className: 'bg-stone-900 text-amber-400 border-amber-400', disabled: true }
+      return { label: '✓ Adquirido', className: 'bg-muted text-muted-foreground border', disabled: true }
     }
     if (noLevel) return { label: `Nível ${item.nivel_min}`, className: 'bg-muted text-muted-foreground border-border opacity-50', disabled: true }
-    if (item.cost === 0) return { label: 'Grátis', className: 'bg-green-500 text-white border-green-500', disabled: false }
+    if (item.cost === 0) return { label: 'Grátis', className: 'bg-primary text-primary-foreground border-primary', disabled: false }
     if (noBalance) return { label: `${item.cost} IO`, className: 'bg-muted text-muted-foreground border-border opacity-50', disabled: true }
-    return { label: `${item.cost} IO`, className: 'bg-amber-500 text-white border-amber-500 hover:bg-amber-600', disabled: false }
+    return { label: `${item.cost} IO`, className: 'bg-primary text-primary-foreground border-primary hover:opacity-90', disabled: false }
   }
 
   function buyItem(item: ShopItem) {
@@ -152,12 +152,12 @@ export default function ShopPage() {
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-lg text-amber-400">LOJA DE RECOMPENSAS</CardTitle>
+              <CardTitle className="text-lg text-primary">LOJA DE RECOMPENSAS</CardTitle>
               <p className="text-xs text-zinc-400">Troque seus IO por itens exclusivos</p>
             </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-800 border border-amber-500/50">
-              <Lightning className="h-4 w-4 text-amber-400" />
-              <span className="font-mono font-bold text-amber-400">{economy.saldo_io} IO</span>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-800 border">
+              <Lightning className="h-4 w-4 text-primary" />
+              <span className="font-mono font-bold text-primary">{economy.saldo_io} IO</span>
             </div>
           </div>
         </CardHeader>
@@ -173,7 +173,7 @@ export default function ShopPage() {
             </div>
             <div className="text-center">
               <p className="text-xs text-zinc-400">Saldo IO</p>
-              <p className="font-mono font-bold text-lg text-amber-400">{economy.saldo_io}</p>
+              <p className="font-mono font-bold text-lg text-primary">{economy.saldo_io}</p>
             </div>
           </div>
         </CardContent>
@@ -187,7 +187,7 @@ export default function ShopPage() {
             className={cn(
               'flex items-center gap-1.5 px-3 py-1.5 rounded-full whitespace-nowrap transition-colors text-sm',
               filter === cat.id
-                ? 'bg-amber-500 text-white'
+                ? 'bg-primary text-primary-foreground'
                 : 'bg-muted text-muted-foreground hover:text-foreground'
             )}
           >
@@ -201,7 +201,7 @@ export default function ShopPage() {
         placeholder="Buscar itens..."
         value={search}
         onChange={e => setSearch(e.target.value)}
-        className="border-amber-500/50"
+        className="border-primary/50"
       />
 
       <div className="grid grid-cols-2 gap-3">
@@ -217,7 +217,7 @@ export default function ShopPage() {
                     <div className="flex items-center gap-1">
                       <p className="font-semibold text-sm truncate">{item.name}</p>
                       {item.raro && (
-                        <Badge className="bg-stone-900 text-amber-400 border border-amber-400 text-[9px] px-1">
+                        <Badge className="bg-stone-900 text-primary border border-primary text-[9px] px-1">
                           LENDÁRIO
                         </Badge>
                       )}

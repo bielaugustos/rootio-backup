@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
 import { PageSkeleton } from '@/components/PageSkeleton'
+import { NbEmptyState } from '@/components/NbEmptyState'
 import {
   ArrowUp, ArrowDown, Trash, Plus, CaretLeft, CaretRight, PiggyBank, Target, PencilSimple, ArrowCounterClockwise, TrashSimple,
 } from '@phosphor-icons/react'
@@ -579,15 +580,15 @@ function FinancePageContent() {
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="p-0">
-              {txMes.length === 0 ? (
-                <div className="p-8 text-center space-y-3">
-                  <p className="text-muted-foreground text-sm">Nenhuma movimentação este mês</p>
-                  <Button onClick={() => { setTxType('expense'); setShowForm(true) }} size="sm">
-                    Registrar primeira transação
-                  </Button>
-                </div>
-              ) : (
+             <CardContent className="p-0">
+               {txMes.length === 0 ? (
+                 <NbEmptyState
+                   icon="💸"
+                   title="Sem movimentações"
+                   sub="Registre entradas e saídas para acompanhar seu saldo real."
+                   action={{ label: 'Registrar transação', onClick: () => { setTxType('expense'); setShowForm(true) } }}
+                 />
+               ) : (
                 <div className="divide-y">
                   {txMes.slice(0, 10).map(t => (
                     <div key={t.id} className="flex items-center gap-3 p-4">
@@ -956,18 +957,12 @@ function FinancePageContent() {
           )}
 
           {goals.length === 0 ? (
-            <Card className="mx-3 mt-3 flex flex-col items-center justify-center p-8 text-center">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                <Target className="h-6 w-6 text-primary" />
-              </div>
-              <CardTitle className="mb-2">Nenhuma meta ainda</CardTitle>
-              <CardDescription className="mb-4">
-                Defina objetivos financeiros
-              </CardDescription>
-              <Button onClick={() => setShowGoalForm(true)} className="gap-2">
-                <Plus className="h-4 w-4" /> Nova meta
-              </Button>
-            </Card>
+            <NbEmptyState
+              icon="🎯"
+              title="Nenhuma meta financeira"
+              sub="Defina um objetivo e acompanhe o quanto falta."
+              action={{ label: 'Criar meta', onClick: () => setShowGoalForm(true) }}
+            />
           ) : (
             <div className="space-y-3 mx-3">
               {goals.map(g => (

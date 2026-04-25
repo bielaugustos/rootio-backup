@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from 'next'
-import { Toaster } from 'sonner'
 import './globals.css'
-import { geist } from './fonts'
+import { geist, spaceGrotesk } from './fonts'
 import { ThemeInitializer } from '@/components/ThemeInitializer'
-
+import { cn } from "@/lib/utils"
+import { Toaster } from '@/components/ui/sonner'
 
 export const metadata: Metadata = {
   title:       'Rootio • Evolução Pessoal com IO',
@@ -32,28 +32,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  return (
-    <html lang="pt-BR" suppressHydrationWarning>
+   return (
+     <html lang="pt-BR" suppressHydrationWarning className={cn("font-sans", geist.variable, spaceGrotesk.variable)}>
       <body className={`${geist.variable} min-h-screen bg-nb-bg antialiased font-sans`}>
 
         <ThemeInitializer />
         {children}
-        <Toaster
-          position="bottom-center"
-          toastOptions={{
-            style: {
-              background:   '#1c1917',
-              color:        '#d97706',
-              border:       '1px solid #292524',
-              borderRadius: '4px',
-              fontFamily:   'var(--font-geist), sans-serif',
-              fontWeight:   '500',
-              fontSize:     '13px',
-              padding:    '8px 12px',
-              minWidth:  '200px',
-            },
-          }}
-        />
+        <Toaster />
       </body>
     </html>
   )

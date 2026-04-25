@@ -48,6 +48,10 @@ export interface DayHistory {
   bgColor:   string
   bgImage:   string | null
 
+  // Search
+  habitsSearchQuery: string
+  habitsFormOpen: boolean
+
   // Actions — Auth
   setUser:      (id: string | null, plan?: 'free' | 'pro') => void
   setAvatar:    (avatar: string) => void
@@ -73,6 +77,10 @@ export interface DayHistory {
   setThemeMode: (mode: 'light' | 'dark') => void
   setSoundOn: (on: boolean) => void
 
+  // Actions — Search
+  setHabitsSearchQuery: (query: string) => void
+  setHabitsFormOpen: (open: boolean) => void
+
   // Reset
   reset: () => void
 }
@@ -93,6 +101,8 @@ export const useAppStore = create<AppStore>()(
       soundOn:    true,
       bgColor:   '#fef3c7',
       bgImage:   null,
+      habitsSearchQuery: '',
+      habitsFormOpen: false,
 
       setAvatar: (avatar) => set({ avatar }),
       setBgColor: (color) => set({ bgColor: color }),
@@ -214,6 +224,10 @@ export const useAppStore = create<AppStore>()(
       setTheme:    (theme)   => set({ theme }),
       setThemeMode: (mode)   => set({ themeMode: mode }),
       setSoundOn: (soundOn) => set({ soundOn }),
+
+      // ── Search ─────────────────────────────
+      setHabitsSearchQuery: (query) => set({ habitsSearchQuery: query }),
+      setHabitsFormOpen: (open) => set({ habitsFormOpen: open }),
 
       // ── Reset ───────────────────────────────
       reset: () =>

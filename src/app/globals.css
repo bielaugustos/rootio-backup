@@ -1,856 +1,110 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ─── Tokens brutos — usados pelo Tailwind e CSS puro ─────── */
-:root {
-  /* core */
-  --ink:        #111111;
-  --ink-2:      #222222;
-  --paper:      #FDFBF5;
-  --paper-2:    #F5EFDF;
-  --line:       #111111;
-
-  /* brand */
-  --amber:      #F59E0B;
-  --amber-2:    #FBBF24;
-  --amber-deep: #B45309;
-  --amber-soft: #FEF3C7;
-
-  /* accents */
-  --sun:        #FFD23F;
-  --grass:      #7CE577;
-  --sky:        #6FB8FF;
-  --violet:     #9B7BFF;
-  --coral:      #FF6B6B;
-  --peach:      #FFB39B;
-
-  /* neutrals */
-  --mute:       #7A7268;
-  --mute-2:     #A9A295;
-
-  /* shape */
-  --r:          0px;
-  --bw:         3px;
-  --bw2:        4px;
-  --sh:         4px 4px 0 0 var(--ink);
-  --sh-lg:      6px 6px 0 0 var(--ink);
-  --sh-xl:      8px 8px 0 0 var(--ink);
-
-  /* shadcn compat — mantém componentes shadcn funcionando */
-  --background:          0 0% 99%;
-  --foreground:          20 14.3% 4.1%;
-  --card:                0 0% 99%;
-  --card-foreground:     20 14.3% 4.1%;
-  --popover:             0 0% 99%;
-  --popover-foreground:  20 14.3% 4.1%;
-  --primary:             37 91% 51%;
-  --primary-foreground:  0 0% 100%;
-  --secondary:           45 47% 94%;
-  --secondary-foreground:24 9.8% 10%;
-  --muted:               45 47% 94%;
-  --muted-foreground:    25 5.3% 44.7%;
-  --accent:              44 100% 90%;
-  --accent-foreground:   26 83.3% 14.1%;
-  --destructive:         0 84.2% 60.2%;
-  --destructive-foreground: 60 9.1% 97.8%;
-  --border:              20 5.9% 90%;
-  --input:               20 5.9% 90%;
-  --ring:                37 91% 51%;
-  --radius:              0rem; /* square everything */
-}
-
-.dark {
-  --background:          20 14.3% 4.1%;
-  --foreground:          60 9.1% 97.8%;
-  --card:                20 14.3% 4.1%;
-  --card-foreground:     60 9.1% 97.8%;
-  --popover:             20 14.3% 4.1%;
-  --popover-foreground:  60 9.1% 97.8%;
-  --primary:             37 91% 51%;
-  --primary-foreground:  0 0% 100%;
-  --secondary:           12 6.5% 15.1%;
-  --secondary-foreground:60 9.1% 97.8%;
-  --muted:               12 6.5% 15.1%;
-  --muted-foreground:    24 5.4% 63.9%;
-  --accent:              12 6.5% 15.1%;
-  --accent-foreground:   60 9.1% 97.8%;
-  --destructive:         0 62.8% 30.6%;
-  --destructive-foreground: 60 9.1% 97.8%;
-  --border:              12 6.5% 15.1%;
-  --input:               12 6.5% 15.1%;
-  --ring:                37 91% 51%;
-}
-
-.dark .nb-header {
-  background: var(--ink);
-  color: #fff;
-  border-color: #fff;
-
-}
-
-.dark .nb-header nav{
-  color: #fff;
-}
-
-.dark .nb-header nav a {
-  color: #fff;
-}
-
-.dark .nb-header nav a:hover {
-  background: var(--amber);
-  border-color: #fff;
-}
-
-.dark .nb-header nav a.active {
-    border-color: #fff;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+    --main: 36 92% 50%;
+    --main-foreground: 0 0% 0%;
+    
+     /* Sidebar variables */
+     --sidebar-background: 0 0% 98%;
+     --sidebar-foreground: 222.2 84% 4.9%;
+     --sidebar-primary: 222.2 47.4% 11.2%;
+     --sidebar-primary-foreground: 210 40% 98%;
+     --sidebar-accent: 210 40% 96.1%;
+     --sidebar-accent-foreground: 222.2 47.4% 11.2%;
+     --sidebar-border: 0 0% 0%;       /* preto no light */
+     --sidebar-ring: 221.2 83.2% 53.3%;
   }
 
-  .dark button[data-sidebar="trigger"] {
-    color: #fff;
+  .dark {
+    --background: 0 0% 11.8%;
+    --foreground: 210 40% 98%;
+    --card: 0 0% 11.8%;
+    --card-foreground: 210 40% 98%;
+    --popover: 0 0% 11.8%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+    --main: 36 92% 50%;
+    --main-foreground: 0 0% 0%;
+    
+     /* Sidebar variables - dark mode */
+     --sidebar-background: 0 0% 11.8%;
+     --sidebar-foreground: 210 40% 98%;
+     --sidebar-primary: 217.2 91.2% 59.8%;
+     --sidebar-primary-foreground: 222.2 47.4% 11.2%;
+     --sidebar-accent: 217.2 32.6% 17.5%;
+     --sidebar-accent-foreground: 210 40% 98%;
+     --sidebar-border: 0 0% 100%;    /* branco no dark */
+     --sidebar-ring: 224.3 76.3% 48%;
   }
+}
 
-    .dark .io-nav-icon {
-    background: hsl(var(--background));
-  }
-  .dark .io-nav-icon.active {
-    background: var(--amber);
-  }
-
-  /* ── Spinner circular ── */
-  .spinner-circle {
-    border-radius: 9999px !important;
-    width: 12px;
-    height: 12px;
-  }
-
-  /* ─── Base ───────────────────────────────────────── */
 @layer base {
   * {
     @apply border-border;
-    box-sizing: border-box;
   }
   body {
-    font-family: 'Space Grotesk', 'Geist', system-ui, sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    font-size: 15px;
-    line-height: 1.45;
-    -webkit-font-smoothing: antialiased;
-    /* dot grid sutil — marca registrada do sistema */
-    background-image:
-      linear-gradient(var(--paper) 0 0),
-      repeating-linear-gradient(45deg, rgba(17,17,17,.03) 0 2px, transparent 2px 14px);
-    background-blend-mode: normal;
-  }
-  ::-webkit-scrollbar       { width: 4px; height: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--ink); }
-  :root {
-    --sidebar-background:        var(--background);
-    --sidebar-foreground:        240 5.3% 26.1%;
-    --sidebar-primary:        240 5.9% 10%;
-    --sidebar-primary-foreground:        0 0% 98%;
-    --sidebar-accent:        240 4.8% 95.9%;
-    --sidebar-accent-foreground:        240 5.9% 10%;
-    --sidebar-border:        220 13% 91%;
-    --sidebar-ring:        217.2 91.2% 59.8%;
-  }
-  .dark {
-    --sidebar-background:        var(--background);
-    --sidebar-foreground:        240 4.8% 95.9%;
-    --sidebar-primary:        224.3 76.3% 48%;
-    --sidebar-primary-foreground:        0 0% 100%;
-    --sidebar-accent:        240 3.7% 15.9%;
-    --sidebar-accent-foreground:        240 4.8% 95.9%;
-    --sidebar-border:        240 3.7% 15.9%;
-    --sidebar-ring:        217.2 91.2% 59.8%;
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-/* ─── Neobrutalism components ─────────────────────── */
 @layer components {
-
-  /* ── Typography ── */
-  .nb-display {
-    font-family: 'Geist', sans-serif;
-    font-weight: 900;
-    letter-spacing: -.02em;
-    line-height: .92;
-    text-transform: uppercase;
-  }
-  .nb-mono {
-    font-family: 'Geist Mono', monospace;
-    font-weight: 700;
-  }
-  .nb-label {
-    font-family: 'Geist Mono', monospace;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .14em;
-    color: var(--ink);
-  }
-  .dark .nb-label {
-    color: #fff;
-  }
-  
-  .bg-nb-ink {
-    background: #fef3c7;
-    border: 2px solid var(--amber);
-  }
-  .dark .bg-nb-ink {
-    background: #1f2937;
-    border: 2px solid var(--amber);
-  }
-  .nb-label-mute { @apply nb-label; color: var(--mute); }
-
-  /* ── Buttons ── */
-  .nb-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    justify-content: center;
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    padding: 10px 16px;
-    font-size: 14px;
-    background: var(--sun);
-    color: var(--ink);
-    border: var(--bw) solid var(--ink);
-    box-shadow: var(--sh);
-    cursor: pointer;
-    transition: transform .08s, box-shadow .08s;
-    text-transform: uppercase;
-    letter-spacing: .04em;
-    border-radius: 0;
-  }
-  .nb-btn:hover   { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 0 var(--ink); }
-  .nb-btn:active  { transform: translate(2px,2px);   box-shadow: 2px 2px 0 0 var(--ink); }
-  .nb-btn:disabled{ opacity: .45; pointer-events: none; }
-
-  .nb-btn-primary { @apply nb-btn; background: var(--amber); color: #fff; }
-  .nb-btn-ink     { @apply nb-btn; background: var(--ink);   color: #fff; }
-  .nb-btn-ghost   { @apply nb-btn; background: #fff; }
-  .nb-btn-amber   { @apply nb-btn; background: var(--amber); color: #fff; }
-  .nb-btn-danger  { @apply nb-btn; background: var(--coral); color: #fff; }
-  .nb-btn-violet { @apply nb-btn; background: var(--violet); color: #fff; }
-  .nb-btn-grass   { @apply nb-btn; background: var(--grass); }
-  .nb-btn-sm      { padding: 6px 10px; font-size: 12px; }
-  .nb-btn-lg      { padding: 14px 22px; font-size: 16px; }
-  .nb-btn-block   { display: flex; width: 100%; justify-content: space-between; }
-  .nb-icon-btn {
-    width: 40px; height: 40px;
-    display: inline-flex; align-items: center; justify-content: center;
-    background: #fff; border: var(--bw) solid var(--ink);
-    box-shadow: var(--sh); cursor: pointer; border-radius: 0;
-  }
-  .nb-icon-btn:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 0 var(--ink); }
-
-  /* ── Cards ── */
-  .nb-card {
-    background: #fff;
-    border: var(--bw2) solid var(--ink);
-    box-shadow: var(--sh-lg);
-    padding: 16px;
-    border-radius: 0;
-  }
-  .nb-card-dark   { @apply nb-card; background: var(--ink); color: #fff; box-shadow: var(--sh-lg); }
-  .nb-card-amber  { @apply nb-card; background: var(--amber-soft); }
-  .nb-card-sun    { @apply nb-card; background: var(--sun); }
-  .nb-card-violet { @apply nb-card; background: var(--violet); color: #fff; }
-  .nb-card-grass  { @apply nb-card; background: var(--grass); }
-  .nb-card-paper  { @apply nb-card; background: var(--paper-2); }
-
-  /* ── IO Ticker ── */
-  .nb-ticker {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    background: var(--ink);
-    color: var(--sun);
-    padding: 3px 6px;
-    font-family: 'Geist Mono', monospace;
-    font-weight: 700;
-    font-size: 10px;
-    border: var(--bw) solid var(--ink);
-    box-shadow: var(--sh);
-    text-transform: uppercase;
-    border-radius: 0;
-    cursor: pointer;
-  }
-  .nb-ticker:hover {
-    transform: translate(-1px,-1px);
-    box-shadow: 3px 3px 0 0 var(--ink);
-  }
-  .nb-ticker:active {
-    transform: translate(1px,1px);
-    box-shadow: 1px 1px 0 0 var(--ink);
-  }
-  .nb-ticker-amber { @apply nb-ticker; background: var(--amber); color: #fff; }
-
-  /* ── Tags / chips ── */
-  .nb-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-family: 'Geist Mono', monospace;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 3px 7px;
-    border: 2px solid var(--ink);
-    background: #fff;
-    text-transform: uppercase;
-    letter-spacing: .1em;
-    border-radius: 0;
-  }
-  .nb-tag-amber  { @apply nb-tag; background: var(--amber-soft); }
-  .nb-tag-grass  { @apply nb-tag; background: var(--grass); }
-  .nb-tag-coral  { @apply nb-tag; background: var(--coral); color: #fff; }
-  .nb-tag-violet { @apply nb-tag; background: var(--violet); color: #fff; }
-  .nb-tag-sky    { @apply nb-tag; background: var(--sky); }
-  .nb-tag-sun    { @apply nb-tag; background: var(--sun); }
-  .nb-tag-ink    { @apply nb-tag; background: var(--ink); color: var(--sun); }
-
-  /* ── Status dots — 10×10 square ── */
-  .nb-dot {
-    width: 10px; height: 10px;
-    background: var(--ink);
-    display: inline-block;
-    border: 2px solid var(--ink);
-    border-radius: 0;
-    flex-shrink: 0;
-  }
-  .nb-dot-amber  { @apply nb-dot; background: var(--amber); border-color: var(--amber-deep); }
-  .nb-dot-grass { @apply nb-dot; background: var(--grass); border-color: #3a9e37; }
-  .nb-dot-coral  { @apply nb-dot; background: var(--coral); border-color: #c94040; }
-  .nb-dot-sky    { @apply nb-dot; background: var(--sky);    border-color: #3a82c9; }
-  .nb-dot-violet { @apply nb-dot; background: var(--violet); border-color: #6a4dbf; }
-  .nb-dot-sun    { @apply nb-dot; background: var(--sun);    border-color: #c9930b; }
-
-  /* ── Input ── */
-  .nb-input {
-    width: 100%;
-    background: #fff;
-    border: var(--bw) solid var(--ink);
-    padding: 10px 12px;
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    box-shadow: var(--sh);
-    outline: none;
-    border-radius: 0;
-    transition: background .1s, box-shadow .1s, transform .1s;
-  }
-  .nb-input:focus {
-    background: var(--sun);
-    box-shadow: 5px 5px 0 0 var(--ink);
-    transform: translate(-1px, -1px);
-  }
-  .nb-input::placeholder { color: var(--mute); }
-
-  /* ── Switch ── */
-  .nb-switch {
-    width: 56px; height: 28px;
-    border: var(--bw) solid var(--ink);
-    background: #fff;
-    position: relative;
-    cursor: pointer;
-    box-shadow: var(--sh);
-    border-radius: 0;
-    display: inline-block;
-    transition: background .14s;
-  }
-  .nb-switch i {
-    position: absolute;
-    top: -3px; left: -3px;
-    width: 28px; height: 28px;
-    background: var(--ink);
-    border: var(--bw) solid var(--ink);
-    transition: left .14s;
-    border-radius: 0;
-  }
-  .nb-switch.on { background: var(--amber); }
-  .nb-switch.on i { left: 28px; background: var(--sun); }
-
-  /* ── Checkbox ── */
-  .nb-check {
-    width: 22px; height: 22px;
-    display: inline-flex; align-items: center; justify-content: center;
-    background: #fff;
-    border: var(--bw) solid var(--ink);
-    box-shadow: var(--sh);
-    cursor: pointer;
-    flex-shrink: 0;
-    border-radius: 0;
-  }
-  .nb-check.on { background: var(--amber); }
-  .nb-check svg { display: none; }
-  .nb-check.on svg { display: block; }
-
-  /* ── Progress bar ── */
-  .nb-prog {
-    height: 18px;
-    background: #fff;
-    border: var(--bw) solid var(--ink);
-    position: relative;
-    overflow: hidden;
-    box-shadow: var(--sh);
-    border-radius: 0;
-  }
-  .nb-prog i {
-    display: block;
-    height: 100%;
-    background: var(--amber);
-    background-image: repeating-linear-gradient(
-      -45deg,
-      --var(--sun) 0 5px,
-      transparent 5px 10px
-    );
-    border-right: var(--bw) solid var(--ink);
-  }
-  .nb-prog-grass  { @apply nb-prog; }
-  .nb-prog-grass i  { background: var(--grass); background-image: repeating-linear-gradient(-45deg, rgba(0,0,0,.15) 0 5px, transparent 5px 10px); }
-  .nb-prog-violet { @apply nb-prog; }
-  .nb-prog-violet i  { background: var(--violet); background-image: repeating-linear-gradient(-45deg, rgba(0,0,0,.18) 0 5px, transparent 5px 10px); }
-
-  /* ── Stamp (decorativo — conquistas, recompensas) ── */
-  .nb-stamp {
-    display: inline-block;
-    padding: 6px 12px;
-    background: var(--coral);
-    color: #fff;
-    font-family: 'Geist', sans-serif;
-    font-weight: 900;
-    font-size: 14px;
-    border: var(--bw) solid var(--ink);
-    box-shadow: var(--sh);
-    text-transform: uppercase;
-    letter-spacing: .04em;
-    border-radius: 0;
-  }
-  .nb-stamp-amber  { @apply nb-stamp; background: var(--amber); color: #fff; }
-  .nb-stamp-grass { @apply nb-stamp; background: var(--grass); color: var(--ink); }
-  .nb-stamp-violet { @apply nb-stamp; background: var(--violet); color: #fff; }
-  .nb-stamp-ink    { @apply nb-stamp; background: var(--ink); color: var(--sun); }
-
-  /* ── Habit row ── */
-  .nb-habit {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
-    background: #fff;
-    border: var(--bw) solid var(--ink);
-    box-shadow: var(--sh);
-    border-radius: 0;
-  }
-  .nb-habit + .nb-habit { margin-top: 10px; }
-  .nb-habit .nb-habit-name { font-weight: 700; font-size: 14.5px; }
-  .nb-habit .nb-habit-io {
-    margin-left: auto;
-    font-family: 'Geist Mono', monospace;
-    font-weight: 700;
-    font-size: 12px;
-    background: var(--sun);
-    padding: 3px 7px;
-    border: 2px solid var(--ink);
-    border-radius: 0;
-  }
-  .nb-habit.done { opacity: .6; }
-  .nb-habit.done .nb-habit-name { text-decoration: line-through; }
-
-  /* ── Transaction row ── */
-  .nb-tx {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    background: #fff;
-    border: var(--bw) solid var(--ink);
-    box-shadow: var(--sh);
-    border-radius: 0;
-  }
-  .nb-tx + .nb-tx { margin-top: 10px; }
-  .nb-tx .nb-tx-icon {
-    width: 34px; height: 34px;
-    background: var(--grass);
-    border: 2px solid var(--ink);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    border-radius: 0;
-  }
-  .nb-tx.out .nb-tx-icon { background: var(--coral); color: #fff; }
-  .nb-tx .nb-tx-amt {
-    margin-left: auto;
-    font-family: 'Geist Mono', monospace;
-    font-weight: 700;
-    font-size: 14px;
-  }
-  .nb-tx.out .nb-tx-amt { color: var(--coral); }
-  .nb-tx.in  .nb-tx-amt { color: #14833B; }
-
-  /* ── Hero card (próxima ação) ── */
-  .nb-hero {
-    background: var(--ink);
-    color: #fff;
-    padding: 20px;
-    border: var(--bw2) solid var(--ink);
-    box-shadow: var(--sh-lg);
-    position: relative;
-    overflow: hidden;
-    border-radius: 0;
-  }
-  .nb-hero::after {
-    content: "";
-    position: absolute;
-    inset: -40% -10% auto auto;
-    width: 220px; height: 220px;
-    background: var(--amber);
-    transform: rotate(25deg);
-    z-index: 0;
-  }
-  .nb-hero > * { position: relative; z-index: 1; }
-  .nb-hero .nb-hero-kicker {
-    font-family: 'Geist Mono', monospace;
-    font-size: 10px;
-    color: var(--sun);
-    text-transform: uppercase;
-    letter-spacing: .18em;
-    margin-bottom: 10px;
-  }
-  .nb-hero h3 {
-    font-family: 'Geist', sans-serif;
-    text-transform: uppercase;
-    font-size: 28px;
-    margin: 0 0 6px;
-    line-height: .95;
-  }
-  .nb-hero p { color: #d9d3c4; font-size: 13px; margin: 0 0 16px; }
-
-  /* ── Level meter ── */
-  .nb-lvl {
-    background: #fff;
-    border: var(--bw2) solid var(--ink);
-    box-shadow: var(--sh-lg);
-    padding: 16px;
-    display: grid;
-    grid-template-columns: 90px 1fr;
-    gap: 14px;
-    align-items: center;
-    border-radius: 0;
-  }
-  .nb-lvl-badge {
-    width: 90px; height: 90px;
-    background: var(--amber);
-    color: #fff;
-    border: var(--bw2) solid var(--ink);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    box-shadow: var(--sh);
-    font-family: 'Geist', sans-serif;
-    border-radius: 0;
-  }
-  .nb-lvl-badge .b1 { font-size: 10px; letter-spacing: .14em; }
-  .nb-lvl-badge .b2 { font-size: 42px; line-height: .9; }
-
-  /* ── Week strip ── */
-  .nb-week {
-    display: flex; justify-content: space-between; gap: 20px; width: 100%;
-  }
-  .nb-week-day {
-    flex: 1 1 0; min-width: 0;
-    aspect-ratio: 1 / 1.1;
-    background: #fff;
-    border: var(--bw) solid var(--ink);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    font-family: 'Geist Mono', monospace;
-    font-size: 11px; font-weight: 700;
-    border-radius: 0;
-  }
-  .nb-week-day .d { font-size: 14px; font-family: 'Geist', sans-serif; font-weight: 900; }
-  .nb-week-day .n { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; margin-top: 2px; }
-  .nb-week-day.done  { background: var(--grass); }
-  .nb-week-day.today { background: var(--amber); color: #fff; box-shadow: 3px 3px 0 0 var(--ink); }
-
-  /* ── Week calendar (spec-body, week, day) ── */
-  .spec-body {
-    display: flex;
-    align-items: left;
-    justify-content: left;
-    min-height: 80px;
-    position: relative;
-    background: #fff;
-    margin-left: -12px;
-  }
-  .spec-body.stretch {
-    align-items: stretch;
-
-  }
-  .week {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    width: 100%;
-  }
-  .day {
-    flex: 1 1 0;
-    min-width: 0;
-    aspect-ratio: 1 / 1.1;
-    background: #fff;
-    border: var(--bw) solid var(--ink);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Geist Mono', monospace;
-    font-size: 11px;
-    font-weight: 700;
-    border-radius: 0;
-  }
-  .day .d {
-    font-size: 14px;
-    font-family: 'Geist', sans-serif;
-    font-weight: 900;
-  }
-  .day .n {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: .1em;
-    margin-top: 2px;
-  }
-  .day.done {
-    background: var(--grass);
-  }
-  .day.today {
-    background: var(--amber);
-    color: #fff;
-    box-shadow: 3px 3px 0 0 var(--ink);
+  .io-ticker {
+    @apply flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold;
+    @apply bg-amber-500 text-black border-2 border-black;
+    @apply shadow-[2px_2px_0_0_rgba(0,0,0,1)];
+    @apply hover:bg-amber-400 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)];
+    @apply active:shadow-none active:translate-x-[2px] active:translate-y-[2px];
+    @apply transition-all duration-75 cursor-pointer;
   }
 
-  /* ── Dark mode styles for week calendar ── */
-  .dark .spec-body {
-    background: transparent;
-  }
-  .dark .day {
-    background: hsl(var(--card));
-    border-color: #fff;
-    color: #fff;
-  }
-  .dark .day.done {
-    background: #22c55e;
-    border-color: #16a34a;
-  }
-  .dark .day.today {
-    background: #f59e0b;
-    border-color: #d97706;
-    color: #fff;
-    box-shadow: 3px 3px 0 0 #fff;
-  }
-  .dark .day .d,
-  .dark .day .n {
-    color: #fff;
+  @keyframes propagate {
+    0%, 100% {
+      transform: scale(0.8);
+      opacity: 0.5;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 1;
+    }
   }
 
-  /* ── Header / Nav ── */
-  .nb-header {
-    border: var(--bw2) solid var(--ink);
-    background: #fff;
-    box-shadow: var(--sh);
-    display: flex;
-    align-items: center;
-    padding: 10px 14px;
-    gap: 14px;
-    border-radius: 0;
+  .animate-propagate {
+    animation: propagate 0.8s ease-in-out infinite;
   }
-  .nb-header-logo {
-    width: 36px; height: 36px;
-    border: var(--bw) solid var(--ink);
-    background: var(--sun);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Geist', sans-serif; font-weight: 900;
-    border-radius: 0;
-  }
-  .nb-header nav { display: flex; gap: 2px; margin-left: 6px; }
-  .nb-header nav a {
-    padding: 6px 10px;
-    font-weight: 700;
-    font-size: 13px;
-    border: 2px solid transparent;
-    cursor: pointer;
-    font-family: 'Geist Mono', monospace;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    border-radius: 0;
-    transition: background .1s, border-color .1s;
-  }
-  .nb-header nav a.active { border-color: var(--ink); background: var(--amber); color: #fff; }
-  .nb-header nav a:hover { border-color: var(--ink); background: var(--sun); }
-
-  /* ── Bottom tabs (mobile) ── */
-  .nb-tabs {
-    display: flex;
-    border: var(--bw2) solid var(--ink);
-    background: #fff;
-    box-shadow: var(--sh-lg);
-    padding: 6px;
-    border-radius: 0;
-  }
-  .nb-tabs a {
-    flex: 1;
-    display: flex; flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    padding: 8px 4px;
-    font-family: 'Geist Mono', monospace;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    font-weight: 700;
-    cursor: pointer;
-    color: var(--mute);
-    border: 2px solid transparent;
-    border-radius: 0;
-    transition: background .1s, border-color .1s;
-  }
-  .nb-tabs a.active { background: var(--amber); color: #fff; border-color: var(--ink); }
-
-  /* ── Shop item ── */
-  .nb-shop-item {
-    background: #fff;
-    border: var(--bw2) solid var(--ink);
-    box-shadow: var(--sh);
-    display: flex; flex-direction: column;
-    border-radius: 0;
-  }
-  .nb-shop-thumb {
-    height: 110px;
-    display: flex; align-items: center; justify-content: center;
-    border-bottom: var(--bw2) solid var(--ink);
-    font-size: 56px;
-    background: var(--sun);
-    position: relative;
-  }
-  .nb-shop-thumb.violet { background: var(--violet); color: #fff; }
-  .nb-shop-thumb.grass  { background: var(--grass); }
-  .nb-shop-thumb.amber  { background: var(--amber); color: #fff; }
-  .nb-shop-thumb.ink    { background: var(--ink); color: var(--sun); }
-
-  /* ── Achievement card ── */
-  .nb-ach {
-    background: #fff;
-    border: var(--bw2) solid var(--ink);
-    box-shadow: var(--sh);
-    padding: 14px;
-    text-align: center;
-    border-radius: 0;
-  }
-  .nb-ach.lock {
-    background: repeating-linear-gradient(-45deg, #fff 0 8px, var(--paper-2) 8px 16px);
-    color: var(--mute);
-  }
-
-  /* ── Divisores decorativos ── */
-  .nb-rule         { height: 4px; background: var(--ink); border-radius: 0; }
-  .nb-rule-ladder  {
-    height: 18px;
-    background:
-      linear-gradient(var(--ink), var(--ink)) 0 0 / 100% 3px no-repeat,
-      linear-gradient(var(--ink), var(--ink)) 0 100% / 100% 3px no-repeat,
-      repeating-linear-gradient(90deg, var(--ink) 0 3px, transparent 3px 18px);
-  }
-
-  /* ── Callout ── */
-  .nb-callout {
-    border: var(--bw2) solid var(--ink);
-    background: var(--sun);
-    padding: 16px 20px;
-    display: flex; gap: 14px; align-items: center;
-    box-shadow: var(--sh);
-    border-radius: 0;
-  }
-
-  /* ── Box geral ── */
-  .nb-box {
-    background: #fff;
-    border: var(--bw2) solid var(--ink);
-    box-shadow: var(--sh-lg);
-    border-radius: 0;
-  }
-  .nb-box-sun    { @apply nb-box; background: var(--sun); }
-  .nb-box-amber  { @apply nb-box; background: var(--amber); color: #fff; }
-  .nb-box-ink    { @apply nb-box; background: var(--ink); color: #fff; }
-  .nb-box-violet { @apply nb-box; background: var(--violet); color: #fff; }
-  .nb-box-grass  { @apply nb-box; background: var(--grass); }
-  .nb-box-coral  { @apply nb-box; background: var(--coral); color: #fff; }
-  .nb-box-sky    { @apply nb-box; background: var(--sky); }
-  .nb-box-peach  { @apply nb-box; background: var(--peach); }
-  .nb-box-paper  { @apply nb-box; background: var(--paper-2); }
-
-  /* io-* aliases — retrocompatibilidade com código existente */
-  .io-ticker      { @apply nb-ticker; }
-  .io-label       { @apply nb-label-mute; }
-  .io-tag         { @apply nb-tag; }
-  .io-tag-amber   { @apply nb-tag-amber; }
-  .io-tag-green   { @apply nb-tag-grass; }
-  .io-tag-red     { @apply nb-tag-coral; }
-  .io-tag-blue    { @apply nb-tag-sky; }
-  .io-tag-purple  { @apply nb-tag-violet; }
-  .io-tag-gray    { @apply nb-tag; }
-  .io-dot         { @apply nb-dot; }
-  .io-dot-amber   { @apply nb-dot-amber; }
-  .io-dot-green   { @apply nb-dot-grass; }
-  .io-dot-red     { @apply nb-dot-coral; }
-  .io-nav-item    { @apply flex flex-col items-center gap-0.5 cursor-pointer; }
-  .io-nav-icon    {
-    width: 40px; height: 40px;
-    display: flex; align-items: center; justify-content: center;
-    background: #fff;
-    transition: background .1s;
-    border-radius: 0;
-  }
-  .io-nav-icon.active { background: var(--amber); }
-  .io-progress-track  { @apply nb-prog; }
-  .io-progress-fill   { display: block; height: 100%; background: var(--amber); }
-  .io-chest-btn {
-    width: 64px; height: 64px;
-    border: var(--bw2) solid var(--ink);
-    background: var(--amber-soft);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    box-shadow: var(--sh);
-    transition: background .12s, transform .1s;
-    border-radius: 0;
-  }
-  .io-chest-btn:hover  { background: var(--sun); }
-  .io-chest-btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 0 var(--ink); }
-}
-
-/* ─── Utilitários Tailwind extras ─────────────────── */
-@layer utilities {
-  .font-display { font-family: 'Geist', sans-serif; font-weight: 900; }
-  .font-mono    { font-family: 'Geist Mono', monospace; }
-  .font-body    { font-family: 'Space Grotesk', sans-serif; }
-  .sh           { box-shadow: var(--sh); }
-  .sh-lg        { box-shadow: var(--sh-lg); }
-  .sh-xl        { box-shadow: var(--sh-xl); }
-  .text-ink     { color: var(--ink); }
-  .text-mute    { color: var(--mute); }
-  .text-sun     { color: var(--sun); }
-  .text-grass   { color: var(--grass); }
-  .text-coral   { color: var(--coral); }
-  .text-sky     { color: var(--sky); }
-  .text-violet  { color: var(--violet); }
-  .bg-paper     { background: var(--paper); }
-  .bg-paper-2   { background: var(--paper-2); }
-  .bg-sun       { background: var(--sun); }
-  .bg-grass     { background: var(--grass); }
-  .bg-coral     { background: var(--coral); }
-  .bg-sky       { background: var(--sky); }
-  .bg-violet    { background: var(--violet); }
-  .bg-peach     { background: var(--peach); }
-  .border-ink   { border-color: var(--ink); }
 }

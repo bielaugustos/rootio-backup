@@ -1,39 +1,41 @@
-import { clsx, type ClassValue } from 'clsx'
-import { twMerge } from 'tailwind-merge'
+  import { clsx, type ClassValue } from "clsx"
+  import { twMerge } from "tailwind-merge"
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
+  export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs))
+  }
 
-export function formatBRL(value: number): string {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency', currency: 'BRL',
-  }).format(value)
-}
+  export function storage<T>(key: string, defaultValue: T): T {
+    if (typeof window === 'undefined') return defaultValue
+    try {
+      const item = localStorage.getItem(key)
+      return item ? JSON.parse(item) : defaultValue
+    } catch {
+      return defaultValue
+    }
+  }
 
-export function todayISO(): string {
-  return new Date().toISOString().split('T')[0]
-}
+  export function saveStorage<T>(key: string, value: T): void {
+    if (typeof window === 'undefined') return
+    try {
+      localStorage.setItem(key, JSON.stringify(value))
+    } catch (e) {
+      console.error('Error saving to localStorage:', e)
+    }
+  }
 
-export function todayLabel(): string {
-  return new Date().toLocaleDateString('pt-BR', {
-    weekday: 'long', day: 'numeric', month: 'long',
-  })
-}
+  export function formatBRL(value: number): string {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value)
+  }
 
-export function storage<T>(key: string, fallback: T): T {
-  if (typeof window === 'undefined') return fallback
-  try {
-    const v = localStorage.getItem(key)
-    return v ? JSON.parse(v) : fallback
-  } catch { return fallback }
-}
+  export function todayISO(): string {
+    return new Date().toISOString().split('T')[0]
+  }
 
-export function saveStorage(key: string, value: unknown): void {
-  if (typeof window === 'undefined') return
-  try { localStorage.setItem(key, JSON.stringify(value)) } catch {}
-}
-
-export function pad(n: number): string {
-  return String(n).padStart(2, '0')
-}
+  export function todayLabel(): string {
+    const days = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
+    return days[new Date().getDay()]
+  }

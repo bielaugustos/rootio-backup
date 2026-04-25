@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { PageSkeleton } from '@/components/PageSkeleton'
+import { NbEmptyState } from '@/components/NbEmptyState'
 import {
   Briefcase, GraduationCap, Star, Shield,
   Plus, Trash, PencilSimple, FileText,
@@ -63,10 +64,10 @@ const CARGOS: Record<string, string[]> = {
 const TIPOS = ['Curso', 'Livro', 'Artigo', 'Documentário'] as const
 
 const TIPOS_COLORS: Record<string, string> = {
-  'Curso': 'bg-blue-100 text-blue-700',
-  'Livro': 'bg-green-100 text-green-700',
-  'Artigo': 'bg-purple-100 text-purple-700',
-  'Documentário': 'bg-orange-100 text-orange-700',
+  'Curso': 'bg-secondary text-secondary-foreground',
+  'Livro': 'bg-secondary text-secondary-foreground',
+  'Artigo': 'bg-secondary text-secondary-foreground',
+  'Documentário': 'bg-secondary text-secondary-foreground',
 }
 
 const SUGESTOES = [
@@ -274,7 +275,7 @@ function CareerPageContent() {
                   <button
                     key={m.id}
                     onClick={() => handleMomentoSelect(m.id)}
-                    className="w-full p-3 text-left rounded-lg border border-border hover:border-amber-500 hover:bg-amber-50 transition-colors"
+                    className="w-full p-3 text-left rounded-lg border border-border hover:border-primary hover:bg-accent transition-colors"
                   >
                     {m.label}
                   </button>
@@ -293,7 +294,7 @@ function CareerPageContent() {
                   <button
                     key={a}
                     onClick={() => handleAreaSelect(a)}
-                    className="w-full p-3 text-left rounded-lg border border-border hover:border-amber-500 hover:bg-amber-50 transition-colors"
+                    className="w-full p-3 text-left rounded-lg border border-border hover:border-primary hover:bg-accent transition-colors"
                   >
                     {a}
                   </button>
@@ -313,7 +314,7 @@ function CareerPageContent() {
                     <button
                       key={c}
                       onClick={() => handleCargoSelect(c)}
-                      className="px-3 py-1.5 rounded-full border border-border hover:border-amber-500 hover:bg-amber-50 transition-colors text-sm"
+                      className="px-3 py-1.5 rounded-full border border-border hover:border-primary hover:bg-accent transition-colors text-sm"
                     >
                       {c}
                     </button>
@@ -353,8 +354,8 @@ function CareerPageContent() {
                   <span className="text-sm font-mono">{onboarding.pct}%</span>
                 </div>
 
-                <div className="p-3 rounded-lg bg-amber-50 border border-amber-200">
-                  <p className="text-xs text-amber-700 font-semibold">OBJETIVO PROFISSIONAL</p>
+                <div className="p-3 rounded-lg bg-muted border">
+                  <p className="text-xs font-semibold text-muted-foreground">OBJETIVO PROFISSIONAL</p>
                   <p className="text-sm mt-1">{onboarding.objetivo}</p>
                 </div>
 
@@ -410,8 +411,8 @@ function CareerPageContent() {
                         className={cn(
                           'px-2 py-1 rounded-full text-xs border transition-colors',
                           onboarding.extraGoals?.includes(g)
-                            ? 'bg-amber-500 text-white border-amber-500'
-                            : 'border-border hover:border-amber-500'
+                            ? 'bg-primary text-primary-foreground border-primary'
+                            : 'border-border hover:border-primary'
                         )}
                       >
                         {g}
@@ -508,12 +509,12 @@ function CareerPageContent() {
           )}
 
           {learns.length === 0 ? (
-            <Card>
-              <CardContent className="p-8 text-center">
-                <BookOpen className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-                <p className="text-muted-foreground">Nenhum conteúdo ainda</p>
-              </CardContent>
-            </Card>
+            <NbEmptyState
+              icon="📚"
+              title="Nenhum aprendizado"
+              sub="Adicione cursos, livros ou artigos que quer acompanhar."
+              action={{ label: 'Adicionar aprendizado', href: '/dashboard/career?tab=aprendizado' }}
+            />
           ) : (
             <div className="space-y-2">
               {learns.map(l => (
@@ -531,15 +532,52 @@ function CareerPageContent() {
                     </div>
                     <div className="flex items-center gap-1">
                       {l.status !== 'concluído' && (
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="h-8 w-8"
+                        <button
+                          style={{
+                            height: 40,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '13px 16px',
+                            background: '#F59E0B',
+                            color: '#000',
+                            border: '2px solid #111111',
+                            borderRadius: 4,
+                            boxShadow: '3px 3px 0 0 #111111',
+                            fontFamily: 'var(--font-display, sans-serif)',
+                            fontWeight: 900,
+                            fontSize: 13,
+                            textTransform: 'uppercase',
+                            letterSpacing: '.04em',
+                            cursor: 'pointer',
+                            transition: 'transform .08s, box-shadow .08s',
+                          }}
                           onClick={() => advanceLearnStatus(l.id)}
                           title="Avançar status"
+                          onMouseEnter={e => {
+                            const t = e.currentTarget
+                            t.style.transform = 'translate(-1px,-1px)'
+                            t.style.boxShadow = '4px 4px 0 0 #111111'
+                          }}
+                          onMouseLeave={e => {
+                            const t = e.currentTarget
+                            t.style.transform = ''
+                            t.style.boxShadow = '3px 3px 0 0 #111111'
+                          }}
+                          onMouseDown={e => {
+                            const t = e.currentTarget
+                            t.style.transform = 'translate(2px,2px)'
+                            t.style.boxShadow = '1px 1px 0 0 #111111'
+                          }}
+                          onMouseUp={e => {
+                            const t = e.currentTarget
+                            t.style.transform = 'translate(-1px,-1px)'
+                            t.style.boxShadow = '4px 4px 0 0 #111111'
+                          }}
                         >
-                          <ArrowCircleRight className="h-4 w-4" />
-                        </Button>
+                          <span>Avançar status</span>
+                          <ArrowRight size={14} weight="bold" />
+                        </button>
                       )}
                       <Button variant="ghost" size="icon" onClick={() => deleteLearn(l.id)}>
                         <Trash className="h-4 w-4" />

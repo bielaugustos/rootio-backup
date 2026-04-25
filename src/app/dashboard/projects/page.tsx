@@ -18,6 +18,7 @@ import {
 } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 import { PageSkeleton } from '@/components/PageSkeleton'
+import { NbEmptyState } from '@/components/NbEmptyState'
 
 const KEY_PROJECTS = 'io_projects'
 const KEY_BANNER = 'io_proj_banner'
@@ -541,12 +542,15 @@ export default function ProjectsPage() {
         </Card>
       )}
 
-      {/* Empty state */}
-      {projects.length === 0 && !showForm && (
-        <div className="mx-3 mt-3">
-          {/* Conteúdo movido para o banner colapsável */}
-        </div>
-      )}
+       {/* Empty state */}
+       {projects.length === 0 && !showForm && (
+         <NbEmptyState
+           icon="📋"
+           title="Nenhum projeto ainda"
+           sub="Um projeto de vida, uma ideia, um plano. Comece pequeno."
+           action={{ label: 'Criar projeto', onClick: () => setShowForm(true) }}
+         />
+       )}
 
       {/* Cards de projeto */}
       {filteredProjects.length > 0 && (
