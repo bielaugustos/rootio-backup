@@ -111,7 +111,7 @@ export function CarreiraCard({
               background:     '#F59E0B',
               color:          '#000',
               border:         '2px solid #111111',
-              boxShadow:      '3px 3px 0 0 #111111',
+              boxShadow:      '2px 2px 0 0 #111111',
               borderRadius:   4,
               fontFamily:     'var(--font-display, sans-serif)',
               fontWeight:     900,
@@ -119,27 +119,27 @@ export function CarreiraCard({
               textTransform:  'uppercase' as const,
               letterSpacing:  '.04em',
               textDecoration: 'none',
-              transition:     'transform .08s, box-shadow .08s',
+              transition:     'all .075s ease',
             }}
             onMouseEnter={e => {
               const t = e.currentTarget
-              t.style.transform = 'translate(-1px,-1px)'
-              t.style.boxShadow = '4px 4px 0 0 #111111'
+              t.style.boxShadow = 'none'
+              t.style.transform = 'translate(4px,4px)'
             }}
             onMouseLeave={e => {
               const t = e.currentTarget
+              t.style.boxShadow = '2px 2px 0 0 #111111'
               t.style.transform = ''
-              t.style.boxShadow = '3px 3px 0 0 #111111'
             }}
             onMouseDown={e => {
               const t = e.currentTarget
-              t.style.transform = 'translate(2px,2px)'
-              t.style.boxShadow = '1px 1px 0 0 #111111'
+              t.style.boxShadow = 'none'
+              t.style.transform = 'translate(4px,4px)'
             }}
             onMouseUp={e => {
               const t = e.currentTarget
-              t.style.transform = 'translate(-1px,-1px)'
-              t.style.boxShadow = '4px 4px 0 0 #111111'
+              t.style.boxShadow = 'none'
+              t.style.transform = 'translate(4px,4px)'
             }}
           >
             <span>Criar agora</span>
@@ -230,34 +230,34 @@ export function CarreiraCard({
                  color:          '#000',
                  border:         '2px solid #111111',
                  borderRadius:   4,
-                 boxShadow:      '3px 3px 0 0 #111111',
+                 boxShadow:      '2px 2px 0 0 #111111',
                  fontFamily:     'var(--font-display, sans-serif)',
                  fontWeight:     900,
                  fontSize:       13,
                  textTransform:  'uppercase' as const,
                  letterSpacing:  '.04em',
                  cursor:         'pointer',
-                 transition:     'transform .08s, box-shadow .08s',
+                 transition:     'all .075s ease',
                }}
               onMouseEnter={e => {
                 const t = e.currentTarget
-                t.style.transform = 'translate(-1px,-1px)'
-                t.style.boxShadow = '4px 4px 0 0 #111111'
+                t.style.boxShadow = 'none'
+                t.style.transform = 'translate(4px,4px)'
               }}
               onMouseLeave={e => {
                 const t = e.currentTarget
+                t.style.boxShadow = '2px 2px 0 0 #111111'
                 t.style.transform = ''
-                t.style.boxShadow = '3px 3px 0 0 #111111'
               }}
               onMouseDown={e => {
                 const t = e.currentTarget
-                t.style.transform = 'translate(2px,2px)'
-                t.style.boxShadow = '1px 1px 0 0 #111111'
+                t.style.boxShadow = 'none'
+                t.style.transform = 'translate(4px,4px)'
               }}
               onMouseUp={e => {
                 const t = e.currentTarget
-                t.style.transform = 'translate(-1px,-1px)'
-                t.style.boxShadow = '4px 4px 0 0 #111111'
+                t.style.boxShadow = 'none'
+                t.style.transform = 'translate(4px,4px)'
               }}
             >
               <span>Avançar status</span>
@@ -275,7 +275,7 @@ export function CarreiraCard({
                  background:     '#F59E0B',
                  color:          '#000',
                  border:         '2px solid #111111',
-                 boxShadow:      '3px 3px 0 0 #111111',
+                 boxShadow:      '2px 2px 0 0 #111111',
                  borderRadius:   4,
                  fontFamily:     'var(--font-display, sans-serif)',
                  fontWeight:     900,
@@ -283,27 +283,27 @@ export function CarreiraCard({
                  textTransform:  'uppercase' as const,
                  letterSpacing:  '.04em',
                  textDecoration: 'none',
-                 transition:     'transform .08s, box-shadow .08s',
+                 transition:     'all .075s ease',
                }}
                onMouseEnter={e => {
                  const t = e.currentTarget
-                 t.style.transform = 'translate(-1px,-1px)'
-                 t.style.boxShadow = '4px 4px 0 0 #111111'
+                 t.style.boxShadow = 'none'
+                 t.style.transform = 'translate(4px,4px)'
                }}
                onMouseLeave={e => {
                  const t = e.currentTarget
+                 t.style.boxShadow = '2px 2px 0 0 #111111'
                  t.style.transform = ''
-                 t.style.boxShadow = '3px 3px 0 0 #111111'
                }}
                onMouseDown={e => {
                  const t = e.currentTarget
-                 t.style.transform = 'translate(2px,2px)'
-                 t.style.boxShadow = '1px 1px 0 0 #111111'
+                 t.style.boxShadow = 'none'
+                 t.style.transform = 'translate(4px,4px)'
                }}
                onMouseUp={e => {
                  const t = e.currentTarget
-                 t.style.transform = 'translate(-1px,-1px)'
-                 t.style.boxShadow = '4px 4px 0 0 #111111'
+                 t.style.boxShadow = 'none'
+                 t.style.transform = 'translate(4px,4px)'
                }}
              >
               <span>Criar novo aprendizado</span>

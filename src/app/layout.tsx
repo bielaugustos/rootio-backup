@@ -34,12 +34,12 @@ export default function RootLayout({
 }) {
    return (
      <html lang="pt-BR" suppressHydrationWarning className={cn("font-sans", geist.variable, spaceGrotesk.variable)}>
-      <body className={`${geist.variable} min-h-screen bg-nb-bg antialiased font-sans`}>
+       <body className={`${geist.variable} min-h-screen bg-nb-bg antialiased font-sans`} suppressHydrationWarning>
 
-        <ThemeInitializer />
-        {children}
-        <Toaster />
-      </body>
-    </html>
-  )
+         <ThemeInitializer />
+         {children}
+         <Toaster />
+       </body>
+     </html>
+   )
 }

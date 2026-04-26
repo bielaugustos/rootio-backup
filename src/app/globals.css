@@ -85,11 +85,11 @@
 
 @layer components {
   .io-ticker {
-    @apply flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold;
+    @apply flex items-center gap-0.5 px-1.5 py-0.5 rounded-sm text-[10px] font-medium;
     @apply bg-amber-500 text-black border-2 border-black;
     @apply shadow-[2px_2px_0_0_rgba(0,0,0,1)];
-    @apply hover:bg-amber-400 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)];
-    @apply active:shadow-none active:translate-x-[2px] active:translate-y-[2px];
+    @apply hover:bg-amber-400 hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px];
+    @apply active:shadow-none active:translate-x-[4px] active:translate-y-[4px];
     @apply transition-all duration-75 cursor-pointer;
   }
 

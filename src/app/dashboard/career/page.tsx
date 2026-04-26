@@ -531,50 +531,50 @@ function CareerPageContent() {
                       </div>
                     </div>
                     <div className="flex items-center gap-1">
-                      {l.status !== 'concluído' && (
-                        <button
-                          style={{
-                            height: 40,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            padding: '13px 16px',
-                            background: '#F59E0B',
-                            color: '#000',
-                            border: '2px solid #111111',
-                            borderRadius: 4,
-                            boxShadow: '3px 3px 0 0 #111111',
-                            fontFamily: 'var(--font-display, sans-serif)',
-                            fontWeight: 900,
-                            fontSize: 13,
-                            textTransform: 'uppercase',
-                            letterSpacing: '.04em',
-                            cursor: 'pointer',
-                            transition: 'transform .08s, box-shadow .08s',
-                          }}
-                          onClick={() => advanceLearnStatus(l.id)}
-                          title="Avançar status"
-                          onMouseEnter={e => {
-                            const t = e.currentTarget
-                            t.style.transform = 'translate(-1px,-1px)'
-                            t.style.boxShadow = '4px 4px 0 0 #111111'
-                          }}
-                          onMouseLeave={e => {
-                            const t = e.currentTarget
-                            t.style.transform = ''
-                            t.style.boxShadow = '3px 3px 0 0 #111111'
-                          }}
-                          onMouseDown={e => {
-                            const t = e.currentTarget
-                            t.style.transform = 'translate(2px,2px)'
-                            t.style.boxShadow = '1px 1px 0 0 #111111'
-                          }}
-                          onMouseUp={e => {
-                            const t = e.currentTarget
-                            t.style.transform = 'translate(-1px,-1px)'
-                            t.style.boxShadow = '4px 4px 0 0 #111111'
-                          }}
-                        >
+                       {l.status !== 'concluído' && (
+                         <button
+                           style={{
+                             height: 40,
+                             display: 'flex',
+                             alignItems: 'center',
+                             justifyContent: 'center',
+                             padding: '13px 16px',
+                             background: '#F59E0B',
+                             color: '#000',
+                             border: '2px solid #111111',
+                             borderRadius: 4,
+                             boxShadow: '2px 2px 0 0 #111111',
+                             fontFamily: 'var(--font-display, sans-serif)',
+                             fontWeight: 900,
+                             fontSize: 13,
+                             textTransform: 'uppercase',
+                             letterSpacing: '.04em',
+                             cursor: 'pointer',
+                             transition: 'all .075s ease',
+                           }}
+                           onClick={() => advanceLearnStatus(l.id)}
+                           title="Avançar status"
+                           onMouseEnter={e => {
+                             const t = e.currentTarget
+                             t.style.boxShadow = 'none'
+                             t.style.transform = 'translate(4px,4px)'
+                           }}
+                           onMouseLeave={e => {
+                             const t = e.currentTarget
+                             t.style.boxShadow = '2px 2px 0 0 #111111'
+                             t.style.transform = ''
+                           }}
+                           onMouseDown={e => {
+                             const t = e.currentTarget
+                             t.style.boxShadow = 'none'
+                             t.style.transform = 'translate(4px,4px)'
+                           }}
+                           onMouseUp={e => {
+                             const t = e.currentTarget
+                             t.style.boxShadow = 'none'
+                             t.style.transform = 'translate(4px,4px)'
+                           }}
+                         >
                           <span>Avançar status</span>
                           <ArrowRight size={14} weight="bold" />
                         </button>

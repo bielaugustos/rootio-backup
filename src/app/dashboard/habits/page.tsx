@@ -64,16 +64,16 @@ const NB: Record<string, React.CSSProperties> = {
   btnAmber: {
     display:'flex', alignItems:'center', justifyContent:'space-between',
     width:'100%', padding:'14px 18px', background:'#F59E0B', color:'#111',
-    border:'3px solid #111', boxShadow:'3px 3px 0 0 #111', borderRadius:0,
+    border:'3px solid #111', boxShadow:'2px 2px 0 0 #111', borderRadius:0,
     fontFamily:'var(--font-display,sans-serif)', fontWeight:900, fontSize:14,
-    letterSpacing:'.04em', cursor:'pointer',
+    letterSpacing:'.04em', cursor:'pointer', transition:'all .075s ease',
   },
   btnGhost: {
     display:'flex', alignItems:'center', justifyContent:'center', gap:6,
     padding:'12px 18px', background:'#fff', color:'#111',
     border:'2px solid #111', boxShadow:'2px 2px 0 0 #111', borderRadius:0,
     fontFamily:'var(--font-body,system-ui)', fontWeight:700, fontSize:13,
-    cursor:'pointer',
+    cursor:'pointer', transition:'all .075s ease',
   },
 }
 
@@ -410,10 +410,24 @@ export default function HabitsPage() {
 
               {/* Ações */}
               <div style={{ display:'flex', gap:8, marginTop:4 }}>
-                <button onClick={cancelForm} style={{ ...NB.btnGhost, flex:1 }}>
+                <button 
+                  onClick={cancelForm} 
+                  style={{ ...NB.btnGhost, flex:1 }}
+                  onMouseEnter={e => { const t = e.currentTarget; t.style.boxShadow = 'none'; t.style.transform = 'translate(4px,4px)' }}
+                  onMouseLeave={e => { const t = e.currentTarget; t.style.boxShadow = '2px 2px 0 0 #111'; t.style.transform = '' }}
+                  onMouseDown={e => { const t = e.currentTarget; t.style.boxShadow = 'none'; t.style.transform = 'translate(4px,4px)' }}
+                  onMouseUp={e => { const t = e.currentTarget; t.style.boxShadow = 'none'; t.style.transform = 'translate(4px,4px)' }}
+                >
                   Cancelar
                 </button>
-                <button onClick={save} style={{ ...NB.btnAmber, flex:2, justifyContent:'center', gap:0 }}>
+                <button 
+                  onClick={save} 
+                  style={{ ...NB.btnAmber, flex:2, justifyContent:'center', gap:0 }}
+                  onMouseEnter={e => { const t = e.currentTarget; t.style.boxShadow = 'none'; t.style.transform = 'translate(4px,4px)' }}
+                  onMouseLeave={e => { const t = e.currentTarget; t.style.boxShadow = '2px 2px 0 0 #111'; t.style.transform = '' }}
+                  onMouseDown={e => { const t = e.currentTarget; t.style.boxShadow = 'none'; t.style.transform = 'translate(4px,4px)' }}
+                  onMouseUp={e => { const t = e.currentTarget; t.style.boxShadow = 'none'; t.style.transform = 'translate(4px,4px)' }}
+                >
                   {editing ? 'Salvar' : 'Adicionar hábito'}
                 </button>
               </div>

@@ -104,7 +104,8 @@ export default function HojePage() {
               name: next.name,
               priority: next.priority as 'alta'|'media'|'baixa',
               freq: next.freq,
-              category: (next as any).listType
+              category: (next as any).listType,
+              icon: next.icon
             }}
             onConcluir={() => toggleHabit(next.id)}
             onPular={handleSkip}
@@ -244,7 +245,7 @@ function InsightsCard({ plan }: { plan: string }) {
                background: '#F59E0B',
                color: '#000',
                border: '2px solid #111111',
-               boxShadow: '3px 3px 0 0 #111111',
+               boxShadow: '2px 2px 0 0 #111111',
                borderRadius: 4,
                fontFamily: 'var(--font-display, sans-serif)',
                fontWeight: 900,
@@ -252,27 +253,27 @@ function InsightsCard({ plan }: { plan: string }) {
                textTransform: 'uppercase',
                letterSpacing: '.04em',
                textDecoration: 'none',
-               transition: 'transform .08s, box-shadow .08s',
+               transition: 'all .075s ease',
              }}
              onMouseEnter={e => {
                const t = e.currentTarget
-               t.style.transform = 'translate(-1px,-1px)'
-               t.style.boxShadow = '4px 4px 0 0 #111111'
+               t.style.boxShadow = 'none'
+               t.style.transform = 'translate(4px,4px)'
              }}
              onMouseLeave={e => {
                const t = e.currentTarget
+               t.style.boxShadow = '2px 2px 0 0 #111111'
                t.style.transform = ''
-               t.style.boxShadow = '3px 3px 0 0 #111111'
              }}
                onMouseDown={e => {
                  const t = e.currentTarget
-                 t.style.transform = 'translate(2px,2px)'
-                 t.style.boxShadow = '1px 1px 0 0 #111111'
+                 t.style.boxShadow = 'none'
+                 t.style.transform = 'translate(4px,4px)'
                }}
              onMouseUp={e => {
                const t = e.currentTarget
-               t.style.transform = 'translate(-1px,-1px)'
-               t.style.boxShadow = '4px 4px 0 0 #111111'
+               t.style.boxShadow = 'none'
+               t.style.transform = 'translate(4px,4px)'
              }}
            >
             <span>PRO VITALÍCIO · R$12,90 ★ Ver PRO</span>

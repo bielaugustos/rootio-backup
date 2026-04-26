@@ -15,6 +15,7 @@ interface HeroCardHabit {
   priority: 'alta' | 'media' | 'baixa'
   freq?:    string
   category?: string
+  icon?:     string
 }
 
 interface HeroCardProps {
@@ -147,21 +148,11 @@ export function HeroCard({ habit, onConcluir, onPular, className = '' }: HeroCar
           {kicker.text}
         </div>
 
-        {/* Título — nome do hábito */}
-        <h2
-          style={{
-            fontFamily:    'var(--font-display, sans-serif)',
-            fontWeight:    900,
-            fontSize:      32,
-            lineHeight:    .95,
-            color:         '#ffffff',
-            letterSpacing: '-.01em',
-            marginBottom:  16,
-            maxWidth:      '70%',   // não sobrepõe a decoração
-          }}
-        >
-          {habit.name}
-        </h2>
+        {/* Avatar do hábito + Título */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16, color: '#fff', fontSize: 36, fontWeight: 700, fontFamily: 'var(--font-geist, sans-serif)', lineHeight:1 }}>
+            {habit.name}
+
+        </div>
 
         {/* Tags — prioridade + tipo */}
         <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' as const }}>
@@ -217,34 +208,34 @@ export function HeroCard({ habit, onConcluir, onPular, className = '' }: HeroCar
                 color:         typeColor.color,
                 border:        '3px solid #111111',
                 borderRadius:  4,
-                boxShadow:     '3px 3px 0 0 #111111',
+                boxShadow:     '2px 2px 0 0 #111111',
                 fontFamily:    'var(--font-display, sans-serif)',
                 fontWeight:    900,
                 fontSize:      14,
                 textTransform: 'uppercase' as const,
                 letterSpacing: '.06em',
                 cursor:        'pointer',
-                transition:    'transform .08s, box-shadow .08s',
+                transition:    'all .075s ease',
               }}
              onMouseEnter={e => {
                const t = e.currentTarget
-               t.style.transform = 'translate(-1px,-1px)'
-               t.style.boxShadow = '4px 4px 0 0 #111111'
+               t.style.boxShadow = 'none'
+               t.style.transform = 'translate(4px,4px)'
              }}
              onMouseLeave={e => {
                const t = e.currentTarget
+               t.style.boxShadow = '2px 2px 0 0 #111111'
                t.style.transform = ''
-               t.style.boxShadow = '3px 3px 0 0 #111111'
              }}
              onMouseDown={e => {
                const t = e.currentTarget
-               t.style.transform = 'translate(2px,2px)'
-               t.style.boxShadow = '1px 1px 0 0 #111111'
+               t.style.boxShadow = 'none'
+               t.style.transform = 'translate(4px,4px)'
              }}
              onMouseUp={e => {
                const t = e.currentTarget
-               t.style.transform = 'translate(-1px,-1px)'
-               t.style.boxShadow = '4px 4px 0 0 #111111'
+               t.style.boxShadow = 'none'
+               t.style.transform = 'translate(4px,4px)'
              }}
            >
              <span>Concluir agora</span>
@@ -266,30 +257,30 @@ export function HeroCard({ habit, onConcluir, onPular, className = '' }: HeroCar
                   color:         typeColor.color,
                   border:        '3px solid #111111',
                   borderRadius:  0,
-                  boxShadow:     '3px 3px 0 0 #111111',
+                  boxShadow:     '2px 2px 0 0 #111111',
                   cursor:        'pointer',
                   flexShrink:    0,
-                  transition:    'transform .08s, box-shadow .08s',
+                  transition:    'all .075s ease',
                 }}
                onMouseEnter={e => {
                  const t = e.currentTarget
-                 t.style.transform = 'translate(-1px,-1px)'
-                 t.style.boxShadow = '4px 4px 0 0 #111111'
+                 t.style.boxShadow = 'none'
+                 t.style.transform = 'translate(4px,4px)'
                }}
                onMouseLeave={e => {
                  const t = e.currentTarget
+                 t.style.boxShadow = '2px 2px 0 0 #111111'
                  t.style.transform = ''
-                 t.style.boxShadow = '3px 3px 0 0 #111111'
                }}
                onMouseDown={e => {
                  const t = e.currentTarget
-                 t.style.transform = 'translate(2px,2px)'
-                 t.style.boxShadow = '1px 1px 0 0 #111111'
+                 t.style.boxShadow = 'none'
+                 t.style.transform = 'translate(4px,4px)'
                }}
                onMouseUp={e => {
                  const t = e.currentTarget
-                 t.style.transform = 'translate(-1px,-1px)'
-                 t.style.boxShadow = '4px 4px 0 0 #111111'
+                 t.style.boxShadow = 'none'
+                 t.style.transform = 'translate(4px,4px)'
                }}
              >
                <SkipForward size={16} weight="bold" />
@@ -384,31 +375,31 @@ export function HeroCardEmpty() {
               position: 'relative',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               padding: '13px 16px', background: '#F59E0B', color: '#000', height: 50,
-              border: '3px solid #111111', boxShadow: '3px 3px 0 0 #111111',
+              border: '3px solid #111111', boxShadow: '2px 2px 0 0 #111111',
               borderRadius: 0, fontFamily: 'var(--font-display, sans-serif)',
               fontWeight: 900, fontSize: 13, textTransform: 'uppercase' as const,
               letterSpacing: '.04em', textDecoration: 'none',
-              transition: 'transform .08s, box-shadow .08s',
+              transition: 'all .075s ease',
             }}
            onMouseEnter={e => {
              const t = e.currentTarget
-             t.style.transform = 'translate(-1px,-1px)'
-             t.style.boxShadow = '4px 4px 0 0 #111111'
+             t.style.boxShadow = 'none'
+             t.style.transform = 'translate(4px,4px)'
            }}
            onMouseLeave={e => {
              const t = e.currentTarget
+             t.style.boxShadow = '2px 2px 0 0 #111111'
              t.style.transform = ''
-             t.style.boxShadow = '3px 3px 0 0 #111111'
            }}
            onMouseDown={e => {
              const t = e.currentTarget
-             t.style.transform = 'translate(2px,2px)'
-             t.style.boxShadow = '1px 1px 0 0 #111111'
+             t.style.boxShadow = 'none'
+             t.style.transform = 'translate(4px,4px)'
            }}
            onMouseUp={e => {
              const t = e.currentTarget
-             t.style.transform = 'translate(-1px,-1px)'
-             t.style.boxShadow = '4px 4px 0 0 #111111'
+             t.style.boxShadow = 'none'
+             t.style.transform = 'translate(4px,4px)'
            }}
          >
            <span>VER HÁBITOS</span>
@@ -462,36 +453,36 @@ export function HeroCardEmpty_NoHabits() {
           position: 'relative',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: '13px 16px', background: '#F59E0B', color: '#000',
-          border: '3px solid #111111', boxShadow: '3px 3px 0 0 #000',
+          border: '3px solid #111111', boxShadow: '2px 2px 0 0 #111111',
           borderRadius: 4, fontFamily: 'var(--font-display, sans-serif)',
           fontWeight: 900, fontSize: 13, textTransform: 'uppercase' as const,
           letterSpacing: '.04em', textDecoration: 'none',
-          transition: 'transform .08s, box-shadow .08s',
+          transition: 'all .075s ease',
         }}
         onMouseEnter={e => {
           const t = e.currentTarget
-          t.style.transform = 'translate(-1px,-1px)'
-          t.style.boxShadow = '4px 4px 0 0 #111111'
+          t.style.boxShadow = 'none'
+          t.style.transform = 'translate(4px,4px)'
         }}
         onMouseLeave={e => {
           const t = e.currentTarget
+          t.style.boxShadow = '2px 2px 0 0 #111111'
           t.style.transform = ''
-          t.style.boxShadow = '3px 3px 0 0 #111111'
         }}
         onMouseDown={e => {
           const t = e.currentTarget
-          t.style.transform = 'translate(2px,2px)'
-          t.style.boxShadow = '1px 1px 0 0 #111111'
+          t.style.boxShadow = 'none'
+          t.style.transform = 'translate(4px,4px)'
         }}
         onMouseUp={e => {
           const t = e.currentTarget
-          t.style.transform = 'translate(-1px,-1px)'
-          t.style.boxShadow = '4px 4px 0 0 #111111'
+          t.style.boxShadow = 'none'
+          t.style.transform = 'translate(4px,4px)'
         }}
-      >
-        <span>Criar meu primeiro hábito</span>
-        <ArrowRight size={14} weight="bold" style={{ position: 'absolute', right: 14 }} />
-      </Link>
+    >
+      <span>Criar meu primeiro hábito</span>
+      <ArrowRight size={14} weight="bold" style={{ position: 'absolute', right: 14 }} />
+    </Link>
     </div>
   )
 }

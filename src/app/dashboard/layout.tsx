@@ -69,18 +69,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
           <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4">
             <Link href="/dashboard/progress">
-              <div className="io-ticker text-xs sm:text-sm"><Lightning size={6} weight="fill" />{economy.saldo_io} IO</div>
+              <div className="io-ticker text-xs sm:text-sm"><Lightning size={3} weight="fill" />{economy.saldo_io} IO</div>
             </Link>
             <Link href="/dashboard/profile">
-              <div 
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-amber-200 hover:border-amber-400 transition-colors cursor-pointer relative overflow-hidden"
-                style={{ backgroundColor: !bgImage ? bgColor : 'transparent' }}
-              >
+               <div 
+                 className="w-6 h-6 sm:w-7 sm:h-7 rounded-md border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all duration-75 cursor-pointer relative overflow-hidden"
+                 style={{ backgroundColor: !bgImage ? bgColor : 'transparent' }}
+               >
                 {bgImage && (
                   <img src={bgImage} alt="avatar" className="absolute inset-0 w-full h-full object-cover" />
                 )}
                 <span 
-                  className="absolute inset-0 flex items-center justify-center text-xs sm:text-sm" 
+                  className="absolute inset-0 flex items-center justify-center text-[10px] sm:text-[11px] font-medium" 
                   style={{ color: bgColor === '#ffffff' || bgColor === '#fef3c7' ? '#000' : '#fff' }}
                 >
                   {avatar}

@@ -160,7 +160,7 @@ const data = {
 
 export function DashboardSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
-  const { economy, avatar, themeMode, bgColor, bgImage } = useAppStore()
+  const { economy, avatar, username, themeMode, bgColor, bgImage } = useAppStore()
   const isDark = themeMode === 'dark'
   const iconColor = isDark ? '#ffffff' : '#000000'
 
@@ -180,6 +180,7 @@ export function DashboardSidebar({ ...props }: React.ComponentProps<typeof Sideb
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-semibold text-foreground">IO Dashboard</span>
+                  <span className="text-xs text-muted-foreground">{username}</span>
                 </div>
               </Link>
             </SidebarMenuButton>
