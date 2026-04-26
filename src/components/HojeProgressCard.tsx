@@ -69,7 +69,7 @@ export function HojeProgressCard({
         background:   cardBg,
         border:       'none',
         boxShadow:    'none',
-        borderRadius: 0,
+        borderRadius: 4,
         padding:      '20px',
       }}
     >
@@ -130,7 +130,7 @@ export function HojeProgressCard({
                     justifyContent: 'center',
                     border:         '2.5px solid #111111',
                     background:     doneBg,
-                    borderRadius:   0,
+                    borderRadius:   4,
                     boxShadow:      '2px 2px 0 0 #111111',
                     cursor:         'default',
                     padding:        0,
@@ -184,7 +184,7 @@ export function HojeProgressCard({
             boxShadow:    '2px 2px 0 0 #111111',
             position:     'relative' as const,
             overflow:     'hidden',
-            borderRadius: 0,
+            borderRadius: 4,
           }}
         >
           <div

@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/sidebar'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { economy, avatar, bgColor, bgImage, habitsSearchQuery, plan, habits, setHabitsSearchQuery, setHabitsFormOpen } = useAppStore()
+  const { economy, avatar, bgColor, bgImage, habitsSearchQuery, plan, habits, setHabitsSearchQuery, setHabitsFormOpen, themeMode } = useAppStore()
   const pathname = usePathname()
 
   const isHabitsPage = pathname === '/dashboard/habits'
@@ -29,7 +29,37 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <List size={20} />
             </SidebarTrigger>
             {showSearch && (
-              <div className="relative flex-1 ml-2 sm:ml-4 flex items-center gap-2">
+              <div className="relative flex-1 ml-2 hidden sm:flex items-center gap-2 bg-white dark:bg-[#1E1E1E] border-2 border-black rounded-[4px] px-2 py-1.5 shadow-sm">
+                <input
+                  autoFocus
+                  placeholder="Buscar..."
+                  value={searchValue}
+                  onChange={(e) => {
+                    setHabitsSearchQuery(e.target.value)
+                  }}
+                  className="flex-1 h-4 px-2 py-1 text-xs border-none focus:outline-none bg-transparent"
+                  style={{ color: themeMode === 'dark' ? '#fff' : '#111' }}
+                />
+                <MagnifyingGlass size={16} style={{ color: themeMode === 'dark' ? 'rgba(255,255,255,.5)' : '#9ca3af' }} />
+              </div>
+            )}
+            {/* Add button desktop */}
+            {showSearch && (
+              <button
+                onClick={() => setHabitsFormOpen(true)}
+                disabled={!canAdd}
+                className="hidden sm:inline-flex items-center justify-center border-2 border-black shadow-[2px_2px_0_0_#000] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] disabled:pointer-events-none disabled:opacity-50 transition-all duration-75 bg-white dark:bg-[#1E1E1E]"
+                style={{
+                  borderRadius:'0.375rem',
+                  opacity: canAdd ? 1 : 0.4,
+                }}
+              >
+                <Plus size={16} weight="bold" />
+              </button>
+            )}
+            {/* Mobile version */}
+            {showSearch && (
+              <div className="relative flex-1 sm:hidden ml-2 flex items-center gap-2">
                 <div className="relative flex-1">
                   <input
                     autoFocus
@@ -38,27 +68,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     onChange={(e) => {
                       setHabitsSearchQuery(e.target.value)
                     }}
-                    className="w-full px-2 sm:px-3 py-1.5 text-xs sm:text-sm border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                    className="w-full h-8 px-2 sm:px-3 py-1.5 text-xs border-2 border-black rounded-[4px] focus:outline-none focus:border-black"
+                    style={{ background: themeMode === 'dark' ? '#1E1E1E' : '#fff', color: themeMode === 'dark' ? '#fff' : '#111' }}
                   />
-                  <MagnifyingGlass size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <MagnifyingGlass size={14} className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: themeMode === 'dark' ? 'rgba(255,255,255,.5)' : '#9ca3af' }} />
                 </div>
                 <button
                   onClick={() => setHabitsFormOpen(true)}
                   disabled={!canAdd}
+                  className="inline-flex items-center justify-center border-2 border-black shadow-[2px_2px_0_0_#000] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] disabled:pointer-events-none disabled:opacity-50 transition-all duration-75 bg-white dark:bg-[#1E1E1E]"
                   style={{
-                    padding:'6px 12px',
-                    background:'#F59E0B',
-                    color:'#111',
-                    border:'2px solid #111',
-                    boxShadow:'2px 2px 0 0 #111',
-                    borderRadius:0,
-                    fontFamily:'var(--font-body,sans-serif)',
-                    fontWeight:700,
-                    fontSize:11,
-                    cursor: canAdd ? 'pointer' : 'not-allowed',
-                    display:'flex',
-                    alignItems:'center',
-                    justifyContent:'center',
+                    borderRadius:'0.375rem',
                     opacity: canAdd ? 1 : 0.4,
                   }}
                 >
@@ -67,7 +87,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </div>
             )}
           </div>
-          <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4">
+          <div className="flex items-center gap-2 sm:gap-4 px-4 sm:px-6">
             <Link href="/dashboard/progress">
               <div className="io-ticker text-xs sm:text-sm"><Lightning size={3} weight="fill" />{economy.saldo_io} IO</div>
             </Link>

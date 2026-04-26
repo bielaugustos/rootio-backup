@@ -60,6 +60,7 @@ interface OnboardingData {
   objetivos: string[]
   habito: string
   habitoDias: number[]
+  habitoFreq: 'diario' | 'semanal' | 'personalizado'
   metaFinanceiraId?: string
   metaFinanceiraValor?: number
   metaFinanceiraPrazo?: string
@@ -95,6 +96,7 @@ export default function OnboardingPage() {
     objetivos: [],
     habito: '',
     habitoDias: [1, 2, 3, 4, 5],
+    habitoFreq: 'semanal',
     metaFinanceiraId: undefined,
     metaFinanceiraValor: undefined,
     metaFinanceiraPrazo: undefined,
@@ -165,7 +167,7 @@ export default function OnboardingPage() {
         id: Date.now(),
         name: data.habito,
         priority: 'media' as const,
-        freq: 'diario' as const,
+        freq: data.habitoFreq === 'diario' ? 'diario' as const : 'personalizado' as const,
         days: data.habitoDias,
         pts: 0,
         done: false,
@@ -229,7 +231,7 @@ export default function OnboardingPage() {
         <h2 className="text-4xl font-black uppercase leading-tight mb-4" style={{ fontFamily: 'var(--font-geist)' }}>
           OI!<br />BEM-VINDZ<br />AO ROOTIO.
         </h2>
-        <p className="text-xs text-muted-foreground max-w-md mx-auto leading-relaxed" style={{ fontFamily: 'var(--font-geist)' }}>
+        <p className="text-xs text-black max-w-md mx-auto leading-relaxed" style={{ fontFamily: 'var(--font-geist)' }}>
           Hábitos, finanças e carreira num <br/> lugar só. Honesto, aberto,  <br/> gamificado.
         </p>
       </div>
@@ -448,6 +450,73 @@ export default function OnboardingPage() {
             onChange={e => setData({ ...data, habito: e.target.value })}
             className="text-sm h-12 transition-shadow duration-200 focus:shadow-nb max-w-md mx-auto"
           />
+        </div>
+
+        {/* Frequência */}
+        <div className="mb-8">
+          <Label className="mb-3 block max-w-md mx-auto text-xs text-center">Frequência</Label>
+          <div className="flex gap-2 flex-wrap justify-center">
+            {[
+              { id: 'diario', label: 'Diário' },
+              { id: 'semanal', label: 'Semanal' },
+            ].map(f => {
+              const active = data.habitoFreq === f.id
+              return (
+                <button
+                  key={f.id}
+                  onClick={() => {
+                    setData({ 
+                      ...data, 
+                      habitoFreq: f.id as any,
+                      habitoDias: f.id === 'diario' ? [0, 1, 2, 3, 4, 5, 6] : [1, 2, 3, 4, 5]
+                    })
+                  }}
+                  className="px-4 py-2 border-2 border-black text-sm font-bold cursor-pointer transition-all duration-75 rounded-[4px]"
+                  style={{
+                    background: active ? '#111' : '#fff',
+                    color: active ? '#fff' : '#111',
+                    boxShadow: active ? '2px 2px 0 0 #111' : 'none',
+                  }}
+                >
+                  {f.label}
+                </button>
+              )
+            })}
+            <button
+              onClick={() => setData({ ...data, habitoFreq: 'personalizado' })}
+              className="px-4 py-2 border-2 border-black text-sm font-bold cursor-pointer transition-all duration-75 rounded-[4px]"
+              style={{
+                background: data.habitoFreq === 'personalizado' ? '#F59E0B' : '#fff',
+                color: data.habitoFreq === 'personalizado' ? '#fff' : '#111',
+                boxShadow: data.habitoFreq === 'personalizado' ? '2px 2px 0 0 #111' : 'none',
+              }}
+            >
+              Personalizado
+            </button>
+          </div>
+
+          {/* Grid de dias — só aparece se personalizado */}
+          {data.habitoFreq === 'personalizado' && (
+            <div className="grid grid-cols-7 gap-1 mt-3 max-w-sm mx-auto">
+              {DIAS.map((dia, i) => {
+                const active = data.habitoDias.includes(i)
+                return (
+                  <button
+                    key={i}
+                    onClick={() => toggleDia(i)}
+                    className="aspect-square border-2 border-black text-xs font-bold cursor-pointer transition-all duration-75 rounded-[4px] flex flex-col items-center justify-center"
+                    style={{
+                      background: active ? '#7CE577' : '#fff',
+                      color: active ? '#111' : 'rgba(0,0,0,.45)',
+                      boxShadow: active ? '2px 2px 0 0 #111' : 'none',
+                    }}
+                  >
+                    <span>{dia}</span>
+                  </button>
+                )
+              })}
+            </div>
+          )}
         </div>
 
         <Button
@@ -736,7 +805,7 @@ export default function OnboardingPage() {
         <h2 className="text-4xl font-black uppercase leading-tight mb-4" style={{ fontFamily: 'var(--font-geist)' }}>
           PRONTO, {data.nome.toUpperCase()}.
         </h2>
-        <p className="text-sm text-muted-foreground mb-8" style={{ fontFamily: 'var(--font-geist)' }}>
+        <p className="text-sm text-black mb-8" style={{ fontFamily: 'var(--font-geist)' }}>
           Sua raiz tá plantada. A gente te encontra pra {data.habito || 'começar'}.
         </p>
 
@@ -758,7 +827,7 @@ export default function OnboardingPage() {
           )}
 
           {data.metaFinanceiraId && metaSelecionada && (
-            <div className="p-5 border-2 border-black bg-amber-50 text-left flex items-center gap-4">
+            <div className="p-5 border-2 border-black rounded-[4px] bg-amber-50 text-left flex items-center gap-4">
               <div className="flex-shrink-0" style={{ width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {metaSelecionada.icon}
               </div>
@@ -773,7 +842,7 @@ export default function OnboardingPage() {
             </div>
           )}
 
-          <div className="p-5 border-2 border-black bg-amber-50 text-left flex items-center gap-4">
+          <div className="p-5 border-2 border-black rounded-[4px] bg-amber-50 text-left flex items-center gap-4">
             <div className="flex-shrink-0" style={{ width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span className="text-2xl">{data.avatar}</span>
             </div>
