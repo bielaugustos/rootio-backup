@@ -1,0 +1,10 @@
+{
+  "profile": "openai",
+  "env": {
+    "OPENAI_BASE_URL": "https://openrouter.ai/api/v1",
+    "OPENAI_MODEL": "google/gemma-4-31b-it:free",
+    "OPENAI_API_FORMAT": "chat_completions",
+    "OPENAI_API_KEY": "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"
+  },
+  "createdAt": "2026-04-27T08:50:49.889Z"
+}

@@ -10,15 +10,15 @@ import { useListTheme } from "@/contexts/ListThemeContext"
     {
       variants: {
         variant: {
-          default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
-          outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
-          secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-          ghost: "hover:bg-accent hover:text-accent-foreground",
-          destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
-          link: "text-primary underline-offset-4 hover:underline",
-          io: "bg-amber-500 text-black border-2 border-ink shadow-nb hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px]",
-          "io-neutral": "bg-background text-foreground border-2 border-ink shadow-nb hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px]",
-          action: "text-black border-2 border-ink shadow-nb hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px]",
+          default: "bg-primary text-black shadow hover:bg-primary/90 dark:[& svg]:!text-white",
+          outline: "border border-input bg-background shadow-sm hover:bg-accent text-black dark:[& svg]:!text-white",
+          secondary: "bg-secondary text-black shadow-sm hover:bg-secondary/80 dark:[& svg]:!text-white",
+          ghost: "hover:bg-accent text-black dark:[& svg]:!text-white",
+          destructive: "bg-destructive text-black shadow-sm hover:bg-destructive/90 dark:[& svg]:!text-white",
+          link: "text-black underline-offset-4 hover:underline dark:[& svg]:!text-white",
+          io: "bg-amber-500 text-black border-2 border-ink shadow-nb hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] dark:[& svg]:!text-white",
+          "io-neutral": "bg-background text-black border-2 border-ink shadow-nb hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] dark:[& svg]:!text-white",
+          action: "text-black border-2 border-ink shadow-nb hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] dark:[& svg]:!text-white",
         },
         size: {
           default: "h-9 px-4 py-2",
