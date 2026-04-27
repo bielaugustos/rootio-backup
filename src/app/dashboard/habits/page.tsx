@@ -1,6 +1,7 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useAppStore, Habit }           from '@/store/useAppStore'
+import { useListTheme }                 from '@/contexts/ListThemeContext'
 import { toast }                        from 'sonner'
 import { PageSkeleton }                 from '@/components/PageSkeleton'
 import { Input }                        from '@/components/ui/input'
@@ -218,16 +219,17 @@ export default function HabitsPage() {
       )}
 
       {/* ── HabitCard no topo — o hábito que está sendo editado ── */}
-      {editing && habitsFormOpen && (
-        <HabitCard
-          habit={editing}
-          onToggle={() => {}}
-          onDelete={() => {}}
-          onEdit={() => {}}
-          preview
-          themeMode={themeMode}
-        />
-      )}
+        {editing && habitsFormOpen && (
+          <HabitCard
+            habit={editing}
+            onToggle={() => {}}
+            onDelete={() => {}}
+            onEdit={() => {}}
+            updateHabit={() => {}}
+            preview
+            themeMode={themeMode}
+          />
+        )}
 
       {/* ── Pendentes ── */}
       {pendentes.length > 0 && (
@@ -235,10 +237,10 @@ export default function HabitsPage() {
           <p style={{ ...NB.label, marginBottom:8, display:'flex', alignItems:'center', gap:5, textTransform:'none', color:themeMode === 'dark' ? '#fff' : undefined }}>
             ../pendentes ({pendentes.length})
           </p>
-          {(showAllPending ? pendentes : pendentes.slice(0,HABIT_LIMIT)).map(h => (
-            <HabitCard key={h.id} habit={h} onToggle={toggleHabit}
-              onDelete={deleteHabit} onEdit={openEdit} themeMode={themeMode} />
-          ))}
+            {(showAllPending ? pendentes : pendentes.slice(0,HABIT_LIMIT)).map(h => (
+              <HabitCard key={h.id} habit={h} onToggle={toggleHabit}
+                onDelete={deleteHabit} onEdit={openEdit} updateHabit={updateHabit} themeMode={themeMode} />
+            ))}
           {pendentes.length > HABIT_LIMIT && (
              <button onClick={() => setShowAllPending(v=>!v)}
                style={{ width:'100%', padding:'8px 0', background:'none', border:'none',
@@ -264,10 +266,10 @@ export default function HabitsPage() {
           <p style={{ ...NB.label, marginBottom:8, display:'flex', alignItems:'center', gap:5, textTransform:'none', color:themeMode === 'dark' ? '#fff' : undefined }}>
             ../concluidos ({concluidos.length})
           </p>
-          {(showAllCompleted ? concluidos : concluidos.slice(0,HABIT_LIMIT)).map(h => (
-            <HabitCard key={h.id} habit={h} done onToggle={toggleHabit}
-              onDelete={deleteHabit} onEdit={openEdit} themeMode={themeMode} />
-          ))}
+            {(showAllCompleted ? concluidos : concluidos.slice(0,HABIT_LIMIT)).map(h => (
+              <HabitCard key={h.id} habit={h} done onToggle={toggleHabit}
+                onDelete={deleteHabit} onEdit={openEdit} updateHabit={updateHabit} themeMode={themeMode} />
+            ))}
           {concluidos.length > HABIT_LIMIT && (
              <button onClick={() => setShowAllCompleted(v=>!v)}
                style={{ width:'100%', padding:'8px 0', background:'none', border:'none',
@@ -288,16 +290,17 @@ export default function HabitsPage() {
            <p style={{ ...NB.label, marginBottom:8, display:'flex', alignItems:'center', gap:5, textTransform:'none', color:themeMode === 'dark' ? '#fff' : undefined }}>
              ../amanhã ({amanha.length})
            </p>
-           {amanha.map(h => (
-             <HabitCard
-               key={h.id}
-               habit={h}
-               onToggle={toggleHabit}
-               onDelete={deleteHabit}
-               onEdit={openEdit}
-               themeMode={themeMode}
-             />
-           ))}
+            {amanha.map(h => (
+              <HabitCard
+                key={h.id}
+                habit={h}
+                onToggle={toggleHabit}
+                onDelete={deleteHabit}
+                onEdit={openEdit}
+                updateHabit={updateHabit}
+                themeMode={themeMode}
+              />
+            ))}
          </div>
        )}
 
@@ -388,22 +391,33 @@ function HabitCard(props: {
   onToggle: (id:number) => void
   onDelete: (id:number) => void
   onEdit:   (h:Habit)  => void
+  updateHabit: (h: Habit) => void
   done?:    boolean
   preview?: boolean
   themeMode: 'light' | 'dark'
 }) {
-  const { habit, onToggle, onDelete, onEdit, done = false, preview = false, themeMode } = props
+  const { habit, onToggle, onDelete, onEdit, updateHabit, done = false, preview = false, themeMode } = props
+  const { setCurrentType, currentColor } = useListTheme()
   const [expanded, setExpanded] = useState(false)
+  const [showListMenu, setShowListMenu] = useState(false)
+
+  const types = ['habito', 'evento', 'tarefa', 'meta']
+  const listColors: Record<string, string> = {
+    habito: '#F5EFDF',
+    evento: '#9B7BFF',
+    tarefa: '#6FB8FF',
+    meta: '#F59E0B',
+  }
 
   const tagBg = habit.priority==='alta'  ? '#FF6B6B'
               : habit.priority==='media' ? '#F59E0B' : '#7CE577'
   const tagColor = habit.priority==='alta' ? '#fff' : '#111'
 
   return (
-    <div style={{ marginBottom:8 }}>
+    <div style={{ marginBottom:12 }}>
       <div style={{
         background:themeMode === 'dark' ? '#1E1E1E' : '#fff', border:'3px solid #111', boxShadow:'4px 4px 0 0 #111',
-        borderRadius:0, padding:'16px 18px',
+        borderRadius:0, padding:'20px 24px',
         opacity: done ? .7 : 1,
       }}>
         {/* Linha principal */}
@@ -464,16 +478,17 @@ function HabitCard(props: {
               <span style={{
                  fontFamily:'var(--font-space-grotesk)', fontSize:10, fontWeight:700,
                  background:'#111', color:'#FFD23F',
-                padding:'2px 6px', border:'1.5px solid #111', borderRadius:0,
-              }}>
-                +{habit.pts}
+                 padding:'2px 6px', border:'1.5px solid #111', borderRadius:0,
+                 transform: 'rotate(90deg) scaleX(-1)',
+               }}>
+                 +{habit.pts}
               </span>
             )}
             {!preview && (
               <button
                 onClick={() => setExpanded(v=>!v)}
                 style={{ background:'none', border:'none', cursor:'pointer',
-                  color:'rgba(0,0,0,.4)', display:'flex', alignItems:'center' }}
+                  color: themeMode === 'dark' ? '#fff' : 'rgba(0,0,0,.4)', display:'flex', alignItems:'center' }}
               >
                 {expanded ? <CaretUp size={14}/> : <CaretDown size={14}/>}
               </button>
@@ -491,32 +506,73 @@ function HabitCard(props: {
 
         {/* Ações — expand */}
         {expanded && !preview && (
-          <div style={{ display:'flex', gap:8, marginTop:10, marginLeft:32 }}>
-            <button
-              onClick={() => { onEdit(habit); setExpanded(false) }}
-              style={{
-                flex:1, display:'flex', alignItems:'center', justifyContent:'center',
-                gap:5, padding:'8px 0', background:themeMode === 'dark' ? '#1E1E1E' : '#fff', color:themeMode === 'dark' ? '#fff' : '#111',
-                border:'2px solid #111', boxShadow:'2px 2px 0 0 #111',
-                borderRadius:0, fontFamily:'var(--font-body)', fontWeight:700,
-                fontSize:12, cursor:'pointer',
-              }}
-            >
-              <PencilSimple size={12}/> Editar
-            </button>
-            <button
-              onClick={() => onDelete(habit.id)}
-              style={{
-                flex:1, display:'flex', alignItems:'center', justifyContent:'center',
-                gap:5, padding:'8px 0', background:'#FF6B6B', color:'#fff',
-                border:'2px solid #111', boxShadow:'2px 2px 0 0 #111',
-                borderRadius:0, fontFamily:'var(--font-body)', fontWeight:700,
-                fontSize:12, cursor:'pointer',
-              }}
-            >
-              <Trash size={12}/> Excluir
-            </button>
-          </div>
+          <React.Fragment>
+            <div style={{ display:'flex', gap:8, marginTop:10, marginLeft:32 }}>
+              <button
+                onClick={() => { onEdit(habit); setExpanded(false) }}
+                style={{
+                  flex:1, display:'flex', alignItems:'center', justifyContent:'center',
+                  gap:5, padding:'6px 0', background: currentColor, color:'#111',
+                  border:'2px solid #111', boxShadow:'2px 2px 0 0 #111',
+                  borderRadius:0, fontFamily:'var(--font-body)', fontWeight:700,
+                  fontSize:11, cursor:'pointer',
+                }}
+              >
+                <PencilSimple size={12}/> Editar
+              </button>
+              <button
+                onClick={() => onDelete(habit.id)}
+                style={{
+                  flex:1, display:'flex', alignItems:'center', justifyContent:'center',
+                  gap:5, padding:'6px 0', background:'#FF6B6B', color:'#fff',
+                  border:'2px solid #111', boxShadow:'2px 2px 0 0 #111',
+                  borderRadius:0, fontFamily:'var(--font-body)', fontWeight:700,
+                  fontSize:11, cursor:'pointer',
+                }}
+              >
+                <Trash size={12}/> Excluir
+              </button>
+              <button
+                onClick={() => setShowListMenu(true)}
+                style={{
+                  flex:1, display:'flex', alignItems:'center', justifyContent:'center',
+                  gap:5, padding:'6px 0', background: currentColor, color:'#111',
+                  border:'2px solid #111', boxShadow:'2px 2px 0 0 #111',
+                  borderRadius:0, fontFamily:'var(--font-body)', fontWeight:700,
+                  fontSize:11, cursor:'pointer',
+                }}
+              >
+                Mudar Lista
+              </button>
+            </div>
+
+            {showListMenu && (
+              <div style={{ display:'flex', flexDirection:'column', gap:4, marginTop:8, marginLeft:32 }}>
+              {types.map(type => {
+                return (
+                  <button
+                    key={type}
+                    onClick={() => {
+                      updateHabit({ ...habit, listType: type } as any)
+                      setCurrentType(type)
+                      setExpanded(false)
+                      setShowListMenu(false)
+                    }}
+                    style={{
+                      display:'flex', alignItems:'center', justifyContent:'center',
+                      gap:5, padding:'6px 0', background: listColors[type], color:'#111',
+                      border:'2px solid #111', boxShadow:'2px 2px 0 0 #111',
+                      borderRadius:0, fontFamily:'var(--font-body)', fontWeight:700,
+                      fontSize:11, cursor:'pointer',
+                    }}
+                  >
+                    {type.charAt(0).toUpperCase() + type.slice(1)}
+                  </button>
+                )
+              })}
+              </div>
+            )}
+          </React.Fragment>
         )}
       </div>
     </div>

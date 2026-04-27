@@ -1,8 +1,9 @@
-  import * as React from "react"
-  import { cva, type VariantProps } from "class-variance-authority"
-  import { Slot } from "radix-ui"
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
+import { Slot } from "radix-ui"
 
-  import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils"
+import { useListTheme } from "@/contexts/ListThemeContext"
 
   const buttonVariants = cva(
     "inline-flex items-center justify-center rounded-[4px] text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
@@ -17,6 +18,7 @@
           link: "text-primary underline-offset-4 hover:underline",
           io: "bg-amber-500 text-black border-2 border-ink shadow-nb hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px]",
           "io-neutral": "bg-background text-foreground border-2 border-ink shadow-nb hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px]",
+          action: "text-black border-2 border-ink shadow-nb hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px]",
         },
         size: {
           default: "h-9 px-4 py-2",
@@ -47,6 +49,9 @@
       asChild?: boolean
     }) {
   const Comp = asChild ? Slot.Root : "button"
+  const { currentColor } = useListTheme()
+
+  const dynamicClass = variant === 'action' ? { backgroundColor: currentColor } : {}
 
   return (
     <Comp
@@ -54,6 +59,7 @@
       data-variant={variant}
       data-size={size}
       className={cn(buttonVariants({ variant, size, className }))}
+      style={dynamicClass}
       {...props}
     />
   )

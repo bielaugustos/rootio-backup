@@ -1,8 +1,10 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useState } from 'react'
 import { useAppStore } from '@/store/useAppStore'
-import { Plus, Lightning, List, MagnifyingGlass } from '@phosphor-icons/react'
+import { ListThemeProvider, useListTheme } from '@/contexts/ListThemeContext'
+import { Plus, Lightning, List, MagnifyingGlass, X } from '@phosphor-icons/react'
 import { DashboardSidebar } from '@/components/navigation/DashboardSidebar'
 import {
   SidebarProvider,
@@ -11,8 +13,10 @@ import {
 } from '@/components/ui/sidebar'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { economy, avatar, bgColor, bgImage, habitsSearchQuery, plan, habits, setHabitsSearchQuery, setHabitsFormOpen, themeMode } = useAppStore()
   const pathname = usePathname()
+  const [showSearchInput, setShowSearchInput] = useState(false)
+  const { economy, avatar, bgColor, bgImage, habitsSearchQuery, plan, habits, setHabitsSearchQuery, setHabitsFormOpen, habitsFormOpen, themeMode } = useAppStore()
+  const { currentColor } = useListTheme()
 
   const isHabitsPage = pathname === '/dashboard/habits'
   const showSearch = isHabitsPage
@@ -20,47 +24,26 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const canAdd = plan === 'pro' || habits.length < 10
 
   return (
-    <SidebarProvider defaultOpen={false}>
-      <DashboardSidebar />
-      <SidebarInset>
-        <header className="flex h-14 shrink-0 items-center gap-2 border-b text-foreground">
+    <ListThemeProvider>
+      <SidebarProvider defaultOpen={false}>
+        <DashboardSidebar />
+        <SidebarInset>
+          <header className="fixed top-0 left-0 right-0 z-50 flex h-14 shrink-0 items-center gap-2 border-b text-foreground bg-background md:relative md:bg-transparent">
           <div className="flex items-center gap-2 px-2 sm:px-4 flex-1">
-            <SidebarTrigger className="-ml-1 text-foreground">
+            <SidebarTrigger className="ml-1 text-zinc-900 p-2 border-2 border-black rounded-[8px] shadow-[2px_2px_0_#000] hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-none active:translate-x-[1px] active:translate-y-[1px] transition-all" style={{ backgroundColor: currentColor }}>
               <List size={20} />
             </SidebarTrigger>
-            {showSearch && (
-              <div className="relative flex-1 ml-2 hidden sm:flex items-center gap-2 bg-white dark:bg-[#1E1E1E] border-2 border-black rounded-[4px] px-2 py-1.5 shadow-sm">
-                <input
-                  autoFocus
-                  placeholder="Buscar..."
-                  value={searchValue}
-                  onChange={(e) => {
-                    setHabitsSearchQuery(e.target.value)
-                  }}
-                  className="flex-1 h-4 px-2 py-1 text-xs border-none focus:outline-none bg-transparent"
-                  style={{ color: themeMode === 'dark' ? '#fff' : '#111' }}
-                />
-                <MagnifyingGlass size={16} style={{ color: themeMode === 'dark' ? 'rgba(255,255,255,.5)' : '#9ca3af' }} />
-              </div>
-            )}
-            {/* Add button desktop */}
-            {showSearch && (
-              <button
-                onClick={() => setHabitsFormOpen(true)}
-                disabled={!canAdd}
-                className="hidden sm:inline-flex items-center justify-center border-2 border-black shadow-[2px_2px_0_0_#000] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] disabled:pointer-events-none disabled:opacity-50 transition-all duration-75 bg-white dark:bg-[#1E1E1E]"
-                style={{
-                  borderRadius:'0.375rem',
-                  opacity: canAdd ? 1 : 0.4,
-                }}
-              >
-                <Plus size={16} weight="bold" />
-              </button>
-            )}
-            {/* Mobile version */}
-            {showSearch && (
-              <div className="relative flex-1 sm:hidden ml-2 flex items-center gap-2">
-                <div className="relative flex-1">
+            {/* Search and add buttons - only on habits page */}
+            {pathname === '/dashboard/habits' && (
+              <div className="relative ml-2 flex items-center gap-2">
+                <button
+                  onClick={() => setShowSearchInput(!showSearchInput)}
+                  className="inline-flex items-center justify-center p-2 border-2 border-black rounded-[8px] shadow-[2px_2px_0_#000] hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-none active:translate-x-[1px] active:translate-y-[1px] transition-all text-black"
+                  style={{ backgroundColor: currentColor }}
+                >
+                  {showSearchInput ? <X size={16} weight="bold" className="text-black" /> : <MagnifyingGlass size={16} weight="bold" className="text-black" />}
+                </button>
+                {showSearchInput && (
                   <input
                     autoFocus
                     placeholder="Buscar..."
@@ -68,21 +51,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     onChange={(e) => {
                       setHabitsSearchQuery(e.target.value)
                     }}
-                    className="w-full h-8 px-2 sm:px-3 py-1.5 text-xs border-2 border-black rounded-[4px] focus:outline-none focus:border-black"
+                    className="w-40 h-10 px-3 py-2 text-sm border-2 border-black rounded-[8px] focus:outline-none"
                     style={{ background: themeMode === 'dark' ? '#1E1E1E' : '#fff', color: themeMode === 'dark' ? '#fff' : '#111' }}
                   />
-                  <MagnifyingGlass size={14} className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: themeMode === 'dark' ? 'rgba(255,255,255,.5)' : '#9ca3af' }} />
-                </div>
+                )}
                 <button
-                  onClick={() => setHabitsFormOpen(true)}
+                  onClick={() => setHabitsFormOpen(!habitsFormOpen)}
                   disabled={!canAdd}
-                  className="inline-flex items-center justify-center border-2 border-black shadow-[2px_2px_0_0_#000] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] disabled:pointer-events-none disabled:opacity-50 transition-all duration-75 bg-white dark:bg-[#1E1E1E]"
+                  className="inline-flex items-center justify-center p-2 border-2 border-black rounded-[8px] shadow-[2px_2px_0_#000] hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-none active:translate-x-[1px] active:translate-y-[1px] disabled:pointer-events-none disabled:opacity-50 transition-all text-black"
                   style={{
-                    borderRadius:'0.375rem',
+                    backgroundColor: currentColor,
                     opacity: canAdd ? 1 : 0.4,
                   }}
                 >
-                  <Plus size={16} weight="bold" />
+                  <Plus size={16} weight="bold" className="text-black" />
                 </button>
               </div>
             )}
@@ -108,9 +90,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </div>
             </Link>
           </div>
-        </header>
-        <main className="flex-1">{children}</main>
-      </SidebarInset>
-    </SidebarProvider>
+          </header>
+          <main className="flex-1 md:pt-0 pt-14">{children}</main>
+        </SidebarInset>
+      </SidebarProvider>
+    </ListThemeProvider>
   )
 }
