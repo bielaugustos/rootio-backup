@@ -11,13 +11,13 @@ const IO_PER_PAGE = 5
 const WEEK_LABELS = ['D','S','T','Q','Q','S','S']
 const WEEK_ORDER = [1,2,3,4,5,6,0]  // seg→dom na grid
 
-// Ícones de tipo de lista
+// Ícones de tipo de lista - baseado no schema do core
 const LIST_TYPES = [
-  { id:'habito',       label:'Hábito',       icon:'⟳' },
-  { id:'evento',       label:'Evento',       icon:'△' },
-  { id:'tarefa',       label:'Tarefa',       icon:'↺' },
-  { id:'meta',         label:'Meta',         icon:'◎' },
-  { id:'personalizado',label:'Personalizado',icon:'+' },
+  { id:'habit',       label:'Hábito',       icon:'⟳' },
+  { id:'event',       label:'Evento',       icon:'△' },
+  { id:'goal',        label:'Meta',         icon:'◎' },
+  { id:'task',        label:'Tarefa',       icon:'↺' },
+  { id:'note',        label:'Nota',         icon:'📝' },
 ]
 
 // Cores por prioridade
@@ -38,7 +38,7 @@ const LIST_TYPE_COLOR: Record<string, string> = {
 // ─── Tipo do componente ─────────────────────────────────────────────────────
 type HabitFormProps = {
   editing: Habit | null
-  onSave: (habit: Omit<Habit, 'id' | 'icon' | 'tags' | 'streak' | 'createdAt'>) => void
+  onSave: (habit: Omit<Habit, 'id' | 'icon' | 'tags' | 'streak' | 'createdAt' | 'listType'>) => void
   onCancel: () => void
   plan: string
   canAdd: boolean
@@ -58,35 +58,33 @@ export function HabitForm({
   formRef,
   themeMode,
 }: HabitFormProps) {
-  const [editTab, setEditTab] = useState<'simples'|'lista'>('simples')
-  
-  // Campos do form
-  const [name, setName]         = useState(editing?.name ?? '')
-  const [priority, setPriority] = useState<'alta'|'media'|'baixa'>(editing?.priority ?? 'media')
-  const [freq, setFreq]         = useState<'diario'|'semanal'|'personalizado'>(editing?.freq ?? 'diario')
-  const [days, setDays]         = useState(editing?.days ?? [0,1,2,3,4,5,6])
-  const [notes, setNotes]       = useState(editing?.notes ?? '')
-  const [pts, setPts]           = useState(editing?.pts ?? 0)
-  const [ptsPage, setPtsPage]   = useState(1)
-  const [listType, setListType] = useState((editing as any)?.listType ?? 'habito')
+  const [editTab, setEditTab] = useState<'simples'>('simples')
+   
+   // Campos do form
+   const [name, setName]         = useState(editing?.name ?? '')
+   const [priority, setPriority] = useState<'alta'|'media'|'baixa'>(editing?.priority ?? 'media')
+   const [freq, setFreq]         = useState<'diario'|'semanal'|'personalizado'>(editing?.freq ?? 'diario')
+   const [days, setDays]         = useState(editing?.days ?? [0,1,2,3,4,5,6])
+   const [notes, setNotes]       = useState(editing?.notes ?? '')
+   const [pts, setPts]           = useState(editing?.pts ?? 0)
+   const [ptsPage, setPtsPage]   = useState(1)
 
   const totalPtsPages = Math.ceil(IO_VALUES.length / IO_PER_PAGE)
   const visibleIO     = IO_VALUES.slice((ptsPage-1)*IO_PER_PAGE, ptsPage*IO_PER_PAGE)
 
-  function handleSave() {
-    if (!name.trim()) { toast.error('Digite o nome do hábito.'); return }
-    
-    onSave({
-      name,
-      priority,
-      freq,
-      days,
-      notes,
-      pts,
-      listType,
-      done: editing?.done ?? false,
-    } as any)
-  }
+   function handleSave() {
+     if (!name.trim()) { toast.error('Digite o nome do hábito.'); return }
+     
+     onSave({
+       name,
+       priority,
+       freq,
+       days,
+       notes,
+       pts,
+       done: editing?.done ?? false,
+     } as any)
+   }
 
   function toggleDay(i: number) {
     setDays(prev => prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i])
@@ -143,38 +141,22 @@ export function HabitForm({
           color: themeMode === 'dark' ? '#fff' : 'rgba(0,0,0,.45)' }}>
           EDITAR
         </span>
-        <div style={{ display:'flex', gap:8, alignItems:'center' }}>
-          {/* Tab Simples */}
-          <button
-            onClick={() => setEditTab('simples')}
-            style={{
-              width:28, height:28, border:'2px solid #111',
-              background: editTab==='simples' ? '#111' : (themeMode === 'dark' ? '#1E1E1E' : '#fff'),
-              color:      editTab==='simples' ? '#fff' : (themeMode === 'dark' ? '#fff' : '#111'),
-              borderRadius:0, cursor:'pointer', display:'flex',
-              alignItems:'center', justifyContent:'center',
-              boxShadow: editTab==='simples' ? '2px 2px 0 0 #111' : 'none',
-            }}
-            title="Simples"
-          >
-            <Sliders size={13} />
-          </button>
-          {/* Tab Lista */}
-          <button
-            onClick={() => setEditTab('lista')}
-            style={{
-              width:28, height:28, border:'2px solid #111',
-              background: editTab==='lista' ? '#111' : (themeMode === 'dark' ? '#1E1E1E' : '#fff'),
-              color:      editTab==='lista' ? '#fff' : (themeMode === 'dark' ? '#fff' : '#111'),
-              borderRadius:0, cursor:'pointer', display:'flex',
-              alignItems:'center', justifyContent:'center',
-              boxShadow: editTab==='lista' ? '2px 2px 0 0 #111' : 'none',
-            }}
-            title="Tipo de lista"
-          >
-            <Target size={13} />
-          </button>
-        </div>
+       <div style={{ display:'flex', gap:8, alignItems:'center' }}>
+           {/* Tab Simples */}
+           <button
+             onClick={() => setEditTab('simples')}
+             style={{
+               width:28, height:28, border:'2px solid #111',
+               background: editTab==='simples' ? '#111' : (themeMode === 'dark' ? '#1E1E1E' : '#fff'),
+               color:      editTab==='simples' ? '#fff' : (themeMode === 'dark' ? '#fff' : '#111'),
+               borderRadius:0, cursor:'pointer', display:'flex',
+               alignItems:'center', justifyContent:'center',
+               boxShadow: editTab==='simples' ? '2px 2px 0 0 #111' : 'none',
+             }}
+           >
+             <Sliders size={13} />
+           </button>
+         </div>
       </div>
 
       {/* ── Tab: SIMPLES ── */}
@@ -361,95 +343,31 @@ export function HabitForm({
             </div>
           </div>
 
-          {/* Ações */}
-          <div style={{ display:'flex', gap:8, marginTop:4 }}>
-            <button 
-              onClick={onCancel} 
-              style={{ ...NB.btnGhost, flex:1 }}
-              onMouseEnter={e => { const t = e.currentTarget; t.style.boxShadow = 'none'; t.style.transform = 'translate(4px,4px)' }}
-              onMouseLeave={e => { const t = e.currentTarget; t.style.boxShadow = '2px 2px 0 0 #111'; t.style.transform = '' }}
-              onMouseDown={e => { const t = e.currentTarget; t.style.boxShadow = 'none'; t.style.transform = 'translate(4px,4px)' }}
-              onMouseUp={e => { const t = e.currentTarget; t.style.boxShadow = 'none'; t.style.transform = 'translate(4px,4px)' }}
-            >
-              Cancelar
-            </button>
-            <button 
-              onClick={handleSave} 
-              style={{ ...NB.btnAmber, flex:2, justifyContent:'center', gap:0 }}
-              onMouseEnter={e => { const t = e.currentTarget; t.style.boxShadow = 'none'; t.style.transform = 'translate(4px,4px)' }}
-              onMouseLeave={e => { const t = e.currentTarget; t.style.boxShadow = '2px 2px 0 0 #111'; t.style.transform = '' }}
-              onMouseDown={e => { const t = e.currentTarget; t.style.boxShadow = 'none'; t.style.transform = 'translate(4px,4px)' }}
-              onMouseUp={e => { const t = e.currentTarget; t.style.boxShadow = 'none'; t.style.transform = 'translate(4px,4px)' }}
-            >
-              {editing ? 'Salvar' : 'Adicionar hábito'}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* ── Tab: LISTA ── */}
-      {editTab === 'lista' && (
-        <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
-          <span style={NB.label}>Lista</span>
-          <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
-             {LIST_TYPES.map(lt => {
-               const active = listType === lt.id
-               const isLocked = lt.id === 'personalizado' && plan !== 'pro'
-               return (
-                 <button
-                   key={lt.id}
-                   onClick={() => !isLocked && setListType(lt.id)}
-                   disabled={isLocked}
-                   style={{
-                     display:'flex', alignItems:'center', gap:5,
-                     padding:'8px 12px', border:'2px solid #111', borderRadius:0,
-                     background: active ? (LIST_TYPE_COLOR[lt.id] ?? '#111') : (themeMode === 'dark' ? '#1E1E1E' : '#fff'),
-                     color: active ? '#fff' : (themeMode === 'dark' ? '#fff' : '#111'),
-                     fontFamily:'var(--font-body)', fontWeight:700, fontSize:13,
-                     cursor: isLocked ? 'not-allowed' : 'pointer',
-                     opacity: isLocked ? .45 : 1,
-                     boxShadow: active ? '2px 2px 0 0 #111' : 'none',
-                   }}
-                 >
-                  <span style={{ fontSize:12 }}>{lt.icon}</span>
-                  {lt.label}
-                </button>
-              )
-            })}
-          </div>
-
-          {/* Pro gate */}
-          {plan !== 'pro' && (
-            <Link
-              href="/dashboard/profile#plano"
-              style={{
-                display:'flex', alignItems:'center', justifyContent:'space-between',
-                padding:'12px 14px', background:'#9B7BFF', color:'#fff',
-                border:'3px solid #111', boxShadow:'3px 3px 0 0 #111', borderRadius:0,
-                fontFamily:'var(--font-display,sans-serif)', fontWeight:900,
-                fontSize:13, textTransform:'uppercase', letterSpacing:'.04em',
-                textDecoration:'none',
-              }}
-            >
-              <span>PRO VITALÍCIO · R$12,90 ★ VER PRO</span>
-              <ArrowRight size={14} weight="bold" />
-            </Link>
-          )}
-
-          {/* Ações */}
-          <div style={{ display:'flex', gap:8 }}>
-            <button
-              onClick={() => { setListType('habito'); toast('Lista arquivada.') }}
-              style={{ ...NB.btnGhost, flex:1 }}
-            >
-              Arquivar
-            </button>
-            <button onClick={handleSave} style={{ ...NB.btnAmber, flex:2, justifyContent:'center' }}>
-              Salvar lista
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
+           {/* Ações */}
+           <div style={{ display:'flex', gap:8, marginTop:4 }}>
+             <button 
+               onClick={onCancel} 
+               style={{ ...NB.btnGhost, flex:1 }}
+               onMouseEnter={e => { const t = e.currentTarget; t.style.boxShadow = 'none'; t.style.transform = 'translate(4px,4px)' }}
+               onMouseLeave={e => { const t = e.currentTarget; t.style.boxShadow = '2px 2px 0 0 #111'; t.style.transform = '' }}
+               onMouseDown={e => { const t = e.currentTarget; t.style.boxShadow = 'none'; t.style.transform = 'translate(4px,4px)' }}
+               onMouseUp={e => { const t = e.currentTarget; t.style.boxShadow = 'none'; t.style.transform = 'translate(4px,4px)' }}
+             >
+               Cancelar
+             </button>
+             <button 
+               onClick={handleSave} 
+               style={{ ...NB.btnAmber, flex:2, justifyContent:'center', gap:0 }}
+               onMouseEnter={e => { const t = e.currentTarget; t.style.boxShadow = 'none'; t.style.transform = 'translate(4px,4px)' }}
+               onMouseLeave={e => { const t = e.currentTarget; t.style.boxShadow = '2px 2px 0 0 #111'; t.style.transform = '' }}
+               onMouseDown={e => { const t = e.currentTarget; t.style.boxShadow = 'none'; t.style.transform = 'translate(4px,4px)' }}
+               onMouseUp={e => { const t = e.currentTarget; t.style.boxShadow = 'none'; t.style.transform = 'translate(4px,4px)' }}
+             >
+               {editing ? 'Salvar' : 'Adicionar hábito'}
+             </button>
+           </div>
+         </div>
+       )}
+     </div>
+   )
+ }

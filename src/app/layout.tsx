@@ -4,6 +4,7 @@ import { geist, spaceGrotesk } from './fonts'
 import { ThemeInitializer } from '@/components/ThemeInitializer'
 import { cn } from "@/lib/utils"
 import { Toaster } from '@/components/ui/sonner'
+import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration'
 
 export const metadata: Metadata = {
   title:       'Rootio • Evolução Pessoal com IO',
@@ -23,6 +24,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width:            'device-width',
   initialScale:     1,
+  maximumScale:     1,
   themeColor:       '#f59e0b',
   viewportFit:      'cover',
 }
@@ -36,8 +38,9 @@ export default function RootLayout({
      <html lang="pt-BR" suppressHydrationWarning className={cn("font-sans", geist.variable, spaceGrotesk.variable)}>
        <body className={`${geist.variable} min-h-screen bg-nb-bg antialiased font-sans`} suppressHydrationWarning>
 
-         <ThemeInitializer />
-         {children}
+<ThemeInitializer />
+          <ServiceWorkerRegistration />
+          {children}
          <Toaster />
        </body>
      </html>

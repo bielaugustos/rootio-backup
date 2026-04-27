@@ -94,7 +94,8 @@ function kickerLabel(habit: HeroCardHabit): { text: string; Icon: any } {
 
 // ─── Componente ───────────────────────────────────────────────────────────────
 export function HeroCard({ habit, onConcluir, onPular, className = '' }: HeroCardProps) {
-  const typeColor = TYPE_STYLE[typeKey(habit)]
+  const typeColorKey = typeKey(habit)
+  const typeColor = TYPE_STYLE[typeColorKey] || TYPE_STYLE['default']
   const kicker = kickerLabel(habit)
 
   return (

@@ -400,6 +400,7 @@ function HabitCard(props: {
   const { setCurrentType, currentColor } = useListTheme()
   const [expanded, setExpanded] = useState(false)
   const [showListMenu, setShowListMenu] = useState(false)
+  const [activePanel, setActivePanel] = useState<'streak' | 'calendar' | 'chart' | 'progress' | 'table' | 'priority' | 'kanban' | 'urgency' | null>(null)
 
   const types = ['habito', 'evento', 'tarefa', 'meta']
   const listColors: Record<string, string> = {
@@ -409,9 +410,52 @@ function HabitCard(props: {
     meta: '#F59E0B',
   }
 
+  // Map habit to item structure matching core schema
+  const item: any = {
+    id: habit.id.toString(),
+    listId: (habit as any).listType ?? 'habit',
+    rawText: habit.name,
+    type: (habit as any).listType ?? 'habit',
+    title: habit.name,
+    tags: [], // Assuming tags aren't currently stored
+    isCompleted: done,
+    isStarred: false, // Not implemented
+    ioValue: habit.pts,
+    habitFrequency: {
+      type: habit.freq === 'semanal' ? 'weekly' : habit.freq === 'diario' ? 'daily' : 'custom',
+      interval: 1,
+      days: habit.freq === 'personalizado' && habit.days ? habit.days : undefined
+    },
+    habitStreakCurrent: 0, // Not tracked currently
+    habitStreakBest: 0, // Not tracked currently
+    updatedAt: Date.now(),
+    createdAt: new Date(habit.createdAt ?? Date.now()).getTime()
+  }
+
+  // Calculate IO with streak multiplier (simplified since we don't track streak)
+  const baseIO = item.ioValue || 0
+  const streakDays = item.habitStreakCurrent || 0
+  const calculatedIO = Math.round(baseIO * Math.min(1 + streakDays * 0.1, 2.0))
+
   const tagBg = habit.priority==='alta'  ? '#FF6B6B'
               : habit.priority==='media' ? '#F59E0B' : '#7CE577'
   const tagColor = habit.priority==='alta' ? '#fff' : '#111'
+
+  // Helper function to format time (simplified)
+  const formatTime = (timestamp: number) => {
+    const date = new Date(timestamp)
+    return date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+  }
+
+  // Placeholder AI insight (would come from AI service in Pro plan)
+  const aiInsight = "Mantenha a consistência para melhores resultados!" // Placeholder
+
+  // Placeholder for AI label based on type
+  const aiLabel = (habit as any).listType === 'habit' ? 'Hábito diário recomendado' : 
+                 (habit as any).listType === 'evento' ? 'Lembrete importante' : 
+                 (habit as any).listType === 'tarefa' ? 'Prioridade alta' : 
+                 (habit as any).listType === 'meta' ? 'Objetivo estratégico' : 
+                 'Item padrão'
 
   return (
     <div style={{ marginBottom:12 }}>
@@ -479,7 +523,8 @@ function HabitCard(props: {
                  fontFamily:'var(--font-space-grotesk)', fontSize:10, fontWeight:700,
                  background:'#111', color:'#FFD23F',
                  padding:'2px 6px', border:'1.5px solid #111', borderRadius:0,
-                 transform: 'rotate(90deg) scaleX(-1)',
+                 transform: 'rotate(-90deg)',
+                 transformOrigin: 'bottom',
                }}>
                  +{habit.pts}
               </span>
@@ -573,8 +618,233 @@ function HabitCard(props: {
               </div>
             )}
           </React.Fragment>
-        )}
+        )        }
       </div>
+    </div>
+  )
+}
+
+// Helper components for HabitCard to match theme-editor design
+function TypeIcon({ type }: { type: string }) {
+  const iconMap: Record<string, React.ComponentType<{ size?: number; weight?: string }>> = {
+    habit: ArrowClockwise,
+    event: CalendarBlank,
+    goal: Flag,
+    task: X,
+    note: Moon,
+  }
+  
+  const Icon = iconMap[type] || ArrowClockwise
+  return <Icon size={16} weight="bold" />
+}
+
+function TypeBadge({ type, label }: { type: string; label: string }) {
+  const bgColor = LIST_TYPE_COLOR[type as keyof typeof LIST_TYPE_COLOR] || '#F59E0B'
+  
+  return (
+    <span style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 4,
+      background: bgColor,
+      color: '#111',
+      fontFamily: 'var(--font-space-grotesk)',
+      fontSize: 9,
+      fontWeight: 700,
+      textTransform: 'uppercase',
+      letterSpacing: '.1em',
+      padding: '2px 6px',
+      border: '1.5px solid #111',
+      borderRadius: 0
+    }}>
+      {label}
+    </span>
+  )
+}
+
+function TagRow({ tags, expanded, onToggle }: { tags: string[]; expanded: boolean; onToggle: () => void }) {
+  if (!expanded || !tags || tags.length === 0) return null
+  
+  return (
+    <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+      {tags.map((tag, index) => (
+        <span
+          key={index}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 4,
+            background: '#F59E0B',
+            color: '#fff',
+            fontFamily: 'var(--font-space-grotesk)',
+            fontSize: 9,
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            letterSpacing: '.1em',
+            padding: '2px 6px',
+            border: '1.5px solid #111',
+            borderRadius: 0
+          }}
+        >
+          #{tag}
+        </span>
+      ))}
+      {!expanded && (
+        <button
+          onClick={onToggle}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 4,
+            background: 'none',
+            border: 'none',
+            color: 'rgba(0,0,0,.4)',
+            fontFamily: 'var(--font-space-grotesk)',
+            fontSize: 9,
+            fontWeight: 700,
+            cursor: 'pointer'
+          }}
+        >
+          <CaretDown size={10}/> Mais tags
+        </button>
+      )}
+    </div>
+  )
+}
+
+function ActionBar({ type, expanded, activePanel, onPanel }: { 
+  type: string; 
+  expanded: boolean; 
+  activePanel: string | null; 
+  onPanel: (panel: string) => void 
+}) {
+  if (!expanded) return null
+  
+  const panels = [
+    { id: 'streak', label: 'Streak', icon: ArrowClockwise },
+    { id: 'calendar', label: 'Calendar', icon: CalendarBlank },
+    { id: 'chart', label: 'Chart', icon: Moon }, // Simplified
+    { id: 'progress', label: 'Progress', icon: Flag },
+    { id: 'table', label: 'Table', icon: List },
+    { id: 'priority', label: 'Priority', icon: Target },
+    { id: 'kanban', label: 'Kanban', icon: Sliders },
+    { id: 'urgency', label: 'Urgency', icon: Bell },
+  ]
+  
+  return (
+    <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+      {panels.map(panel => (
+        <button
+          key={panel.id}
+          onClick={() => onPanel(panel.id)}
+          style={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6,
+            padding: '8px 0',
+            background: activePanel === panel.id 
+              ? (LIST_TYPE_COLOR[type as keyof typeof LIST_TYPE_COLOR] || '#F59E0B')
+              : (themeMode === 'dark' ? '#1E1E1E' : '#fff'),
+            color: activePanel === panel.id ? '#fff' : (themeMode === 'dark' ? '#fff' : '#111'),
+            border: '2px solid #111',
+            boxShadow: '2px 2px 0 0 #111',
+            borderRadius: 0,
+            fontFamily: 'var(--font-body)',
+            fontWeight: 700,
+            fontSize: 11,
+            cursor: 'pointer'
+          }}
+        >
+          <panel.icon size={12} weight="bold" />
+          <span>{panel.label}</span>
+        </button>
+      ))}
+    </div>
+  )
+}
+
+// Placeholder panels (would be implemented separately in full version)
+function StreakPanel({ item }: { item: any }) {
+  return (
+    <div style={{ padding: '12px 0' }}>
+      <p style={{ fontFamily: 'var(--font-space-grotesk)', fontSize: 11, color: '#666', marginBottom: 4 }}>
+        Streak atual: {item.habitStreakCurrent} dias
+      </p>
+      <p style={{ fontFamily: 'var(--font-space-grotesk)', fontSize: 11, color: '#666' }}>
+        Melhor streak: {item.habitStreakBest} dias
+      </p>
+    </div>
+  )
+}
+
+function HabitCalendar({ item }: { item: any }) {
+  return (
+    <div style={{ padding: '12px 0' }}>
+      <p style={{ fontFamily: 'var(--font-space-grotesk)', fontSize: 11, color: '#666' }}>
+        Calendário de hábito (implementação futura)
+      </p>
+    </div>
+  )
+}
+
+function WeeklyChart({ item }: { item: any }) {
+  return (
+    <div style={{ padding: '12px 0' }}>
+      <p style={{ fontFamily: 'var(--font-space-grotesk)', fontSize: 11, color: '#666' }}>
+        Gráfico semanal (implementação futura)
+      </p>
+    </div>
+  )
+}
+
+function GoalProgress({ item }: { item: any }) {
+  return (
+    <div style={{ padding: '12px 0' }}>
+      <p style={{ fontFamily: 'var(--font-space-grotesk)', fontSize: 11, color: '#666' }}>
+        Progresso da meta: {item.goalCurrentValue ?? 0}/{item.goalTargetValue ?? 100}
+      </p>
+    </div>
+  )
+}
+
+function GoalTable({ item }: { item: any }) {
+  return (
+    <div style={{ padding: '12px 0' }}>
+      <p style={{ fontFamily: 'var(--font-space-grotesk)', fontSize: 11, color: '#666' }}>
+        Tabela de metas (implementação futura)
+      </p>
+    </div>
+  )
+}
+
+function TaskPriority({ item }: { item: any }) {
+  return (
+    <div style={{ padding: '12px 0' }}>
+      <p style={{ fontFamily: 'var(--font-space-grotesk)', fontSize: 11, color: '#666' }}>
+        Prioridade da tarefa: {item.taskPriority ?? 'média'}
+      </p>
+    </div>
+  )
+}
+
+function KanbanBoard({ item }: { item: any }) {
+  return (
+    <div style={{ padding: '12px 0' }}>
+      <p style={{ fontFamily: 'var(--font-space-grotesk)', fontSize: 11, color: '#666' }}>
+        Kanban: {item.taskKanbanStatus ?? 'todo'}
+      </p>
+    </div>
+  )
+}
+
+function EventUrgency({ item }: { item: any }) {
+  return (
+    <div style={{ padding: '12px 0' }}>
+      <p style={{ fontFamily: 'var(--font-space-grotesk)', fontSize: 11, color: '#666' }}>
+        Urgência do evento: {item.eventUrgency ?? 'média'}
+      </p>
     </div>
   )
 }

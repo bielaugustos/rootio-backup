@@ -98,9 +98,8 @@ export function FabNav({ contextItems }: FabNavProps) {
   const filtered = items.filter(item => item.href !== pathname)
 
   return (
-    // Só aparece no mobile — no desktop a sidebar cuida da navegação
-    <div ref={containerRef} className="md:hidden">
-
+    <div ref={containerRef} className="md:hidden fixed top-0 left-0 right-0 z-50">
+      
       {/* Overlay escurecido ao abrir */}
       {open && (
         <div
@@ -109,55 +108,59 @@ export function FabNav({ contextItems }: FabNavProps) {
         />
       )}
 
-      {/* Container do FAB — fixo no canto inferior direito */}
-      <div className="fixed bottom-5 right-4 z-50 flex flex-col items-end gap-2.5">
-
-        {/* Itens expandidos — sobem verticalmente */}
-        <div
-          className={cn(
-            'flex flex-col items-end gap-2 transition-all duration-300',
-            open
-              ? 'opacity-100 translate-y-0 pointer-events-auto'
-              : 'opacity-0 translate-y-4 pointer-events-none'
-          )}
-        >
-          {filtered.map((item, i) => (
-            <FabItemButton
-              key={i}
-              item={item}
-              index={i}
-              open={open}
-              onClick={() => {
-                setOpen(false)
-                if (item.action) item.action()
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Botão FAB principal */}
+      {/* Barra fixa no topo */}
+      <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 bg-nb-bg border-b border-zinc-800">
+        
+        {/* Botão menu */}
         <button
           onClick={() => setOpen(v => !v)}
           className={cn(
-            'w-14 h-14 flex items-center justify-center',
+            'p-2 flex items-center justify-center',
             'bg-amber-500 text-zinc-900',
             'border-2 border-zinc-900',
-            'rounded-[10px]',                           // quadrado — neobrutalism
-            'shadow-[4px_4px_0_#1c1917]',
+            'rounded-[8px]',
+            'shadow-[2px_2px_0_#1c1917]',
             'transition-all duration-200',
-            'active:translate-x-[3px] active:translate-y-[3px] active:shadow-none',
-            open && 'rotate-[5deg]'
+            'active:translate-x-[1px] active:translate-y-[1px] active:shadow-none',
           )}
           aria-label={open ? 'Fechar menu' : 'Abrir menu'}
         >
-          <div className={cn('transition-transform duration-200', open && 'rotate-45')}>
+          <div className={cn('transition-transform duration-200', open && 'rotate-90')}>
             {open
-              ? <X size={22} weight="bold" />
-              : <List size={22} weight="bold" />
+              ? <X size={20} weight="bold" />
+              : <List size={20} weight="bold" />
             }
           </div>
         </button>
 
+        {/* Título do app */}
+        <span className="text-amber-500 font-bold text-lg">Rootio</span>
+
+        {/* Espaço vazio para balance */}
+        <div className="w-10" />
+      </div>
+
+      {/* Itens do menu — aparecem abaixo da barra quando abertos */}
+      <div
+        className={cn(
+          'absolute top-14 left-4 right-4 flex flex-col items-start gap-2 transition-all duration-300',
+          open
+            ? 'opacity-100 translate-y-0 pointer-events-auto'
+            : 'opacity-0 -translate-y-4 pointer-events-none'
+        )}
+      >
+        {filtered.map((item, i) => (
+          <FabItemButton
+            key={i}
+            item={item}
+            index={i}
+            open={open}
+            onClick={() => {
+              setOpen(false)
+              if (item.action) item.action()
+            }}
+          />
+        ))}
       </div>
     </div>
   )

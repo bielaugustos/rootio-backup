@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAppStore } from '@/store/useAppStore'
 import { storage, saveStorage, todayISO } from '@/lib/utils'
@@ -9,7 +9,7 @@ import { NbCheck } from '@/components/ui/nb/NbCheck'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, ArrowLeft, Bell, CheckSquare, Cardholder, Target, Books, FirstAid, AirplaneTilt, House } from '@phosphor-icons/react'
+import { ArrowRight, ArrowLeft, Bell, CheckSquare, Cardholder, Target, Books, FirstAid, AirplaneTilt, House, X } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 
 const OBJETIVOS = [
@@ -111,6 +111,16 @@ export default function OnboardingPage() {
     '#F5EFDF', // Step 4: Bege claro
     '#F5EFDF', // Step 5: Bege claro
     '#F59E0B', // Step 6: Ambar
+  ]
+
+  // Nomes dos steps
+  const stepNames = [
+    'INÍCIO',
+    'OBJETIVOS',
+    'HÁBITO',
+    'META $',
+    'AVATAR',
+    'PRONTO',
   ]
 
   useEffect(() => {
@@ -218,12 +228,9 @@ export default function OnboardingPage() {
     <div className="w-full max-w-md mx-auto">
       <div className="flex items-center justify-center mb-8">
         <div className="flex flex-col items-center gap-4">
-          <div className="bg-amber-500 border-4 border-black rounded-xl px-6 py-4 shadow-[3px_3px_0_0_#000]">
-            <span className="text-2xl font-black">🌻</span>
+          <div className="w-40 h-40 flex items-center justify-center bg-amber-500 border-4 border-black rounded-xl shadow-[3px_3px_0_0_#000]">
+            <span className="text-8xl font-black">🌻</span>
           </div>
-          <span className="font-mono text-[10px] font-bold text-muted-foreground uppercase tracking-[.14em]">
-            01 / 06 • INÍCIO
-          </span>
         </div>
       </div>
 
@@ -274,15 +281,6 @@ export default function OnboardingPage() {
 
     return (
       <div className="w-full max-w-md mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <Button size="icon" variant="io-neutral" onClick={handleBack}>
-            <ArrowLeft size={16} />
-          </Button>
-          <span className="font-mono text-[10px] font-bold text-muted-foreground uppercase tracking-[.14em]">
-            02 / 06 • OBJETIVOS
-          </span>
-        </div>
-
         {/* Barra de progresso estilo card Hoje */}
         <div className="mb-8">
           <div
@@ -375,15 +373,6 @@ export default function OnboardingPage() {
 
     return (
       <div className="w-full max-w-md mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <Button size="icon" variant="io-neutral" onClick={handleBack}>
-            <ArrowLeft size={16} />
-          </Button>
-          <span className="font-mono text-[10px] font-bold text-muted-foreground uppercase tracking-[.14em]">
-            03 / 06 • HÁBITO
-          </span>
-        </div>
-
         {/* Barra de progresso estilo card Hoje */}
         <div className="mb-8">
           <div
@@ -541,15 +530,6 @@ export default function OnboardingPage() {
 
     return (
       <div className="w-full max-w-md mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <Button size="icon" variant="io-neutral" onClick={handleBack}>
-            <ArrowLeft size={16} />
-          </Button>
-          <span className="font-mono text-[10px] font-bold text-muted-foreground uppercase tracking-[.14em]">
-            04 / 06 • META $
-          </span>
-        </div>
-
         {/* Barra de progresso estilo card Hoje */}
         <div className="mb-8">
           <div
@@ -649,15 +629,6 @@ export default function OnboardingPage() {
 
     return (
       <div className="w-full max-w-md mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <Button size="icon" variant="io-neutral" onClick={handleBack}>
-            <ArrowLeft size={16} />
-          </Button>
-          <span className="font-mono text-[10px] font-bold text-muted-foreground uppercase tracking-[.14em]">
-            05 / 06 • SEU AVATAR
-          </span>
-        </div>
-
         {/* Barra de progresso estilo card Hoje */}
         <div className="mb-8">
           <div
@@ -745,15 +716,6 @@ export default function OnboardingPage() {
 
     return (
       <div className="w-full max-w-md mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <Button size="icon" variant="io-neutral" onClick={handleBack}>
-            <ArrowLeft size={16} />
-          </Button>
-          <span className="font-mono text-[10px] font-bold text-muted-foreground uppercase tracking-[.14em]">
-            06 / 06 • PRONTO
-          </span>
-        </div>
-
         {/* Barra de progresso estilo card Hoje */}
         <div className="mb-8">
           <div
@@ -888,16 +850,44 @@ export default function OnboardingPage() {
 
   return (
     <div 
-      className="min-h-screen flex items-center justify-center p-6 overflow-hidden transition-colors duration-500 ease-in-out"
+      className="min-h-screen flex flex-col p-6 overflow-hidden transition-colors duration-500 ease-in-out"
       style={{ background: stepBackgrounds[step] }}
     >
-      <div className="w-full max-w-2xl mx-auto">
-        {step === 0 && renderStep1()}
-        {step === 1 && renderStep2()}
-        {step === 2 && renderStep3()}
-        {step === 3 && renderStep4()}
-        {step === 4 && renderStep5()}
-        {step === 5 && renderStep6()}
+      {/* Navbar fixa no topo - apenas a partir do step 2 */}
+      {step > 0 && (
+        <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3" style={{ background: stepBackgrounds[step], borderBottom: '2px solid #000' }}>
+          <div className="w-10 flex justify-start">
+            <button
+              onClick={handleBack}
+              className="p-2 flex items-center justify-center bg-amber-500 border-2 border-black rounded-[8px] shadow-[2px_2px_0_#000] hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-none active:translate-x-[1px] active:translate-y-[1px] transition-all"
+            >
+              <ArrowLeft size={16} weight="bold" />
+            </button>
+          </div>
+          <span className="font-mono text-xs font-bold text-black uppercase tracking-[.14em]">
+            {String(step + 1).padStart(2, '0')} / 06 • {stepNames[step]}
+          </span>
+          <div className="w-10 flex justify-end">
+            <button
+              onClick={() => router.push('/dashboard')}
+              className="p-2 flex items-center justify-center bg-white border-2 border-black rounded-[8px] shadow-[2px_2px_0_#000] hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-none active:translate-x-[1px] active:translate-y-[1px] transition-all"
+            >
+              <X size={16} weight="bold" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Conteúdo - sem padding no step 1, com padding nos outros */}
+      <div className={`flex-1 flex items-center justify-center ${step > 0 ? 'pt-16' : 'pt-0'}`}>
+        <div className="w-full max-w-2xl mx-auto">
+          {step === 0 && renderStep1()}
+          {step === 1 && renderStep2()}
+          {step === 2 && renderStep3()}
+          {step === 3 && renderStep4()}
+          {step === 4 && renderStep5()}
+          {step === 5 && renderStep6()}
+        </div>
       </div>
     </div>
   )
