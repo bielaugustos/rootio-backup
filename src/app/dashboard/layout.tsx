@@ -4,7 +4,19 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { useAppStore } from '@/store/useAppStore'
 import { ListThemeProvider, useListTheme } from '@/contexts/ListThemeContext'
-import { Plus, Lightning, List, MagnifyingGlass, X } from '@phosphor-icons/react'
+import { Plus, List, MagnifyingGlass, X } from '@phosphor-icons/react'
+
+// IconCustom for IO badge
+function IconCustom({ name, size = 16, style = {} }: { name: string; size?: number; style?: React.CSSProperties }) {
+  if (name === 'io-star') {
+    return (
+      <svg viewBox="0 0 24 24" width={size} height={size} style={style}>
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill={style.fill || 'var(--c-goal)'} />
+      </svg>
+    )
+  }
+  return null
+}
 import { DashboardSidebar } from '@/components/navigation/DashboardSidebar'
 import {
   SidebarProvider,
@@ -79,7 +91,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 boxShadow: '2px 2px 0 var(--border)',
                 fontSize: 11, fontWeight: 700,
               }}>
-                <Lightning size={11} weight="fill" style={{ fill: 'var(--c-goal)' }} />
+                <IconCustom name="io-star" size={11} style={{ fill: 'var(--c-goal)' }} />
                 <span style={{ color: 'var(--c-goal)' }}>{economy.saldo_io} IO</span>
               </span>
             </Link>
