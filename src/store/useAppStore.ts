@@ -68,7 +68,7 @@ export interface DayHistory {
   resetHabits: () => void
 
   // Actions — Economy
-  earnIO:  (tipo: keyof typeof IO_RULES) => { ganhou: number; subiuNivel: boolean }
+  earnIO:  (tipo: keyof typeof IO_RULES) => void
   spendIO: (amount: number) => boolean
   deductIO: (amount: number) => void
 
@@ -192,13 +192,10 @@ export const useAppStore = create<AppStore>()(
 
       // ── Economy ─────────────────────────────
       earnIO: (tipo) => {
-        let result = { ganhou: 0, subiuNivel: false }
         set(s => {
           const r = ganharIO(s.economy, tipo)
-          result = { ganhou: r.ganhou, subiuNivel: r.subiuNivel }
           return { economy: r.economy }
         })
-        return result
       },
 
       spendIO: (amount) => {

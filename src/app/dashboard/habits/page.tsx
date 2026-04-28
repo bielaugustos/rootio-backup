@@ -6,11 +6,13 @@ import { toast }                        from 'sonner'
 import { PageSkeleton }                 from '@/components/PageSkeleton'
 import { Input }                        from '@/components/ui/input'
 import { HabitForm }                    from '@/components/HabitForm'
+import { CommandPalette }               from '@/components/CommandPalette'
 import Link                             from 'next/link'
 import {
   Plus, Trash, PencilSimple,
   CaretDown, CaretUp, Check, Flag, Moon,
-  ArrowClockwise, CalendarBlank, X,
+  ArrowClockwise, CalendarBlank, X, List, Target, Sliders, Bell,
+  IconWeight,
 } from '@phosphor-icons/react'
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
@@ -39,7 +41,7 @@ const NB: Record<string, React.CSSProperties> = {
     borderRadius:0, padding:20,
   },
   label: {
-      fontFamily:'var(--font-space-grotesk,monospace)', fontSize:11, fontWeight:700,
+    fontFamily:'var(--font-space-grotesk), monospace', fontSize:11, fontWeight:700,
     textTransform:'uppercase', letterSpacing:'.12em', color:'rgba(0,0,0,.45)',
     display:'block', marginBottom:6,
   },
@@ -147,42 +149,14 @@ export default function HabitsPage() {
         </span>
       </div>
 
-      {/* ── Input rápido para criar hábito ── */}
+      {/* ── Command Palette ── */}
       {!habitsFormOpen && (
-        <Input
-          type="text"
-          placeholder="Digite um hábito e aperte Enter..."
-          className="h-12 transition-shadow duration-200 focus:shadow-nb"
-          style={{ background: themeMode === 'dark' ? '#1E1E1E' : undefined }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              const target = e.target as HTMLInputElement
-              const habitName = target.value.trim()
-              if (habitName) {
-                if (!canAdd) {
-                  toast.error(`Limite de ${FREE_LIMIT} hábitos no plano Free.`)
-                  return
-                }
-                addHabit({
-                  id:Date.now(),
-                  name:habitName,
-                  priority:'media',
-                  freq:'diario',
-                  days:[0,1,2,3,4,5,6],
-                  notes:'',
-                  pts:0,
-                  done:false,
-                  icon:'⭐',
-                  tags:[],
-                  streak:0,
-                  createdAt:new Date().toISOString()
-                })
-                earnIO('input_registro')
-                toast.success('+10 IO • hábito criado!')
-                target.value = ''
-              }
-            }
-          }}
+        <CommandPalette
+          themeMode={themeMode}
+          canAdd={canAdd}
+          addHabit={addHabit}
+          earnIO={earnIO}
+          plan={plan}
         />
       )}
 
@@ -625,18 +599,6 @@ function HabitCard(props: {
 }
 
 // Helper components for HabitCard to match theme-editor design
-function TypeIcon({ type }: { type: string }) {
-  const iconMap: Record<string, React.ComponentType<{ size?: number; weight?: string }>> = {
-    habit: ArrowClockwise,
-    event: CalendarBlank,
-    goal: Flag,
-    task: X,
-    note: Moon,
-  }
-  
-  const Icon = iconMap[type] || ArrowClockwise
-  return <Icon size={16} weight="bold" />
-}
 
 function TypeBadge({ type, label }: { type: string; label: string }) {
   const bgColor = LIST_TYPE_COLOR[type as keyof typeof LIST_TYPE_COLOR] || '#F59E0B'
@@ -712,15 +674,16 @@ function TagRow({ tags, expanded, onToggle }: { tags: string[]; expanded: boolea
   )
 }
 
-function ActionBar({ type, expanded, activePanel, onPanel }: { 
-  type: string; 
-  expanded: boolean; 
-  activePanel: string | null; 
-  onPanel: (panel: string) => void 
+function ActionBar({ type, expanded, activePanel, onPanel, themeMode }: {
+  type: string;
+  expanded: boolean;
+  activePanel: string | null;
+  onPanel: (panel: string) => void;
+  themeMode: 'light' | 'dark'
 }) {
   if (!expanded) return null
   
-  const panels = [
+  const panels: any[] = [
     { id: 'streak', label: 'Streak', icon: ArrowClockwise },
     { id: 'calendar', label: 'Calendar', icon: CalendarBlank },
     { id: 'chart', label: 'Chart', icon: Moon }, // Simplified
@@ -757,6 +720,7 @@ function ActionBar({ type, expanded, activePanel, onPanel }: {
             cursor: 'pointer'
           }}
         >
+          {/* @ts-ignore */}
           <panel.icon size={12} weight="bold" />
           <span>{panel.label}</span>
         </button>
