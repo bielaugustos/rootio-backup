@@ -85,7 +85,7 @@ export default function HojePage() {
   if (loading) return <PageSkeleton />
 
   return (
-    <div className="px-4 pt-6 pb-20 max-w-2xl mx-auto w-full flex flex-col gap-4">
+    <div className="p-4 md:p-6 pb-20 space-y-4 max-w-2xl mx-auto">
 
       {/* Data */}
       <p style={{ fontFamily:'var(--font-space-grotesk)', fontSize:11, fontWeight:700,

@@ -1395,7 +1395,7 @@ export default function ThemeEditorPage() {
           </div>
         </header>
 
-        <main style={{ maxWidth: 760, margin: '0 auto', padding: '32px 16px 48px', display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <main style={{ maxWidth: 672, margin: '0 auto', padding: '24px 16px 80px', display: 'flex', flexDirection: 'column', gap: 16 }}>
 
           {/* Título */}
           <div style={{ marginBottom: 40 }}>

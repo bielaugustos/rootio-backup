@@ -254,7 +254,7 @@ export default function ProjectsPage() {
   }
 
   return loading ? <PageSkeleton /> : (
-    <div className="p-4 md:p-6 space-y-4 max-w-2xl">
+    <div className="p-4 md:p-6 pb-20 space-y-4 max-w-2xl mx-auto">
       {/* Banner colapsável - sempre visível */}
       <Card className="mx-3 mt-3 overflow-hidden border-l-4 border-l-amber-500">
         <CardHeader className="pb-2">

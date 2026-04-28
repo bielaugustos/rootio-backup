@@ -599,7 +599,7 @@ function HabitCard(props: {
 
 // Helper components for HabitCard to match theme-editor design
 function TypeIcon({ type }: { type: string }) {
-  const iconMap: Record<string, React.ComponentType<{ size?: number; weight?: string }>> = {
+  const iconMap: Record<string, any> = {
     habit: ArrowClockwise,
     event: CalendarBlank,
     goal: Flag,
@@ -694,7 +694,7 @@ function ActionBar({ type, expanded, activePanel, onPanel, themeMode }: {
 }) {
   if (!expanded) return null
   
-  const panels = [
+  const panels: any[] = [
     { id: 'streak', label: 'Streak', icon: ArrowClockwise },
     { id: 'calendar', label: 'Calendar', icon: CalendarBlank },
     { id: 'chart', label: 'Chart', icon: Moon }, // Simplified

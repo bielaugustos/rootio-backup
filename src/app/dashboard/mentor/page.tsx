@@ -198,7 +198,7 @@ export default function MentorPage() {
   }, [entries])
 
   return loading ? <PageSkeleton /> : (
-    <div className="p-4 md:p-6 space-y-4 max-w-2xl">
+    <div className="p-4 md:p-6 pb-20 space-y-4 max-w-2xl mx-auto">
       {/* Abas */}
       <div className="flex rounded-lg bg-muted p-1 mx-3">
         <button

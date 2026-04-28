@@ -147,7 +147,7 @@ export default function ShopPage() {
   }
 
   return loading ? <PageSkeleton /> : (
-    <div className="p-4 md:p-6 space-y-4 max-w-2xl">
+    <div className="p-4 md:p-6 pb-20 space-y-4 max-w-2xl mx-auto">
       <Card className="bg-zinc-950 text-white border-zinc-800">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">

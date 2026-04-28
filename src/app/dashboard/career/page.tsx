@@ -256,7 +256,7 @@ function CareerPageContent() {
   const sugestoesFiltradas = SUGESTOES.filter(s => !skills.find(skill => skill.name === s))
 
   return loading ? <PageSkeleton /> : (
-    <div className="p-4 md:p-6 space-y-4 max-w-2xl">
+    <div className="p-4 md:p-6 pb-20 space-y-4 max-w-2xl mx-auto">
       <Tabs defaultValue={tabParam || 'agente'} className="w-full">
         <TabsList className="w-full grid grid-cols-3">
           <TabsTrigger value="agente">Agente</TabsTrigger>

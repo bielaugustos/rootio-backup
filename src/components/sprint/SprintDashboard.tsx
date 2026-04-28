@@ -402,7 +402,7 @@ function SprintDashboardContent() {
   }
 
   return (
-    <div className="p-4 md:p-6 space-y-4 max-w-2xl">
+    <div className="p-4 md:p-6 pb-20 space-y-4 max-w-2xl mx-auto">
       <ImpedimentOverlay isVisible={activeImpediments > 0} count={activeImpediments} logs={impedimentLogs} />
       
       {/* Header */}
