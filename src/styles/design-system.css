@@ -1,0 +1,57 @@
+*{box-sizing:border-box;margin:0;padding:0}
+
+.ds-root{
+  --bg:#0c0c0c;--bg2:#141414;--bg3:#1a1a1a;--bg4:#222;--bg5:#2a2a2a;
+  --b:#2a2a2a;--b2:#333;--b3:#444;--b-focus:#888;
+  --t1:#ececec;--t2:#a8a8a8;--t3:#666;--t4:#444;
+  --ink:#0c0c0c;--ink-inv:#fff;
+  --shadow-nb:4px 4px 0 #0c0c0c;--shadow-nb-sm:2px 2px 0 #0c0c0c;
+  --c-habit:#F5EFDF;--c-habit-bg:#1e1c16;--c-habit-b:#b8a97a;--c-habit-t:#e8dfc0;
+  --c-goal:#F59E0B;--c-goal-bg:#1f1500;--c-goal-b:#4a3500;--c-goal-t:#f5b93b;
+  --c-task:#6FB8FF;--c-task-bg:#0a1825;--c-task-b:#1a3d60;--c-task-t:#90c8ff;
+  --c-event:#9B7BFF;--c-event-bg:#130e24;--c-event-b:#2e1f60;--c-event-t:#c4b0ff;
+  --c-note-bg:#181818;--c-note-t:#aaa;
+  --c-io:#F59E0B;--c-io-bg:#1f1500;--c-io-b:#4a3500;
+  --c-danger:#fee2e2;--c-danger-t:#7f1d1d;--c-danger-b:#7f1d1d;--c-danger-s:#7f1d1d;
+  font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
+  font-size:13px;line-height:1.5;background:var(--bg);color:var(--t1);
+  min-height:600px;
+}
+.ds-root.light{
+  --bg:#f9f7f2;--bg2:#ffffff;--bg3:#f3f0e8;--bg4:#ebe7db;--bg5:#e0dbd0;
+  --b:#d8d3c8;--b2:#c5bfb0;--b3:#a09890;--b-focus:#666;
+  --t1:#1a1814;--t2:#5a5548;--t3:#9a9080;--t4:#c0b8a8;
+  --ink:#1a1814;--ink-inv:#f9f7f2;
+  --shadow-nb:4px 4px 0 #1a1814;--shadow-nb-sm:2px 2px 0 #1a1814;
+  --c-habit:#F5EFDF;--c-habit-bg:#fdf8ee;--c-habit-b:#c8b87a;--c-habit-t:#7a6030;
+  --c-goal:#F59E0B;--c-goal-bg:#fffbeb;--c-goal-b:#d97706;--c-goal-t:#92400e;
+  --c-task:#6FB8FF;--c-task-bg:#eff8ff;--c-task-b:#3b82f6;--c-task-t:#1e3a8a;
+  --c-event:#9B7BFF;--c-event-bg:#f5f3ff;--c-event-b:#7c3aed;--c-event-t:#4c1d95;
+  --c-note-bg:#f5f3ee;--c-note-t:#7a7060;
+  --c-io:#F59E0B;--c-io-bg:#fffbeb;--c-io-b:#d97706;
+  --c-danger:#fee2e2;--c-danger-t:#7f1d1d;--c-danger-b:#ef4444;--c-danger-s:#b91c1c;
+}
+
+.ds-root .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+
+/* ── NEOBRUTALIST BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:8px 18px;border-radius:4px;font-size:13px;font-weight:700;cursor:pointer;border:2px solid var(--ink);box-shadow:var(--shadow-nb);transition:box-shadow .1s,transform .1s;color:#000;font-family:inherit}
+.btn:hover,.btn:active{box-shadow:none;transform:translate(4px,4px)}
+.btn-primary{background:var(--c-goal)}
+.btn-habit{background:var(--c-habit)}
+.btn-task{background:var(--c-task)}
+.btn-event{background:var(--c-event);color:#fff}
+.btn-ghost{background:var(--bg3);color:var(--t1);border-color:var(--b2);box-shadow:4px 4px 0 var(--b2)}
+.btn-ghost:hover,.btn-ghost:active{box-shadow:none;transform:translate(4px,4px)}
+.btn-danger{background:var(--c-danger);color:var(--c-danger-t);border-color:var(--c-danger-b);box-shadow:4px 4px 0 var(--c-danger-s)}
+.btn-danger:hover,.btn-danger:active{box-shadow:none;transform:translate(4px,4px)}
+.btn-icon{padding:8px;width:38px;height:38px}
+.btn-sm{padding:5px 12px;font-size:12px}
+
+/* ── IO BADGE ── */
+.io-b{display:inline-flex;align-items:center;gap:4px;background:var(--c-io-bg);border:1.5px solid var(--c-io-b);padding:2px 8px;border-radius:4px;box-shadow:var(--shadow-nb-sm)}
+.io-b svg{width:11px;height:11px}
+.io-b span{font-size:11px;font-weight:700;color:var(--c-goal)}
+
+/* ── AVATAR ── */
+.av{width:30px;height:30px;border-radius:50%;background:var(--c-event-bg);border:2px solid var(--c-event-b);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--c-event-t);flex-shrink:0}

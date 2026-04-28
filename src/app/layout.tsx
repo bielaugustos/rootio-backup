@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import './styles/design-system.css'
 import { geist, spaceGrotesk } from './fonts'
 import { ThemeInitializer } from '@/components/ThemeInitializer'
 import { cn } from "@/lib/utils"
@@ -36,7 +37,7 @@ export default function RootLayout({
 }) {
    return (
      <html lang="pt-BR" suppressHydrationWarning className={cn("font-sans", geist.variable, spaceGrotesk.variable)}>
-       <body className={`${geist.variable} min-h-screen bg-nb-bg antialiased font-sans`} suppressHydrationWarning>
+        <body className={`${geist.variable} min-h-screen bg-nb-bg antialiased font-sans ds-root`} suppressHydrationWarning>
 
 <ThemeInitializer />
           <ServiceWorkerRegistration />

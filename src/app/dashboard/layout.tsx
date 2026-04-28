@@ -6,6 +6,18 @@ import { useAppStore } from '@/store/useAppStore'
 import { ListThemeProvider, useListTheme } from '@/contexts/ListThemeContext'
 import { Plus, List, MagnifyingGlass, X } from '@phosphor-icons/react'
 
+// IconCustom for IO badge
+function IconCustom({ name, size = 16, style = {} }: { name: string; size?: number; style?: React.CSSProperties }) {
+  if (name === 'io-star') {
+    return (
+      <svg viewBox="0 0 24 24" width={size} height={size} style={style}>
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill={style.fill || 'var(--c-goal)'} />
+      </svg>
+    )
+  }
+  return null
+}
+
 
 import { DashboardSidebar, BottomNav } from '@/components/navigation/DashboardSidebar'
 import {
@@ -72,28 +84,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             )}
           </div>
           <div className="flex items-center gap-2 sm:gap-4 px-4 sm:px-6">
+            <Link href="/dashboard/progress">
+              <div className="io-b">
+                <IconCustom name="io-star" size={11} style={{ fill: 'var(--c-goal)' }} />
+                <span>{economy.saldo_io}</span>
+              </div>
+            </Link>
             <Link href="/dashboard/profile">
-               <div style={{
-                 width: 30, height: 30, borderRadius: '50%',
-                 background: bgColor,
-                 border: '2px solid var(--border)',
-                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                 fontSize: 11, fontWeight: 700,
-                 color: bgColor === '#ffffff' || bgColor === '#fef3c7' ? '#000' : '#fff',
-                 flexShrink: 0,
-                 cursor: 'pointer',
-                 position: 'relative',
-                 overflow: 'hidden',
-               }}>
-                {bgImage && (
-                  <img src={bgImage} alt="avatar" className="absolute inset-0 w-full h-full object-cover" />
-                )}
-                {!bgImage && avatar}
+               <div className="av">
+                {avatar}
                </div>
              </Link>
             <div>
-              <p style={{ fontSize: 13, fontWeight: 700, color: 'var(--foreground)' }}>{username}</p>
-              <p style={{ fontSize: 11, color: 'var(--foreground)', opacity: .6 }}>{economy.io_hoje} IO hoje</p>
+              <p style={{ fontSize: 13, fontWeight: 700, color: 'var(--t1)' }}>{username}</p>
+              <p style={{ fontSize: 11, color: 'var(--t3)' }}>{economy.io_hoje} IO hoje</p>
             </div>
           </div>
           </header>
