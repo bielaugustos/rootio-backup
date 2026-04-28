@@ -71,24 +71,37 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
           <div className="flex items-center gap-2 sm:gap-4 px-4 sm:px-6">
             <Link href="/dashboard/progress">
-              <div className="io-ticker text-xs sm:text-sm"><Lightning size={3} weight="fill" />{economy.saldo_io} IO</div>
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', gap: 4,
+                padding: '2px 8px', borderRadius: 4,
+                background: 'var(--background)',
+                border: '1.5px solid var(--c-goal)',
+                boxShadow: '2px 2px 0 var(--border)',
+                fontSize: 11, fontWeight: 700,
+              }}>
+                <Lightning size={11} weight="fill" style={{ fill: 'var(--c-goal)' }} />
+                <span style={{ color: 'var(--c-goal)' }}>{economy.saldo_io} IO</span>
+              </span>
             </Link>
             <Link href="/dashboard/profile">
-               <div 
-                 className="w-6 h-6 sm:w-7 sm:h-7 rounded-md border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all duration-75 cursor-pointer relative overflow-hidden"
-                 style={{ backgroundColor: !bgImage ? bgColor : 'transparent' }}
-               >
-                {bgImage && (
-                  <img src={bgImage} alt="avatar" className="absolute inset-0 w-full h-full object-cover" />
-                )}
-                <span 
-                  className="absolute inset-0 flex items-center justify-center text-[10px] sm:text-[11px] font-medium" 
-                  style={{ color: bgColor === '#ffffff' || bgColor === '#fef3c7' ? '#000' : '#fff' }}
-                >
-                  {avatar}
-                </span>
-              </div>
-            </Link>
+               <div style={{
+                 width: 30, height: 30, borderRadius: '50%',
+                 background: 'var(--c-event)',
+                 border: '2px solid var(--c-event-b)',
+                 display: 'flex', alignItems: 'center', justifyContent: 'center',
+                 fontSize: 11, fontWeight: 700,
+                 color: 'var(--c-event-t)',
+                 flexShrink: 0,
+                 cursor: 'pointer',
+                 position: 'relative',
+                 overflow: 'hidden',
+               }}>
+                 {bgImage && (
+                   <img src={bgImage} alt="avatar" className="absolute inset-0 w-full h-full object-cover" />
+                 )}
+                 {!bgImage && avatar}
+               </div>
+             </Link>
           </div>
           </header>
           <main className="flex-1 md:pt-0 pt-14">{children}</main>
