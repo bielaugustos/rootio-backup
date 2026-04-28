@@ -7,7 +7,7 @@ import { ListThemeProvider, useListTheme } from '@/contexts/ListThemeContext'
 import { Plus, List, MagnifyingGlass, X } from '@phosphor-icons/react'
 
 
-import { DashboardSidebar } from '@/components/navigation/DashboardSidebar'
+import { DashboardSidebar, BottomNav } from '@/components/navigation/DashboardSidebar'
 import {
   SidebarProvider,
   SidebarInset,
@@ -100,6 +100,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <main className="flex-1 md:pt-0 pt-14">{children}</main>
         </SidebarInset>
       </SidebarProvider>
+
+      {/* Bottom nav (mobile) */}
+      <BottomNav/>
     </ListThemeProvider>
   )
 }
