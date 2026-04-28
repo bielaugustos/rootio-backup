@@ -4,6 +4,7 @@ import { useAppStore } from '@/store/useAppStore'
 import { saveStorage, storage, formatBRL, todayISO } from '@/lib/utils'
 import { Transaction, FinancialGoal } from '@/types'
 import { PageSkeleton } from '@/components/PageSkeleton'
+import { Button } from '@/components/ui/button'
 import { ArrowUp, ArrowDown, Trash, Plus, CaretLeft, CaretRight, PiggyBank, PencilSimple, ArrowCounterClockwise, PaperPlaneTilt } from '@phosphor-icons/react'
 
 const KEY = { transactions:'io_fin_transactions', goals:'io_fin_goals', emergency:'io_fin_emergency' }
@@ -70,8 +71,6 @@ function FinanceContent() {
   const [chatInput, setChatInput] = useState('')
   const [chatMsgs, setChatMsgs] = useState<{t:'u'|'a';text?:string;d?:any;id:number}[]>([])
   const [chatLoading, setChatLoading] = useState(false)
-  const [hovered, setHovered] = useState(false)
-  const [pressed, setPressed] = useState(false)
   const chatEnd = useRef<HTMLDivElement>(null)
 
   useEffect(() => { setLoading(false) }, [])
@@ -209,29 +208,10 @@ function FinanceContent() {
           <div style={{...sc(isDark),overflow:'hidden'}}>
             <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 14px',borderBottom:'1px solid var(--border)'}}>
               <span style={{fontWeight:700,fontSize:13}}>Movimentações</span>
-              <button
+              <Button
                 onClick={()=>{setTxType('expense');setShowForm(true)}}
-                onMouseDown={() => setPressed(true)}
-                onMouseUp={() => setPressed(false)}
-                onMouseEnter={() => setHovered(true)}
-                onMouseLeave={() => { setHovered(false); setPressed(false) }}
-                style={{
-                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                  gap: 8, fontWeight: 700, fontSize: 14,
-                  border: '2px solid var(--border)',
-                  borderRadius: 5,
-                  cursor: 'pointer',
-                  transition: 'transform .1s, box-shadow .1s',
-                  fontFamily: 'inherit',
-                  whiteSpace: 'nowrap',
-                  padding: '0 18px',
-                  height: 40,
-                  background: '#e6ac00',
-                  color: '#000000',
-                  boxShadow: (hovered || pressed) ? 'none' : 'var(--shadow)',
-                  transform: (hovered || pressed) ? 'translate(4px, 4px)' : 'none',
-                }}
-              ><Plus size={14} /> Nova entrada</button>
+                variant="io"
+              ><Plus size={14} /> Nova entrada</Button>
             </div>
             {txMes.length===0?(
               <div style={{padding:'32px 16px',textAlign:'center'}}>

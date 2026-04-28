@@ -3,10 +3,9 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils"
-import { useListTheme } from "@/contexts/ListThemeContext"
 
   const buttonVariants = cva(
-    "inline-flex items-center justify-center rounded-[4px] text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+    "inline-flex items-center justify-center rounded-[4px] text-sm font-medium transition-all duration-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 shadow-nb hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px],",
     {
       variants: {
         variant: {
@@ -49,9 +48,8 @@ import { useListTheme } from "@/contexts/ListThemeContext"
       asChild?: boolean
     }) {
   const Comp = asChild ? Slot.Root : "button"
-  const { currentColor } = useListTheme()
 
-  const dynamicClass = variant === 'action' ? { backgroundColor: currentColor } : {}
+  const dynamicClass = variant === 'action' ? { backgroundColor: 'var(--c-habit)' } : {}
 
   return (
     <Comp
