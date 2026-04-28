@@ -18,7 +18,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname()
   const [showSearchInput, setShowSearchInput] = useState(false)
   const { economy, avatar, username, bgColor, bgImage, habitsSearchQuery, plan, habits, setHabitsSearchQuery, setHabitsFormOpen, habitsFormOpen, themeMode } = useAppStore()
-  const initials = username.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
   const { currentColor } = useListTheme()
 
   const isHabitsPage = pathname === '/dashboard/habits'
@@ -73,10 +72,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             )}
           </div>
           <div className="flex items-center gap-2 sm:gap-4 px-4 sm:px-6">
-            <div className="flex items-center gap-4">
-              <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--foreground)' }}>{username}</span>
-              <span style={{ fontSize: 11, color: 'var(--foreground)', opacity: .6 }}>{economy.io_hoje} IO hoje</span>
-            </div>
             <Link href="/dashboard/profile">
                <div style={{
                  width: 30, height: 30, borderRadius: '50%',
@@ -96,6 +91,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 {!bgImage && avatar}
                </div>
              </Link>
+            <div>
+              <p style={{ fontSize: 13, fontWeight: 700, color: 'var(--foreground)' }}>{username}</p>
+              <p style={{ fontSize: 11, color: 'var(--foreground)', opacity: .6 }}>{economy.io_hoje} IO hoje</p>
+            </div>
           </div>
           </header>
           <main className="flex-1 md:pt-0 pt-14">{children}</main>

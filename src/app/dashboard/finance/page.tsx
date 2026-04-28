@@ -207,7 +207,21 @@ function FinanceContent() {
           <div style={{...sc(isDark),overflow:'hidden'}}>
             <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 14px',borderBottom:'1px solid var(--border)'}}>
               <span style={{fontWeight:700,fontSize:13}}>Movimentações</span>
-              <button onClick={()=>{setTxType('expense');setShowForm(true)}} style={{...btnG(),padding:'5px 10px',fontSize:11}}><Plus size={12}/> Nova</button>
+              <button onClick={()=>{setTxType('expense');setShowForm(true)}} style={{
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                gap: 8, fontWeight: 700, fontSize: 14,
+                border: '2px solid var(--border)',
+                borderRadius: 5,
+                cursor: 'pointer',
+                transition: 'transform .1s, box-shadow .1s',
+                fontFamily: 'inherit',
+                whiteSpace: 'nowrap',
+                padding: '0 18px',
+                height: 40,
+                background: '#e6ac00',
+                color: '#000000',
+                boxShadow: '4px 4px 0 var(--border)',
+              }}><Plus size={14} /> + nova entrada</button>
             </div>
             {txMes.length===0?(
               <div style={{padding:'32px 16px',textAlign:'center'}}>
