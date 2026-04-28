@@ -6,17 +6,7 @@ import { useAppStore } from '@/store/useAppStore'
 import { ListThemeProvider, useListTheme } from '@/contexts/ListThemeContext'
 import { Plus, List, MagnifyingGlass, X } from '@phosphor-icons/react'
 
-// IconCustom for IO badge
-function IconCustom({ name, size = 16, style = {} }: { name: string; size?: number; style?: React.CSSProperties }) {
-  if (name === 'io-star') {
-    return (
-      <svg viewBox="0 0 24 24" width={size} height={size} style={style}>
-        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill={style.fill || 'var(--c-goal)'} />
-      </svg>
-    )
-  }
-  return null
-}
+
 import { DashboardSidebar } from '@/components/navigation/DashboardSidebar'
 import {
   SidebarProvider,
@@ -27,7 +17,8 @@ import {
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const [showSearchInput, setShowSearchInput] = useState(false)
-  const { economy, avatar, bgColor, bgImage, habitsSearchQuery, plan, habits, setHabitsSearchQuery, setHabitsFormOpen, habitsFormOpen, themeMode } = useAppStore()
+  const { economy, avatar, username, bgColor, bgImage, habitsSearchQuery, plan, habits, setHabitsSearchQuery, setHabitsFormOpen, habitsFormOpen, themeMode } = useAppStore()
+  const initials = username.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
   const { currentColor } = useListTheme()
 
   const isHabitsPage = pathname === '/dashboard/habits'
@@ -82,36 +73,27 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             )}
           </div>
           <div className="flex items-center gap-2 sm:gap-4 px-4 sm:px-6">
-            <Link href="/dashboard/progress">
-              <span style={{
-                display: 'inline-flex', alignItems: 'center', gap: 4,
-                padding: '2px 8px', borderRadius: 4,
-                background: 'var(--background)',
-                border: '1.5px solid var(--c-goal)',
-                boxShadow: '2px 2px 0 var(--border)',
-                fontSize: 11, fontWeight: 700,
-              }}>
-                <IconCustom name="io-star" size={11} style={{ fill: 'var(--c-goal)' }} />
-                <span style={{ color: 'var(--c-goal)' }}>{economy.saldo_io} IO</span>
-              </span>
-            </Link>
+            <div className="flex items-center gap-4">
+              <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--foreground)' }}>{username}</span>
+              <span style={{ fontSize: 11, color: 'var(--foreground)', opacity: .6 }}>{economy.io_hoje} IO hoje</span>
+            </div>
             <Link href="/dashboard/profile">
                <div style={{
                  width: 30, height: 30, borderRadius: '50%',
-                 background: 'var(--c-event)',
-                 border: '2px solid var(--c-event-b)',
+                 background: bgColor,
+                 border: '2px solid var(--border)',
                  display: 'flex', alignItems: 'center', justifyContent: 'center',
                  fontSize: 11, fontWeight: 700,
-                 color: 'var(--c-event-t)',
+                 color: bgColor === '#ffffff' || bgColor === '#fef3c7' ? '#000' : '#fff',
                  flexShrink: 0,
                  cursor: 'pointer',
                  position: 'relative',
                  overflow: 'hidden',
                }}>
-                 {bgImage && (
-                   <img src={bgImage} alt="avatar" className="absolute inset-0 w-full h-full object-cover" />
-                 )}
-                 {!bgImage && avatar}
+                {bgImage && (
+                  <img src={bgImage} alt="avatar" className="absolute inset-0 w-full h-full object-cover" />
+                )}
+                {!bgImage && avatar}
                </div>
              </Link>
           </div>
