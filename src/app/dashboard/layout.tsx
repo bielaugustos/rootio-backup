@@ -97,12 +97,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </Link>
             <Link href="/dashboard/profile">
                <div style={{
-                 width: 72, height: 72, borderRadius: 4,
-                 border: '3px solid var(--c-goal-b,#92400E)',
-                 background: bgColor,
+                 width: 30, height: 30, borderRadius: '50%',
+                 background: 'var(--c-event)',
+                 border: '2px solid var(--c-event-b)',
                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                 fontSize: 36, cursor: 'pointer', flexShrink: 0, position: 'relative',
-                 boxShadow: 'var(--shadow-nb,4px 4px 0 #1a1814)',
+                 fontSize: 11, fontWeight: 700,
+                 color: 'var(--c-event-t)',
+                 flexShrink: 0,
+                 cursor: 'pointer',
+                 position: 'relative',
+                 overflow: 'hidden',
                }}>
                  {bgImage && (
                    <img src={bgImage} alt="avatar" className="absolute inset-0 w-full h-full object-cover" />
