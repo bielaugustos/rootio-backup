@@ -70,6 +70,8 @@ function FinanceContent() {
   const [chatInput, setChatInput] = useState('')
   const [chatMsgs, setChatMsgs] = useState<{t:'u'|'a';text?:string;d?:any;id:number}[]>([])
   const [chatLoading, setChatLoading] = useState(false)
+  const [hovered, setHovered] = useState(false)
+  const [pressed, setPressed] = useState(false)
   const chatEnd = useRef<HTMLDivElement>(null)
 
   useEffect(() => { setLoading(false) }, [])
@@ -207,21 +209,29 @@ function FinanceContent() {
           <div style={{...sc(isDark),overflow:'hidden'}}>
             <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 14px',borderBottom:'1px solid var(--border)'}}>
               <span style={{fontWeight:700,fontSize:13}}>Movimentações</span>
-              <button onClick={()=>{setTxType('expense');setShowForm(true)}} style={{
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                gap: 8, fontWeight: 700, fontSize: 14,
-                border: '2px solid var(--border)',
-                borderRadius: 5,
-                cursor: 'pointer',
-                transition: 'transform .1s, box-shadow .1s',
-                fontFamily: 'inherit',
-                whiteSpace: 'nowrap',
-                padding: '0 18px',
-                height: 40,
-                background: '#e6ac00',
-                color: '#000000',
-                boxShadow: '4px 4px 0 var(--border)',
-              }}><Plus size={14} /> + nova entrada</button>
+              <button
+                onClick={()=>{setTxType('expense');setShowForm(true)}}
+                onMouseDown={() => setPressed(true)}
+                onMouseUp={() => setPressed(false)}
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => { setHovered(false); setPressed(false) }}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                  gap: 8, fontWeight: 700, fontSize: 14,
+                  border: '2px solid var(--border)',
+                  borderRadius: 5,
+                  cursor: 'pointer',
+                  transition: 'transform .1s, box-shadow .1s',
+                  fontFamily: 'inherit',
+                  whiteSpace: 'nowrap',
+                  padding: '0 18px',
+                  height: 40,
+                  background: '#e6ac00',
+                  color: '#000000',
+                  boxShadow: (hovered || pressed) ? 'none' : 'var(--shadow)',
+                  transform: (hovered || pressed) ? 'translate(4px, 4px)' : 'none',
+                }}
+              ><Plus size={14} /> Nova entrada</button>
             </div>
             {txMes.length===0?(
               <div style={{padding:'32px 16px',textAlign:'center'}}>
